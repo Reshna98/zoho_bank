@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+  <div class="row">
+    <div class="col-sm-12 " >
+      <h1>
+        BANKING
+      </h1>
+
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12" style="text-align: right;">
+      <a class="btn btn-success mr-2" style="width: 100px;" href="{% url 'create_delivery_chellan' %}" >New</a>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12">
+      <table class="table table-responsive  " style="text-align: center;">
+        <thead>
+          <tr>
+            <th class="text-light">Date</th>
+            <th class="text-light">Delivery Challan#</th>
+            <th class="text-light">Refferernce#</th>
+            <th class="text-light">Customer Name</th>
+            <th class="text-light">Customer Mail id</th>
+            <th class="text-light">Amount</th>
+          
+          </tr>
+        </thead>
+        <tbody>
+          {% for v in view %}
+ 
+          <tr>
+ 
+            <td class="text-light"> <a href="{% url 'delivery_challan_view' v.id%}">{{v.chellan_date}}</a></td>
+            <td class="text-light">{{v.chellan_no}}</td>
+            <td class="text-light">{{v.reference}}</td>
+            <td class="text-light"> {{v.customer_name}}</td>
+            <td class="text-light">{{v.customer_mailid}}</td>
+            <td class="text-light">{{v.total}}</td>
+
+           
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  
+ 
+{% endblock %}
