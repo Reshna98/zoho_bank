@@ -3051,6 +3051,7 @@ def deletechallan(request,id):
     estimate.delete()
     return redirect('delivery_chellan_home')
 
+@login_required(login_url='login')
 def recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
@@ -3059,10 +3060,29 @@ def recurring_bills(request):
             }
     return render(request,'recurring_bills.html',context)
 
+@login_required(login_url='login')
 def add_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
+    vendor = vendor_table.objects.filter(user = request.user)
     context = {
-                'company' : company
+                'company' : company,
+                'vendor' : vendor,
             }
     return render(request,'add_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def get_vendordet(request):
+
+        company= company_details.objects.get(user = request.user)
+
+        fname = request.POST.get('fname')
+        lname = request.POST.get('lname')
+        id = request.POST.get('id')
+        print(lname)
+        vdr = vendor_table.objects.get(user=company.user_id,first_name = fname,last_name = lname,id=id)
+        vemail = vdr.vendor_email
+        gstnum = vdr.gst_number
+        gsttr = vdr.gst_treatment
+    
+        return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr},safe=False)

@@ -9848,6 +9848,7 @@ progress {
     .lightGallery .image-tile {
         flex: 0 0 auto;
         width: 25%;
+        
     }
     .col-md-4,
     .lightGallery .image-tile {
@@ -28940,6 +28941,7 @@ div.tagsinput span.tag a {
     -webkit-flex-grow: 1;
     flex-grow: 1;
 }
+
 
 
 /*# sourceMappingURL=maps/style.css.map */

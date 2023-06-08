@@ -145,9 +145,12 @@ urlpatterns = [
     path('add_sales_challan',views.add_sales_challan,name='add_sales_challan'),
     path('render_challan_pdf/<int:id>',views.render_challan_pdf,name='render_challan_pdf'),
     path('deletechallan/<int:id>',views.deletechallan,name='deletechallan'),
+
+
+    #---------Nithya------Recurring Bills----------------
     path('recurring_bills',views.recurring_bills,name='recurring_bills'),
     path('add_recurring_bills',views.add_recurring_bills,name='add_recurring_bills'),
-
+    path('get_vendordet',views.get_vendordet,name='get_vendordet'),
 
 
     

@@ -2,13 +2,13 @@
 {% block content %}
 {% load static %}
 
-<div class="container p-5" style="background-color: rgba(80, 93, 108, 0.7); width: 800px; border-radius: 5px;">
+<div class="container-fluid containerprof" >
 
-    <h2 class="text-center mt-5 p-2 text-uppercase font-weight-bold mb-5" style="background-color : rgba(80, 93, 108); color: azure;"> 
+    <h2 class="text-center mt-5 p-2 text-uppercase font-weight-bold mb-5" > 
       Edit Profile</h2>
   
             
-                  <form class="was-validated 100vw" action="{% url 'edit_profile' company.id  %}" method="post" enctype="multipart/form-data">
+                  <form class="was-validated 100vw justify-content-center" action="{% url 'edit_profile' company.id  %}" method="post" enctype="multipart/form-data">
   
                       {% csrf_token %}
                       
@@ -94,9 +94,8 @@
                               <input type="file" name = 'file' class="form-control" >
                             </div>
                           
-                          <button type="submit" class="btn  text-align-center font-weight-bold mt-2" 
-                          style="width: 200px;  margin-left: 250px; background-color:rgba(80, 93, 108); 
-                          color: aliceblue;"> SAVE CHANGES</button>
+                          <button type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
+                          style="width: 200px; text-align: center ;"> SAVE CHANGES</button>
               
                   </form>
                   

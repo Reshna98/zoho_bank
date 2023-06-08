@@ -358,11 +358,6 @@ class Expense(models.Model):
         return self.profile_name
 
 
-
-class remarks_table(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-    vendor=models.ForeignKey(vendor_table,on_delete=models.CASCADE,null=True)
-    remarks=models.CharField(max_length=500)
     
 class Account(models.Model):
     accountType = models.CharField(max_length=255)

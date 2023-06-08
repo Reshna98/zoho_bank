@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
 <style>
-    * {
-      box-sizing: border-box;
-    }
-    
+
     input[type=text], select, textarea {
       width: 100%;
       padding: 12px;
@@ -19,100 +18,333 @@
       display: inline-block;
     }
     
-    input[type=submit] {
-      background-color: #04AA6D;
-      color: white;
-      padding: 12px 20px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      float: right;
-    }
     
-    input[type=submit]:hover {
-      background-color: #45a049;
-    }
-    
-    .container {
-      border-radius: 5px;
-      background-color: #f2f2f2;
-      padding: 20px;
-    }
-    
-    .col-25 {
-      float: left;
-      width: 25%;
-      margin-top: 6px;
-    }
-    
-    .col-75 {
-      float: left;
-      width: 75%;
-      margin-top: 6px;
-    }
-    
-    /* Clear floats after the columns */
     .row:after {
       content: "";
       display: table;
       clear: both;
     }
     
-    /* Responsive layout - when the screen is less than 600px wide, make the two columns stack on top of each other instead of next to each other */
     @media screen and (max-width: 600px) {
       .col-25, .col-75, input[type=submit] {
         width: 100%;
         margin-top: 0;
       }
+      input[type=text], select, textarea {
+      width: 100%;
+
+    }
+    }
+
+    .dropdown input,
+    .dropdown button {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+
+    .dropdown.open input,
+    .dropdown.open button {
+      display: block;
     }
     </style>
 
 
-<div class="container">
-  <form action="">
-    <div class="row">
-      <div class="col-25">
-        <label for="fname">First Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id="fname" name="firstname" placeholder="Your name..">
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="lname">Last Name</label>
-      </div>
-      <div class="col-75">
-        <input type="text" id="lname" name="lastname" placeholder="Your last name..">
+<div class="container-fulid containerprof">
+
+    <div class="card radius-15 p-5">
+      <div class="card-body">
+          <div class="card-title">
+            <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; New Recurring Bills</h2>
+          </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="country">Country</label>
+
+    <div class="card radius-15 p-5">
+    <form action="">
+      <div class="row">
+        <div class="col-md-3">
+          <label style="color: rgb(190, 88, 88);">Vendor Name *</label><br>
+          
+        </div>
+
+        <div class="col-md-6">
+          <select name="vendor" id="vendor" class="form-control" >
+            <option value=""></option>
+            {% for v in vendor %}
+            <option value="{{ v.first_name }} {{ v.last_name }} {{v.id}}">{{ v.first_name }} {{ v.last_name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-10 px-5">
+          <label class="d-none" id="email_lbl" style="color: grey;"></label>
+          <label class="d-none" id="gst_trt_lbl" style="color: grey;"></label>
+          <label class="d-none" id="gstin_lbl" style="color: grey;"></label>
+        </div>
+
       </div>
-      <div class="col-75">
-        <select id="country" name="country">
-          <option value="australia">Australia</option>
-          <option value="canada">Canada</option>
-          <option value="usa">USA</option>
-        </select>
+      <div class="row">
+        <div class="col-md-3">
+          <label style="color: rgb(190, 88, 88);">Source of Supply*</label>
+        </div>
+
+        <div class="col-md-6">
+            <select name="srcofsupply" id="" class="form-control">
+                <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
+                <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
+                <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
+                <option value="[AS] Assam">[AS] Assam</option>
+                <option value="[BR] Bihar">[BR] Bihar</option>
+                <option value="[CH] Chandigarh">[CH] Chandigarh</option>
+                <option value="[CG] Chhattisgarh">[CG] Chhattisgarh</option>
+                <option value="[DNH] Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
+                <option value="[DD] Damn anad Diu">[DD] Damn anad Diu</option>
+                <option value="[DL] Delhi">[DL] Delhi</option>
+                <option value="[GA] Goa">[GA] Goa</option>
+                <option value="[GJ] Gujarat">[GJ] Gujarat</option>
+                <option value="[HR] Haryana">[HR] Haryana</option>
+                <option value="[HP] Himachal Predesh">[HP] Himachal Predesh</option>
+                <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
+                <option value="[JH] Jharkhand">[JH] Jharkhand</option>
+                <option value="[KA] Karnataka">[KA] Karnataka</option>
+                <option selected="selected" value="[KL] Kerala">[KL] Kerala</option>
+                <option value="[LA] Ladakh">[LA] Ladakh</option>
+                <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
+                <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
+                <option value="[MH] Maharashtra">[MH] Maharashtra</option>
+                <option value="[MN] Manipur">[MN] Manipur</option>
+                <option value="[ML] Meghalaya">[ML] Meghalaya</option>
+                <option value="[MZ] Mizoram">[MZ] Mizoram</option>
+                <option value="[NL] Nagaland">[NL] Nagaland</option>
+                <option value="[OD] Odisha">[OD] Odisha</option>
+                <option value="[PY] Puducherry">[PY] Puducherry</option>
+                <option value="[PB] Punjab">[PB] Punjab</option>
+                <option value="[RJ] Rajasthan">[RJ] Rajasthan</option>
+                <option value="[SK] Sikkim">[SK] Sikkim</option>
+                <option value="[TN] Tamil Nadu">[TN] Tamil Nadu</option>
+                <option value="[TS] Telangana">[TS] Telangana</option>
+                <option value="[TR] Tripura">[TR] Tripura</option>
+                <option value="[UP] Uttar Predesh">[UP] Uttar Predesh</option>
+                <option value="[UK] Uttarakhand">[UK] Uttarakhand</option>
+                <option value="[WB] West Bengal">[WB] West Bengal</option>
+                <option value="[OT] Other Territory">[OT] Other Territory</option>
+            </select>
+            
+        </div>
+
       </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label style="color: rgb(190, 88, 88);">Destination of Supply*</label>
+        </div>
+
+        <div class="col-md-6">
+            <select name="dstnofsupply" id="" class="form-control">
+                <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
+                <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
+                <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
+                <option value="[AS] Assam">[AS] Assam</option>
+                <option value="[BR] Bihar">[BR] Bihar</option>
+                <option value="[CH] Chandigarh">[CH] Chandigarh</option>
+                <option value="[CG] Chhattisgarh">[CG] Chhattisgarh</option>
+                <option value="[DNH] Dadra and Nagar Haveli">[DNH] Dadra and Nagar Haveli</option>
+                <option value="[DD] Damn anad Diu">[DD] Damn anad Diu</option>
+                <option value="[DL] Delhi">[DL] Delhi</option>
+                <option value="[GA] Goa">[GA] Goa</option>
+                <option value="[GJ] Gujarat">[GJ] Gujarat</option>
+                <option value="[HR] Haryana">[HR] Haryana</option>
+                <option value="[HP] Himachal Predesh">[HP] Himachal Predesh</option>
+                <option value="[JK] Jammu and Kashmir">[JK] Jammu and Kashmir</option>
+                <option value="[JH] Jharkhand">[JH] Jharkhand</option>
+                <option value="[KA] Karnataka">[KA] Karnataka</option>
+                <option selected="selected" value="[KL] Kerala">[KL] Kerala</option>
+                <option value="[LA] Ladakh">[LA] Ladakh</option>
+                <option value="[LD] Lakshadweep">[LD] Lakshadweep</option>
+                <option value="[MP] Madhya Predesh">[MP] Madhya Predesh</option>
+                <option value="[MH] Maharashtra">[MH] Maharashtra</option>
+                <option value="[MN] Manipur">[MN] Manipur</option>
+                <option value="[ML] Meghalaya">[ML] Meghalaya</option>
+                <option value="[MZ] Mizoram">[MZ] Mizoram</option>
+                <option value="[NL] Nagaland">[NL] Nagaland</option>
+                <option value="[OD] Odisha">[OD] Odisha</option>
+                <option value="[PY] Puducherry">[PY] Puducherry</option>
+                <option value="[PB] Punjab">[PB] Punjab</option>
+                <option value="[RJ] Rajasthan">[RJ] Rajasthan</option>
+                <option value="[SK] Sikkim">[SK] Sikkim</option>
+                <option value="[TN] Tamil Nadu">[TN] Tamil Nadu</option>
+                <option value="[TS] Telangana">[TS] Telangana</option>
+                <option value="[TR] Tripura">[TR] Tripura</option>
+                <option value="[UP] Uttar Predesh">[UP] Uttar Predesh</option>
+                <option value="[UK] Uttarakhand">[UK] Uttarakhand</option>
+                <option value="[WB] West Bengal">[WB] West Bengal</option>
+                <option value="[OT] Other Territory">[OT] Other Territory</option>
+            </select>
+        </div>
+      </div>
+      <br><br>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label for="prof_name" style="color: rgb(190, 88, 88);">Profile Name *</label>
+        </div>
+
+        <div class="col-md-6">
+          <input type="text" class="form-control" required id="prof_name" name="prof_name">
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label for="" style="color: rgb(190, 88, 88);">Repeat Every *</label>
+        </div>
+
+        <div class="col-md-6">
+          <div class="d-flex">
+            <select class="form-control" required name="repeat">
+
+                <option selected value="1 Week">Week</option>
+                <option value="2 Weeks">2 Weeks</option>
+                <option value="1 Month">Month</option>
+                <option value="2 Months">2 Months</option>
+                <option value="3 Months">3 Months</option>
+                <option value="6 Months">6 Months</option>
+                <option value="1 Year">Years</option>
+                <option value="2 Years">2 Years</option>
+                <option value="3 Years">3 Years</option>
+                <option value="6 Years">6 Years</option>
+            </select>
+          </div>   
+        </div>
+      </div>
+      <br><br>
+
+
+      <div class="row">
+          <div class="col-md-3">
+            <label for="date1">Starts On</label>
+          </div>
+          <div class="col-md-3">
+            <input type="date" class="form-control" required id="date1" name="start_date">
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-3">
+          <label for="date2">Ends On</label>
+        </div>
+        <div class="col-md-3">
+          <input type="date" class="form-control" required id="date2" name="end_date">
+        </div>
+        <div class="col-md-3">
+          <input type="checkbox" id="never-expire-checkbox" onchange="toggleDateInput()" />
+          <label for="never-expire-checkbox" style="color: #909091;" name="neverExp">Never Expires</label>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="col-md-3">
+          <label for="date2">Payment Terms</label>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex">
+            <select class="form-control" id="terms" required name="terms">
+
+                <option selected value="15">NET 15</option>
+                <option value="30">NET 30</option>
+                <option value="45">NET 45</option>
+                <option value="60">NET 60</option>
+                <option value="90">NET 90</option>
+                <option value="">Due end of the month</option>
+                <option value="recpt">Due on receipt</option>
+            </select>
+          </div>   
+        </div>
+        
+      </div>  
+      
+      <div class="row mt-5">
+        <center>
+          <button type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
+                          style="width: 200px; text-align: center ;"> SAVE CHANGES</button>
+        </center>
+      </div>
+    </form>
     </div>
-    <div class="row">
-      <div class="col-25">
-        <label for="subject">Subject</label>
-      </div>
-      <div class="col-75">
-        <textarea id="subject" name="subject" placeholder="Write something.." style="height:200px"></textarea>
-      </div>
-    </div>
-    <div class="row">
-      <input type="submit" value="Submit">
-    </div>
-  </form>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script>
+  function toggleDateInput() {
+      var checkbox = document.getElementById("never-expire-checkbox");
+      var dateInput = document.getElementById("date2");
+      
+      if (checkbox.checked) {
+          dateInput.disabled = true;
+          $("#terms").val("recpt");
+      } 
+      else {
+          dateInput.disabled = false;
+      }
+  }
+
+  $(document).ready(function() {
+    $('#terms').change(function() {
+      var va = $(this).val();
+      var checkbox = $('#never-expire-checkbox')[0];
+      if (va == 'recpt'){
+        checkbox.checked = true;
+        $('#date2')[0].disabled = true;
+      }
+      else{
+        checkbox.checked = false;
+        $('#date2').disabled = false;
+      }
+      });
+  });
 
 
+
+
+$(document).ready(function() {
+    $('#vendor').change(function() {
+
+        var name = $("#vendor").val();
+        var na = name.split(' ')
+        // console.log(name)
+        $.ajax({
+
+            url: "{% url 'get_vendordet' %}", 
+
+            data: { 
+                    fname : na[0],
+                    lname : na[1],
+                    id :na[2],
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+
+            success: function(data) {
+              console.log(data.vendor_email);
+                $("#email_lbl").removeClass('d-none');
+                $("#email_lbl").addClass('d-block');
+                $("#gstin_lbl").removeClass('d-none');
+                $("#gstin_lbl").addClass('d-block');
+                $("#gst_trt_lbl").removeClass('d-none');
+                $("#gst_trt_lbl").addClass('d-block');
+
+                $('#email_lbl').text('Email :'+ data.vendor_email);
+                $('#gstin_lbl').text('GSTIN  :'+ data.gst_number);
+                $('#gst_trt_lbl').text('GST Treatment : ' +data.gst_treatment);
+
+            }
+        });
+    
+    });
+});
+</script>
 
 {% endblock %}
