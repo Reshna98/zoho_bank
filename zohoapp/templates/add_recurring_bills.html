@@ -63,12 +63,11 @@
 
     <div class="card radius-15 p-5">
     <form action="">
+
       <div class="row">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Vendor Name *</label><br>
-          
         </div>
-
         <div class="col-md-6">
           <select name="vendor" id="vendor" class="form-control" >
             <option value=""></option>
@@ -77,13 +76,13 @@
             {% endfor %}
           </select>
         </div>
-        <div class="col-md-10 px-5">
+        <div class="col-md-10 p-5">
           <label class="d-none" id="email_lbl" style="color: grey;"></label>
           <label class="d-none" id="gst_trt_lbl" style="color: grey;"></label>
           <label class="d-none" id="gstin_lbl" style="color: grey;"></label>
         </div>
-
       </div>
+
       <div class="row">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Source of Supply*</label>
@@ -260,8 +259,124 @@
             </select>
           </div>   
         </div>
-        
       </div>  
+
+      <div class="row mb-5">
+        <div class="col-md-3">
+          <label for="">Reverse Charge</label>
+        </div>
+        <div class="col-md-6">
+          <input type="checkbox" id="rvsCharge" name="rvsCharge" onchange="saveCheckboxValue()">
+          <label for="rvsCharge" class="mx-3 mt-2">This transaction is applicable for Reverse Charge</label>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-3">
+          <label style="color: rgb(190, 88, 88);">Customer Name *</label><br>
+        </div>
+        <div class="col-md-6">
+          <select name="customer" id="customer" class="form-control" >
+            <option value=""></option>
+            {% for c in customer %}
+            <option value="{{ c.customerName }} {{c.id}}">{{ c.customerName }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-10 p-5">
+          <label class="d-none" id="cemail_lbl" style="color: grey;"></label>
+          <label class="d-none" id="comp_lbl" style="color: grey;"></label>
+          <label class="d-none" id="cgst_trt_lbl" style="color: grey;"></label>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-md-12 table-responsive-md mt-3">
+          <table class="table table-bordered table-hover mt-3" id="tab_logic">
+            <thead>
+              <tr>
+                <th class="text-center text-uppercase">Item Details</th>
+                <th class="text-center text-uppercase">account</th>
+                <th class="text-center text-uppercase">quantity</th>
+                <th class="text-center text-uppercase">rate</th>
+                <th class="text-center text-uppercase">tax</th>
+                <th class="text-center text-uppercase">discount</th>
+                <th class="text-center text-uppercase">amount</th>
+              </tr>
+            </thead>
+            <tbody id="items-table-body">
+              <tr>
+                <td style="width: 20%;">
+                  <div class="d-flex">
+                    <select name='item[]' id="item" class="form-control">
+                      <option value=" " selected disabled>Select Item</option>
+                      {% for i in item %}
+                        <option value="{{ i.name  }}">{{ i.name  }} </option>
+                      {% endfor %}
+                    </select>
+                  </div>  
+                </td>
+                <td  style="width: 20%;">
+                  <div class="d-flex">
+                    <select name='account[]' id="account" class="form-control">
+                      <option value=" " selected disabled >Select Account</option>
+                      <hr>
+                      {% for i in account %}
+                          <option value="{{ i.accountName }}">{{ i.accountName  }} </option>
+                      {% endfor %}
+                    </select>
+                  </div>  
+                </td>
+                <td style="width: 10%;">
+                  <input type="number" name='qty[]' onchange="qtychange1(this)" placeholder='Qty' id="qty1"  class="form-control qty" step=0 min=0/>
+                </td>
+                <td style="width: 10%;">
+                  <input type="text" name='rate[]' id="rate" placeholder='Rate' class="form-control" />
+                </td>
+                <td style="width: 16%;">
+                  <select name="tax[]" id="tax1" class="form-control tax">
+                    <option id="ta1" value=0 text={{ cmp1.state }} disabled>Choose</option>
+                    <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
+                    <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
+                    <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
+                    <option value=6 text={{ cmp1.state }}>06.0% GST(06%)</option>
+                    <option value=5 text={{ cmp1.state }}>05.0% GST(05%)</option>
+                    <option value=3 text={{ cmp1.state }}>03.0% GST(03%)</option>
+                    <option value=.25 text={{ cmp1.state }}>0.25% GST(0.25%)</option>
+                    <option value=0 text={{ cmp1.state }}>0.0% GST(0%)</option>
+                    <option value=0 text={{ cmp1.state }}>Exempt GST(0%)</option>
+                    <option value=0 text={{ cmp1.state }}>Out of Scope(0%)</option>
+                    <option id="ta5" value=0 text=" " disabled>Choose</option>
+                    <option value=28 text=" ">28.0% IGST(28%)</option>
+                    <option value=18 text=" ">18.0% IGST(18%)</option>
+                    <option value=12 text=" ">12.0% IGST(12%)</option>
+                    <option value=6 text=" ">06.0% IGST(06%)</option>
+                    <option value=5 text=" ">05.0% IGST(05%)</option>
+                    <option value=3 text=" ">03.0% IGST(03%)</option>
+                    <option value=.25 text=" ">0.25% IGST(0.25%)</option>
+                    <option value=0 text=" ">0.0% IGST(0%)</option>
+                    <option value=0 text=" ">Exempt IGST(0%)</option>
+                    <option value=0 text=" ">Out of Scope(0%)</option>
+                  </select>
+                </td>
+                <td style="width: 11%;">
+                  <input type="text" name='discount[]' id="discount" placeholder='Discount' class="form-control"/>
+                </td>
+                <td style="width: 11%;">
+                  <input type="text" name='amount[]' id="amount" placeholder='Amount' class="form-control price" step="0.00" min="0"  />
+                </td>
+                <td style="display: none;">
+                  <input type="number" step="any" name='taxamount1' id="taxamount1" class="form-control taxamount"/>
+                </td>   
+              </tr>
+            </tbody>
+            <tr>
+                <td style="border: none;"><a class="btn btn-outline-secondary ml-1" role="button" id="add"  title="Add Row">+</a></td>
+            </tr>
+          </table>
+        </div>
+      </div>
       
       <div class="row mt-5">
         <center>
@@ -336,8 +451,8 @@ $(document).ready(function() {
                 $("#gst_trt_lbl").removeClass('d-none');
                 $("#gst_trt_lbl").addClass('d-block');
 
-                $('#email_lbl').text('Email :'+ data.vendor_email);
-                $('#gstin_lbl').text('GSTIN  :'+ data.gst_number);
+                $('#email_lbl').text('Email : '+ data.vendor_email);
+                $('#gstin_lbl').text('GSTIN  : '+ data.gst_number);
                 $('#gst_trt_lbl').text('GST Treatment : ' +data.gst_treatment);
 
             }
@@ -345,6 +460,130 @@ $(document).ready(function() {
     
     });
 });
+
+$(document).ready(function() {
+    $('#customer').change(function() {
+
+        var name = $("#customer").val();
+        var na = name.split(' ')
+        console.log(name)
+        $.ajax({
+
+            url: "{% url 'get_customerdet' %}", 
+
+            data: { 
+                    name : na[0]+ " " + na[1],
+                    id :na[2],
+                    csrfmiddlewaretoken: '{{ csrf_token }}' 
+                },
+
+            type : 'POST',
+
+            success: function(data) {
+              console.log(data.customer_email);
+                $("#cemail_lbl").removeClass('d-none');
+                $("#cemail_lbl").addClass('d-block');
+                $("#comp_lbl").removeClass('d-none');
+                $("#comp_lbl").addClass('d-block');
+                $("#cgst_trt_lbl").removeClass('d-none');
+                $("#cgst_trt_lbl").addClass('d-block');
+                $('#cemail_lbl').text('Email : '+ data.customer_email);
+                $('#comp_lbl').text('Company Name  : '+ data.comp);
+                $('#cgst_trt_lbl').text('GST Treatment : ' +data.gst_treatment);
+
+            }
+        });
+    
+    });
+});
+
+
+
+
+  $(document).ready(function(){
+    var roinc = 0
+    $('#add').click(function(){
+      roinc++
+      $('#items-table-body').append(
+        
+        `<tr id='addr0${roinc}'>
+          <td style="width: 20%;">
+            <div class="d-flex">
+              <select name='item[]' id="item${roinc}" class="form-control">
+                <option value=" " selected disabled>Select Item</option>
+                {% for i in item %}
+                  {% if i.cid_id == cmp1.cid %}
+                      <option value="{{ i.name  }}">{{ i.name  }} </option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>  
+          </td>
+          <td  style="width: 20%;">
+            <div class="d-flex">
+              <select name='account[]' id="account${roinc}" class="form-control">
+                <option value=" " selected disabled >Select Account</option>
+                <hr>
+                {% for i in account %}
+                  <option value="{{ i.accountName }}">{{ i.accountName  }} </option>
+                {% endfor %}
+              </select>
+            </div>  
+          </td>
+          <td style="width: 10%;">
+            <input type="number" name='qty[]' onchange="qtychange1(this)" placeholder='Qty' id="qty1${roinc}"  class="form-control qty" step=0 min=0/>
+          </td>
+          <td style="width: 10%;">
+            <input type="text" name='rate[]' id="rate${roinc}" placeholder='Rate' class="form-control" />
+          </td>
+          <td style="width: 16%;">
+            <select name="tax[]" id="tax1" class="form-control tax">
+              <option id="ta${roinc}" value=0 text={{ cmp1.state }} disabled>Choose</option>
+              <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
+              <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
+              <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
+              <option value=6 text={{ cmp1.state }}>06.0% GST(06%)</option>
+              <option value=5 text={{ cmp1.state }}>05.0% GST(05%)</option>
+              <option value=3 text={{ cmp1.state }}>03.0% GST(03%)</option>
+              <option value=.25 text={{ cmp1.state }}>0.25% GST(0.25%)</option>
+              <option value=0 text={{ cmp1.state }}>0.0% GST(0%)</option>
+              <option value=0 text={{ cmp1.state }}>Exempt GST(0%)</option>
+              <option value=0 text={{ cmp1.state }}>Out of Scope(0%)</option>
+              <option id="ta5${roinc}" value=0 text=" " disabled>Choose</option>
+              <option value=28 text=" ">28.0% IGST(28%)</option>
+              <option value=18 text=" ">18.0% IGST(18%)</option>
+              <option value=12 text=" ">12.0% IGST(12%)</option>
+              <option value=6 text=" ">06.0% IGST(06%)</option>
+              <option value=5 text=" ">05.0% IGST(05%)</option>
+              <option value=3 text=" ">03.0% IGST(03%)</option>
+              <option value=.25 text=" ">0.25% IGST(0.25%)</option>
+              <option value=0 text=" ">0.0% IGST(0%)</option>
+              <option value=0 text=" ">Exempt IGST(0%)</option>
+              <option value=0 text=" ">Out of Scope(0%)</option>
+            </select>
+          </td>
+          <td style="width: 11%;">
+            <input type="text" name='discount[]' id="discount${roinc}" placeholder='Discount' class="form-control"/>
+          </td>
+          <td style="width: 11%;">
+            <input type="text" name='amount[]' id="amount${roinc}" placeholder='Amount' class="form-control price" step="0.00" min="0"  />
+          </td>
+          <td style="display: none;">
+            <input type="number" step="any" name='taxamount1' id="taxamount1" class="form-control taxamount"/>
+          </td>   
+          <td><button type="button" id="${roinc}" class="btn btn-danger remove_row" tooltip="Remove">x</button></td>
+        </tr>`
+
+     
+        );
+      });
+  });
+
+  $(document).on('click','.remove_row',function(){
+    var row_id = $(this).attr("id");
+    $('#addr0'+row_id+'').remove();
+  });
+
 </script>
 
 {% endblock %}

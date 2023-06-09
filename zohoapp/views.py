@@ -3065,9 +3065,13 @@ def add_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
     vendor = vendor_table.objects.filter(user = request.user)
+    acnt = Account.objects.filter(user = request.user)
+    cust = customer.objects.filter(user = request.user)
     context = {
                 'company' : company,
                 'vendor' : vendor,
+                'account': acnt,
+                'customer' : cust,
             }
     return render(request,'add_recurring_bills.html',context)
 
@@ -3086,3 +3090,19 @@ def get_vendordet(request):
         gsttr = vdr.gst_treatment
     
         return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr},safe=False)
+
+@login_required(login_url='login')
+def get_customerdet(request):
+
+        company= company_details.objects.get(user = request.user)
+
+        name = request.POST.get('name')
+        print(name)
+        id = request.POST.get('id')
+        vdr = customer.objects.get(user=company.user_id,customerName = name,id=id)
+        email = vdr.customerEmail
+        comp = vdr.companyName
+        gsttr = vdr.GSTTreatment
+    
+        return JsonResponse({'customer_email' :email, 'comp' : comp,'gst_treatment':gsttr},safe=False)
+

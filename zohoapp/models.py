@@ -364,6 +364,8 @@ class Account(models.Model):
     accountName = models.CharField(max_length=255)
     accountCode = models.CharField(max_length=255)
     description = models.TextField()
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+
 
 class DeliveryChellan(models.Model):
     user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)

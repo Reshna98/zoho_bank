@@ -151,7 +151,7 @@ urlpatterns = [
     path('recurring_bills',views.recurring_bills,name='recurring_bills'),
     path('add_recurring_bills',views.add_recurring_bills,name='add_recurring_bills'),
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
-
+    path('get_customerdet',views.get_customerdet,name='get_customerdet'),
 
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
