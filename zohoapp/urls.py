@@ -153,6 +153,14 @@ urlpatterns = [
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
     path('get_customerdet',views.get_customerdet,name='get_customerdet'),
 
+    path('recurbills_vendor',views.recurbills_vendor,name='recurbills_vendor'),
+    path('vendor_dropdown',views.vendor_dropdown,name = 'vendor_dropdown'),
+
+    path('recurbills_pay',views.recurbills_pay,name='recurbills_pay'),
+    path('pay_dropdown',views.pay_dropdown,name = 'pay_dropdown'),
+
+
+
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

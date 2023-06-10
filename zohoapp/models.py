@@ -228,6 +228,7 @@ class payment(models.Model):
     days=models.TextField(max_length=255)
     
 class payment_terms(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
     Terms=models.CharField(max_length=100,null=True,blank=True)
     Days=models.IntegerField(null=True,blank=True)    
 
@@ -334,7 +335,6 @@ class bank(models.Model):
     bank_name = models.CharField(max_length=220,default='', null=True, blank=True)
     
     from django.db import models
-
 
 class Expense(models.Model):
     profile_name = models.CharField(max_length=255)

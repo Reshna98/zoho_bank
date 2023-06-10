@@ -3067,42 +3067,139 @@ def add_recurring_bills(request):
     vendor = vendor_table.objects.filter(user = request.user)
     acnt = Account.objects.filter(user = request.user)
     cust = customer.objects.filter(user = request.user)
+    item = AddItem.objects.filter(user = request.user)
+    payments = payment_terms.objects.filter(user = request.user)
     context = {
                 'company' : company,
                 'vendor' : vendor,
                 'account': acnt,
                 'customer' : cust,
+                'item' : item,
+                'payments' :payments,
             }
     return render(request,'add_recurring_bills.html',context)
 
 @login_required(login_url='login')
 def get_vendordet(request):
 
-        company= company_details.objects.get(user = request.user)
+    company= company_details.objects.get(user = request.user)
 
-        fname = request.POST.get('fname')
-        lname = request.POST.get('lname')
-        id = request.POST.get('id')
-        print(lname)
-        vdr = vendor_table.objects.get(user=company.user_id,first_name = fname,last_name = lname,id=id)
-        vemail = vdr.vendor_email
-        gstnum = vdr.gst_number
-        gsttr = vdr.gst_treatment
-    
-        return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr},safe=False)
+    fname = request.POST.get('fname')
+    lname = request.POST.get('lname')
+    id = request.POST.get('id')
+    vdr = vendor_table.objects.get(user=company.user_id,first_name = fname,last_name = lname,id=id)
+    vemail = vdr.vendor_email
+    gstnum = vdr.gst_number
+    gsttr = vdr.gst_treatment
+
+    return JsonResponse({'vendor_email' :vemail, 'gst_number' : gstnum,'gst_treatment':gsttr},safe=False)
 
 @login_required(login_url='login')
 def get_customerdet(request):
 
-        company= company_details.objects.get(user = request.user)
+    company= company_details.objects.get(user = request.user)
 
-        name = request.POST.get('name')
-        print(name)
-        id = request.POST.get('id')
-        vdr = customer.objects.get(user=company.user_id,customerName = name,id=id)
-        email = vdr.customerEmail
-        comp = vdr.companyName
-        gsttr = vdr.GSTTreatment
+    name = request.POST.get('name')
+    id = request.POST.get('id')
+    vdr = customer.objects.get(user=company.user_id,customerName = name,id=id)
+    email = vdr.customerEmail
+    comp = vdr.companyName
+    gsttr = vdr.GSTTreatment
+
+    return JsonResponse({'customer_email' :email, 'comp' : comp,'gst_treatment':gsttr},safe=False)
+
+@login_required(login_url='login')
+def recurbills_vendor(request):
     
-        return JsonResponse({'customer_email' :email, 'comp' : comp,'gst_treatment':gsttr},safe=False)
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        title=request.POST.get('title')
+        first_name=request.POST.get('firstname')
+        last_name=request.POST.get('lastname')
+        comp=request.POST.get('company_name')
+        dispn = request.POST.get('display_name')
+        email=request.POST.get('email')
+        website=request.POST.get('website')
+        w_mobile=request.POST.get('work_mobile')
+        p_mobile=request.POST.get('pers_mobile')
+        skype = request.POST.get('skype')
+        desg = request.POST.get('desg')
+        dpt = request.POST.get('dpt')
+        gsttype=request.POST.get('gsttype')
+        gstin=request.POST.get('gstin')
+        panno=request.POST.get('panno')
+        supply=request.POST.get('sourceofsupply')
+        currency=request.POST.get('currency')
+        balance=request.POST.get('openingbalance')
+        payment=request.POST.get('paymentterms')
+        street=request.POST.get('street')
+        city=request.POST.get('city')
+        state=request.POST.get('state')
+        pincode=request.POST.get('pincode')
+        country=request.POST.get('country')
+        fax=request.POST.get('fax')
+        phone=request.POST.get('phone')
+        shipstreet=request.POST.get('shipstreet')
+        shipcity=request.POST.get('shipcity')
+        shipstate=request.POST.get('shipstate')
+        shippincode=request.POST.get('shippincode')
+        shipcountry=request.POST.get('shipcountry')
+        shipfax=request.POST.get('shipfax')
+        shipphone=request.POST.get('shipphone')
+
+        u = User.objects.get(id = request.user.id)
+
+        vndr = vendor_table(salutation=title, first_name=first_name, last_name=last_name,vendor_display_name = dispn, company_name= comp, gst_treatment=gsttype, gst_number=gstin, 
+                    pan_number=panno,vendor_wphone = w_mobile,vendor_mphone = p_mobile, vendor_email=email,skype_number = skype,
+                    source_supply=supply,currency=currency, website=website, designation = desg, department = dpt,
+                    opening_bal=balance,baddress=street, bcity=city, bstate=state, payment_terms=payment,bzip=pincode, 
+                    bcountry=country, saddress=shipstreet, scity=shipcity, sstate=shipstate,szip=shippincode, scountry=shipcountry,
+                    bfax = fax, sfax = shipfax, bphone = phone, sphone = shipphone,user = u)
+        vndr.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def vendor_dropdown(request):
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = vendor_table.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = option.first_name+ " " + option.last_name
+
+    return JsonResponse(options)
+
+
+@login_required(login_url='login')
+def recurbills_pay(request):
+    
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        name=request.POST.get('name')
+        days=request.POST.get('days')
+        print(name)
+        
+        u = User.objects.get(id = request.user.id)
+
+        pay = payment_terms(Terms=name, Days=days, user = u)
+        pay.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def pay_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = payment_terms.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = option.Terms
+
+    return JsonResponse(options)
 
