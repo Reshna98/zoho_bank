@@ -42,6 +42,7 @@ class Purchase(models.Model):
 
 class Unit(models.Model):
     unit=models.TextField(max_length=255)
+    
 
     def __str__(self):
         return self.unit
@@ -53,7 +54,7 @@ class AddItem(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,default='')
     type=models.TextField(max_length=255)
     Name=models.TextField(max_length=255)
-    unit=models.ForeignKey(Unit,on_delete=models.CASCADE)
+    unit=models.ForeignKey(Unit,on_delete=models.CASCADE,null= True,blank=True)
     sales=models.ForeignKey(Sales,on_delete=models.CASCADE)
     purchase=models.ForeignKey(Purchase,on_delete=models.CASCADE)
     date=models.DateTimeField(auto_now_add=True)

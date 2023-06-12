@@ -3051,6 +3051,10 @@ def deletechallan(request,id):
     estimate.delete()
     return redirect('delivery_chellan_home')
 
+
+
+# Nithya-------------recurring bills------
+
 @login_required(login_url='login')
 def recurring_bills(request):
 
@@ -3069,6 +3073,7 @@ def add_recurring_bills(request):
     cust = customer.objects.filter(user = request.user)
     item = AddItem.objects.filter(user = request.user)
     payments = payment_terms.objects.filter(user = request.user)
+    units = Unit.objects.all()
     context = {
                 'company' : company,
                 'vendor' : vendor,
@@ -3076,6 +3081,7 @@ def add_recurring_bills(request):
                 'customer' : cust,
                 'item' : item,
                 'payments' :payments,
+                'units' :units,
             }
     return render(request,'add_recurring_bills.html',context)
 
@@ -3200,6 +3206,35 @@ def pay_dropdown(request):
     option_objects = payment_terms.objects.filter(user = user)
     for option in option_objects:
         options[option.id] = option.Terms
+
+    return JsonResponse(options)
+
+
+@login_required(login_url='login')
+def recurbills_unit(request):
+    
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        unit =request.POST.get('unit')
+        
+        u = User.objects.get(id = request.user.id)
+
+        unit = Unit(unit= unit)
+        unit.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def unit_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Unit.objects.all()
+    for option in option_objects:
+        options[option.id] = option.unit
 
     return JsonResponse(options)
 

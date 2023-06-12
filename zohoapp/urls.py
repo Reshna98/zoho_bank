@@ -159,6 +159,9 @@ urlpatterns = [
     path('recurbills_pay',views.recurbills_pay,name='recurbills_pay'),
     path('pay_dropdown',views.pay_dropdown,name = 'pay_dropdown'),
 
+     path('recurbills_unit',views.recurbills_unit,name='recurbills_unit'),
+    path('unit_dropdown',views.unit_dropdown,name = 'unit_dropdown'),
+
 
 
     
