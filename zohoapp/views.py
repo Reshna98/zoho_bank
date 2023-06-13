@@ -182,14 +182,6 @@ def additem(request):
     sale=Sales.objects.all()
     purchase=Purchase.objects.all()
     
-    
-
-
-  
-    
-        
-
-
 
     accounts = Purchase.objects.all()
     account_types = set(Purchase.objects.values_list('Account_type', flat=True))
@@ -3074,6 +3066,10 @@ def add_recurring_bills(request):
     item = AddItem.objects.filter(user = request.user)
     payments = payment_terms.objects.filter(user = request.user)
     units = Unit.objects.all()
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    sales_type = set(Sales.objects.values_list('Account_type', flat=True))
+    purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
     context = {
                 'company' : company,
                 'vendor' : vendor,
@@ -3082,6 +3078,10 @@ def add_recurring_bills(request):
                 'item' : item,
                 'payments' :payments,
                 'units' :units,
+                'sales' :sales,
+                'purchase':purchase,
+                'sales_type':sales_type,
+                'purchase_type':purchase_type,
             }
     return render(request,'add_recurring_bills.html',context)
 
@@ -3109,10 +3109,10 @@ def get_customerdet(request):
     id = request.POST.get('id')
     vdr = customer.objects.get(user=company.user_id,customerName = name,id=id)
     email = vdr.customerEmail
-    comp = vdr.companyName
+    # gstin = vdr.GSTIN
     gsttr = vdr.GSTTreatment
 
-    return JsonResponse({'customer_email' :email, 'comp' : comp,'gst_treatment':gsttr},safe=False)
+    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr},safe=False)
 
 @login_required(login_url='login')
 def recurbills_vendor(request):
@@ -3237,4 +3237,111 @@ def unit_dropdown(request):
         options[option.id] = option.unit
 
     return JsonResponse(options)
+
+@login_required(login_url='login')
+def recurbills_item(request):
+
+    company = company_details.objects.get(user = request.user)
+
+
+    if request.method=='POST':
+        type=request.POST.get('type')
+        name=request.POST['name']
+        ut=request.POST['unit']
+        inter=request.POST['inter']
+        intra=request.POST['intra']
+        sell_price=request.POST.get('sell_price')
+        sell_acc=request.POST.get('sell_acc')
+        sell_desc=request.POST.get('sell_desc')
+        cost_price=request.POST.get('cost_price')
+        cost_acc=request.POST.get('cost_acc')      
+        cost_desc=request.POST.get('cost_desc')
+
+        history="Created by " + str(request.user)
+        u = User.objects.get(id = request.user.id)
+        if ut :
+            units=Unit.objects.get(id=ut)
+            AddItem(unit=units).save()
+        if sell_acc:
+            sel=Sales.objects.get(id=sell_acc)
+            AddItem(sales=sel).save()
+        if cost_acc:
+            cost=Purchase.objects.get(id=cost_acc)
+            AddItem(purchase=cost).save()
+
+
+        item=AddItem(type=type,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
+                            user=u,creat=history,interstate=inter,intrastate=intra)
+
+        item.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def item_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = AddItem.objects.all()
+    for option in option_objects:
+        options[option.id] = option.Name
+
+    return JsonResponse(options)
+
+@login_required(login_url='login')
+def recurbills_account(request):
+
+    company = company_details.objects.get(user = request.user)
+
+
+    if request.method=='POST':
+        type=request.POST.get('actype')
+        name=request.POST['acname']
+        u = User.objects.get(id = request.user.id)
+
+        acnt=Account(accountType=type,accountName=name,user = u)
+
+        acnt.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def account_dropdown(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = Account.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = option.accountName
+
+    return JsonResponse(options)
+
+@login_required(login_url='login')
+def get_rate(request):
+
+    user = User.objects.get(id=request.user.id)
+    if request.method=='POST':
+        id=request.POST.get('id')
+
+        item = AddItem. objects.get( id = id, user = user)
+         
+        rate = 0 if item.p_price == "" else item.p_price
+
+        return JsonResponse({"rate": rate},safe=False)
+    
+@login_required(login_url='login')
+def get_cust_state(request):
+
+    user = User.objects.get(id=request.user.id)
+    if request.method=='POST':
+        id=request.POST.get('id')
+        print(id)
+
+        cust = customer. objects.get( id = id, user = user)
+         
+        state = 'Not Specified' if cust.placeofsupply == "" else cust.placeofsupply
+
+        return JsonResponse({"state": state},safe=False)
 

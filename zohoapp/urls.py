@@ -159,10 +159,15 @@ urlpatterns = [
     path('recurbills_pay',views.recurbills_pay,name='recurbills_pay'),
     path('pay_dropdown',views.pay_dropdown,name = 'pay_dropdown'),
 
-     path('recurbills_unit',views.recurbills_unit,name='recurbills_unit'),
+    path('recurbills_unit',views.recurbills_unit,name='recurbills_unit'),
     path('unit_dropdown',views.unit_dropdown,name = 'unit_dropdown'),
 
-
+    path('recurbills_item',views.recurbills_item,name='recurbills_item'),
+    path('item_dropdown',views.item_dropdown ,name = 'item_dropdown'),
+    path('recurbills_account',views.recurbills_account,name='recurbills_account'),
+    path('account_dropdown',views.account_dropdown ,name = 'account_dropdown'),
+    path('get_rate',views.get_rate ,name = 'get_rate'),
+    path('get_cust_state',views.get_cust_state,name = "get_cust_state"),
 
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
