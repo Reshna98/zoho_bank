@@ -150,6 +150,9 @@ urlpatterns = [
     #---------Nithya------Recurring Bills----------------
     path('recurring_bills',views.recurring_bills,name='recurring_bills'),
     path('add_recurring_bills',views.add_recurring_bills,name='add_recurring_bills'),
+    path('create_recurring_bills',views.create_recurring_bills,name='create_recurring_bills'),
+    # path('edit_recurring_bills',views.edit_recurring_bills,name='edit_recurring_bills'),
+
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
     path('get_customerdet',views.get_customerdet,name='get_customerdet'),
 

@@ -86,13 +86,14 @@
   <div class="card radius-15 p-3">
     <div class="card-body">
         <div class="card-title">
-          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; New Recurring Bills</h2>
+          <h2 class="mb-0 text-uppercase text-right"><img width="50" height="50" src="https://img.icons8.com/ios/50/update-file.png" alt="update-file"/>
+             &nbsp; Update Recurring Bills</h2>
         </div>
     </div>
   </div>
 
   <div class="card radius-15 p-5">
-    <form action="{% url 'create_recurring_bills' %}" class="mt-2 mb-4">
+    <form action="" class="mt-2 mb-4">
       <div class="row">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
@@ -507,8 +508,8 @@
       </div>
       <div class="row mt-5 mb-3">
         <center>
-          <input type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
-                  style="width: 200px; text-align: center ;" value="SAVE CHANGES">
+          <button type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
+                          style="width: 200px; text-align: center ;"> SAVE CHANGES</button>
         </center>
       </div>
       
@@ -953,7 +954,7 @@
                     <label for="vspincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vspincode" name="vspincode" maxlength="6"  placeholder="PIN Code">  
+                    <input type="text" class="form-control" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -965,7 +966,7 @@
                     <label for="vphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vphone" name="vphone"  placeholder="Phone"> 
+                    <input type="text" class="form-control" id="vphone" name="vphone" maxlength="6" placeholder="Phone"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -973,7 +974,7 @@
                     <label for="vsphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vsphone" name="vsphone"  placeholder="Phone">  
+                    <input type="text" class="form-control" id="vsphone" name="vsphone" maxlength="6" placeholder="Phone">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -985,7 +986,7 @@
                     <label for="vfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vfax" name="vfax"  placeholder="FAX"> 
+                    <input type="text" class="form-control" id="vfax" name="vfax" maxlength="6" placeholder="FAX"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -993,7 +994,7 @@
                     <label for="vsfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vsfax" name="vsfax"  placeholder="FAX">  
+                    <input type="text" class="form-control" id="vsfax" name="vsfax" maxlength="6" placeholder="FAX">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1600,7 +1601,7 @@
                     <label for="vphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="cphone" name="cphone" placeholder="Phone"> 
+                    <input type="text" class="form-control" id="cphone" name="cphone" maxlength="6" placeholder="Phone"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1608,7 +1609,7 @@
                     <label for="csphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="csphone" name="csphone" placeholder="Phone">  
+                    <input type="text" class="form-control" id="csphone" name="csphone" maxlength="6" placeholder="Phone">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1620,7 +1621,7 @@
                     <label for="cfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="cfax" name="cfax" placeholder="FAX"> 
+                    <input type="text" class="form-control" id="cfax" name="cfax" maxlength="6" placeholder="FAX"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1628,7 +1629,7 @@
                     <label for="csfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="csfax" name="csfax" placeholder="FAX">  
+                    <input type="text" class="form-control" id="csfax" name="csfax" maxlength="6" placeholder="FAX">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -3072,9 +3073,9 @@ $(document).ready(function() {
     $("#shipcharge").val($("#addcharge").val());
   });
   $(document).on("change", "#add_round_off", function(){
-    console.log($("#add_round_off").val())
-    var round = parseFloat($("#grandtotal").val()) - parseFloat($("#add_round_off").val()) 
-    $("#round_off").val(round);
+
+    var round = parseFloat($("#subtotal").val()) - parseFloat($("#add_round_off").val()) 
+    $("#round_off").val(parseInt(round));
   });
 
 
