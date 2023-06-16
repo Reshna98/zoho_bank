@@ -86,21 +86,25 @@
   <div class="card radius-15 p-3">
     <div class="card-body">
         <div class="card-title">
-          <h2 class="mb-0 text-uppercase text-right"><img width="50" height="50" src="https://img.icons8.com/ios/50/update-file.png" alt="update-file"/>
+          <h2 class="mb-0 text-uppercase text-right">
+            <img width="50" height="50" src="https://img.icons8.com/ios/50/update-file.png" alt="update-file" style="color: azure;"/>
              &nbsp; Update Recurring Bills</h2>
         </div>
     </div>
   </div>
 
   <div class="card radius-15 p-5">
-    <form action="" class="mt-2 mb-4">
+    <form action="{% url 'change_recurring_bills' recur_bills.id %}" class="mt-2 mb-4" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
         </div>
         <div class="col-md-6">
           <select name="vendor" id="vendor" class="form-control" >
-            <option value=""></option>
+            <option value="{{recur_bills.vendor_name}}" selected>{{recur_bills.vendor_name}}</option>
+
+            <div class="dropdown-divider"></div>
             {% for v in vendor %}
             <option value="{{ v.first_name }} {{ v.last_name }} {{v.id}}">{{ v.first_name }} {{ v.last_name }}</option>
             {% endfor %}
@@ -114,7 +118,7 @@
           <label for="email_inp">Vendor Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="email_inp" name="email_inp">
+          <input type="text" class="form-control" id="email_inp" name="email_inp">
         </div>
       </div>
 
@@ -123,7 +127,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="gst_trt_inp" name="gst_trt_inp">
+          <input type="text" class="form-control" id="gst_trt_inp" name="gst_trt_inp" >
         </div>
       </div>
 
@@ -132,7 +136,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="gstin_inp" name="gstin_inp">
+          <input type="text" class="form-control" id="gstin_inp" name="gstin_inp">
         </div>
       </div>
 
@@ -143,6 +147,8 @@
 
         <div class="col-md-6">
             <select name="srcofsupply" id="" class="form-control">
+                <option value="{{recur_bill.source_supply}}" selected>{{recur_bill.source_supply}}</option>    
+
                 <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                 <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
                 <option value="[AR] Arunachal Predesh">[AR] Arunachal Predesh</option>
@@ -190,11 +196,11 @@
 
       <div class="row mt-2">
         <div class="col-md-3">
-          <label for="prof_name" style="color: rgb(190, 88, 88);">Profile Name *</label>
+          <label for="prof_name" style="color: rgb(190, 88, 88);" >Profile Name *</label>
         </div>
 
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="prof_name" name="prof_name">
+          <input type="text" class="form-control"  id="prof_name" name="prof_name" value="{{recur_bills.profile_name}}">
         </div>
       </div>
 
@@ -206,8 +212,8 @@
         <div class="col-md-6">
           <div class="d-flex">
             <select class="form-control" required name="repeat">
-
-                <option selected value="1 Week">Week</option>
+                <option selected value="{{recur_bills.repeat_every}}">{{recur_bills.repeat_every}}</option>
+                <option value="1 Week">Week</option>
                 <option value="2 Weeks">2 Weeks</option>
                 <option value="1 Month">Month</option>
                 <option value="2 Months">2 Months</option>
@@ -229,7 +235,7 @@
             <label for="date1">Starts On</label>
           </div>
           <div class="col-md-3">
-            <input type="date" class="form-control" required id="date1" name="start_date">
+            <input type="date" class="form-control" id="date1" name="start_date" value="{{ recur_bills.start_date| date:'Y-m-d' }}">
           </div>
       </div>
       <div class="row mt-2">
@@ -237,7 +243,7 @@
           <label for="date2">Ends On</label>
         </div>
         <div class="col-md-3">
-          <input type="date" class="form-control" required id="date2" name="end_date">
+          <input type="date" class="form-control"  id="date2" name="end_date" value="{{ recur_bills.end_date| date:'Y-m-d' }}">
         </div>
         <div class="col-md-3">
           <input type="checkbox" id="never-expire-checkbox" onchange="toggleDateInput()" />
@@ -252,10 +258,11 @@
         <div class="col-md-6">
           <div class="d-flex">
             <select class="form-control" id="terms" required name="terms">
+              <option selected value="{{recur_bills.payment_terms}}">NET {{recur_bills.payment_terms }}</option>
               {% for p in payments %}
-                <option selected value="{{p.id}} {{p.Terms}} {{ p.days}}">{{p.Terms}}</option>
+                <option  value="{{p.id}} {{p.Terms}} {{ p.days}}">{{p.Terms}}</option>
               {% endfor %}
-              <option selected value="15">NET 15</option>
+              <option value="15">NET 15</option>
               <option value="30">NET 30</option>
               <option value="45">NET 45</option>
               <option value="60">NET 60</option>
@@ -286,7 +293,7 @@
         </div>
         <div class="col-md-6">
           <select name="customer" id="customer" class="form-control" >
-            <option value=""></option>
+            <option value="{{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
             {% for c in customer %}
             <option value="{{c.id}} {{ c.customerName }} ">{{ c.customerName }}</option>
             {% endfor %}
@@ -304,7 +311,7 @@
           <label for="cemail_inp">Customer Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cemail_inp" name="cemail_inp">
+          <input type="text" class="form-control"  id="cemail_inp" name="cemail_inp">
         </div>
       </div>
 
@@ -313,7 +320,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cgst_trt_inp" name="cgst_trt_inp">
+          <input type="text" class="form-control"  id="cgst_trt_inp" name="cgst_trt_inp">
         </div>
       </div>
 
@@ -322,7 +329,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cgstin_inp" name="cgstin_inp">
+          <input type="text" class="form-control" id="cgstin_inp" name="cgstin_inp">
         </div>
       </div>
 
@@ -346,11 +353,12 @@
               </tr>
             </thead>
             <tbody id="items-table-body">
-              <tr>
+              {% for ri in recur_items %}
+              <tr id='addr0{{ forloop.counter }}'>
                 <td style="width: 20%;">
                   <div class="d-flex">
                     <select name='item[]' id="item" class="form-control item" >
-                      <option value=" " selected disabled>Select Item</option>
+                      <option value=" {{ri.item }}" selected >{{ ri.item }}</option>
                       {% for i in item %}
                         <option value="{{i.id}}">{{ i.Name  }} </option>
                       {% endfor %}
@@ -361,7 +369,7 @@
                 <td  style="width: 20%;">
                   <div class="d-flex">
                     <select name='account[]' id="account" class="form-control acnt">
-                      <option value=" " selected disabled >Select Account</option>
+                      <option value="{{ ri.account }} " selected>{{ ri.account }}</option>
                       <hr>
                       {% for i in account %}
                           <option value="{{ i.id }} ">{{ i.accountName  }} </option>
@@ -370,10 +378,10 @@
                   </div>  
                 </td>
                 <td style="width: 10%;">
-                  <input type="number" name='qty[]' placeholder='Qty' id="qty1"  class="form-control qty" step=0 min=0/>
+                  <input type="number" name='qty[]' placeholder='Qty' id="qty1" value=" {{ ri.quantity }} "  class="form-control qty" step=0 min=0/>
                 </td>
                 <td style="width: 10%;">
-                  <input type="text" name='rate[]' id="rate" placeholder='Rate' class="form-control rate" />
+                  <input type="text" name='rate[]' id="rate" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate" />
                 </td>
                 <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
@@ -381,7 +389,7 @@
                   <input type="text" placeholder="Select Tax" class="form-control selecttax" id="selecttax">
                   <select name="tax[]" id="tax1" class="form-control tax1 d-none mb-2">
                     <optgroup class="d-none" id="intra_tax" label="Choose GST">
-                      <!-- <option id="ta1" value=0 text={{ cmp1.state }} disabled>Choose</option> -->
+                      <option id="ta1" value=" {{ ri.tax  }} " text={{ cmp1.state }} selected>{{ ri.tax }} </option>
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                       <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
                       <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
@@ -411,11 +419,11 @@
 
                 </td>
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc" placeholder='Discount' class="form-control disc"/>
+                  <input type="text" name='discount[]' id="disc" value=" {{ri.discount}} " placeholder='Discount' class="form-control disc"/>
                 </td>
 
                 <td style="width: 11%;">
-                  <input type="text" name='amount[]' id="amount" placeholder='Amount' class="form-control amount1" step="0.00" min="0"  />
+                  <input type="text" name='amount[]' id="amount" value=" {{ri.amount}} " placeholder='Amount' class="form-control amount1" step="0.00" min="0"  />
                 </td>
 
               </tr>
@@ -424,6 +432,7 @@
                 <td style="border: none;"><a class="btn btn-outline-secondary ml-1 text-capitalize" role="button" id="add"  
                   title="Add Another Line">+</a></td>
             </tr>
+            {% endfor %}
           </table>
         </div>
       </div>
@@ -432,10 +441,10 @@
         <div class="col-md-5 mt-2 p-3 mx-5">
           <label for="">Note</label>
           <div class="form-row">
-            <textarea class="form-control" name="note" rows="15" style="height: 200px;"></textarea>
+            <textarea class="form-control" name="note" rows="15" style="height: 200px;" value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
           </div><br>
           <div>
-            <input type="file" class="form-control" name="file">
+            <input type="file" class="form-control" name="file" value="{{recur_bills.document}}">
           </div>
           <div>
           </div>
@@ -447,7 +456,7 @@
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
-              <input type="number" step="any" name='subtotal' placeholder=0 
+              <input type="number" step="any" name='subtotal' placeholder=0 value="{{recur_bills.sub_total}}"
                 class="form-control" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
@@ -455,21 +464,21 @@
           <div class="row container-fluid p-2 m-0 d-none" id="igst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">IGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 value="{{recur_bills.igst}}"
                 class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="cgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">CGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 value="{{recur_bills.cgst}}"
                 class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="sgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">SGST</label></div>
             <div class="col-sm-3 mt-2"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 
+            <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
                 class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -483,7 +492,7 @@
               class="form-control"/>
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='shipcharge' step="any" id="shipcharge" placeholder=0 
+              <input type="number" name='shipcharge' step="any" id="shipcharge" placeholder=0 value="{{recur_bills.shipping_charge}}"
                 class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
@@ -501,7 +510,7 @@
             <div class="col-sm-5 mt-2"><label for="a" class="text-center" id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
             <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="any" 
-                class="form-control text-dark" readonly>
+                value="{{recur_bills.grand_total}}"class="form-control text-dark" readonly>
             </div>
           </div>
         </div>   

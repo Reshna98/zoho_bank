@@ -16,6 +16,8 @@ from django.http import JsonResponse
 from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
+import pytz
+import os
 
 
 def index(request):
@@ -1272,12 +1274,6 @@ def addinvoice(request):
         payment(term='net 30',days=30).save() 
     
 
-
-    
-            
-            
-            
-            
     context={
         'c':c,
         'p':p,
@@ -2718,12 +2714,7 @@ def update_challan(request,id):
         tax = [float(x) for x in tax1]
         amount1 = request.POST.getlist('amount[]')
         amount = [float(x) for x in amount1]
-        # print(item)
-        # print(quantity)
-        # print(rate)
-        # print(discount)
-        # print(tax)
-        # print(amount)
+      
 
         objects_to_delete = ChallanItems.objects.filter(chellan=id)
         objects_to_delete.delete()
@@ -2996,12 +2987,6 @@ def render_challan_pdf(request,id):
     print(challan.customer_name) 
     print(challan.customer_mailid)
     customers = customer.objects.get(user=user,customerName=challan.customer_name,customerEmail=challan.customer_mailid)
-
-
-
-    print(items)
-    
-
     total = challan.total
 
     template_path = 'delivery_challan_pdf.html'
@@ -3048,11 +3033,81 @@ def deletechallan(request,id):
 # Nithya-------------recurring bills------
 
 @login_required(login_url='login')
-def recurring_bills(request):
+def recurring_bill(request):
 
     company = company_details.objects.get(user = request.user)
+    recur = recurring_bills.objects.filter(user = request.user.id)
     context = {
-                'company' : company
+                'company' : company,
+                'recur_bill' : recur
+            }
+    return render(request,'recurring_bills.html',context)
+
+# filter
+
+@login_required(login_url='login')
+def recur_custasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'recurring_bills.html',context)
+
+@login_required(login_url='login')
+def recur_custdesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'recurring_bills.html',context)
+
+@login_required(login_url='login')
+def recur_vendorasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'recurring_bills.html',context)
+
+@login_required(login_url='login')
+def recur_vendordesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'recurring_bills.html',context)
+
+@login_required(login_url='login')
+def recur_profileasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'recurring_bills.html',context)
+
+@login_required(login_url='login')
+def recur_profiledesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
+
+    context = {
+            'rec_bill':rec_bill,
+            'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
 
@@ -3090,37 +3145,40 @@ def create_recurring_bills(request):
 
     company = company_details.objects.get(user = request.user)
     if request.method == 'POST':
-        vname = request.POST.get('vendor')
-        cname = request.POST.get('customer')
+        vname = request.POST.get('vendor').rsplit(' ', 1)
+        cname = request.POST.get('customer').split(" ")[1:]
+        cname = " ".join(cname)
         src_supply = request.POST.get('srcofsupply')
         prof = request.POST['prof_name']
         repeat = request.POST['repeat']
-        start =request.POST['start_date']
-        end =request.POST['end_date']
+        start = request.POST.get('start_date')
+        end = None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         pay_term =request.POST['terms']
         sub_total =request.POST['subtotal']
         sgst=request.POST['sgst']
         cgst=request.POST['cgst']
         igst=request.POST['igst']
         tax = request.POST['igst']
-        shipping_charge=request.POST['shipcharge']
-        round_off=request.POST['round_off']
+        shipping_charge=0 if request.POST['shipcharge'] == "" else request.POST['shipcharge']
         grand_total=request.POST['grand_total']
         note=request.POST['note']
 
         u = User.objects.get(id = request.user.id)
 
-        bills = recurring_bills(vendor_name=vname,profile_name=prof,customer_name = cname,
-                                source_supply=src_supply,repeat_every = repeat,start_date = start,end_date = end,
-                                payment_terms =pay_term,sub_total=sub_total,sgst=sgst,cgst=cgst,igst=igst,
-                                tax_amount=tax,round_off=round_off,shipping_charge = shipping_charge,
-                                grand_total=grand_total,note=note,company=company,user = u)
+        bills = recurring_bills(vendor_name=vname[0],profile_name=prof,customer_name = cname,
+                    source_supply=src_supply,repeat_every = repeat,start_date = start,end_date = end,
+                    payment_terms =pay_term,sub_total=sub_total,sgst=sgst,cgst=cgst,igst=igst,
+                    tax_amount=tax,shipping_charge = shipping_charge,
+                    grand_total=grand_total,note=note,company=company,user = u,  )
+        bills.save()
+
+        r_bill = recurring_bills.objects.get(id=bills.id)
 
         if len(request.FILES) != 0:
-            bills.document=request.FILES['file'] 
-            bills.save()
+            r_bill.document=request.FILES['file'] 
+            r_bill.save()
 
-        items = request.POST.getlist("items[]")
+        items = request.POST.getlist("item[]")
         accounts = request.POST.getlist("account[]")
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
@@ -3128,278 +3186,179 @@ def create_recurring_bills(request):
         discount = request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
 
-        r_bill = recurring_bills.objects.get(id=bills.id)
-
         if len(items)==len(accounts)==len(quantity)==len(rate)==len(tax) == len(discount)==len(amount) and items and accounts and quantity and rate and tax and discount and amount:
                 mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
+                print(mapped)
                 mapped=list(mapped)
+                print(mapped)
                 for ele in mapped:
-                    billAdd,created = recurring_bills_items.objects.get_or_create(item = ele[0],account = ele[1],quantity=ele[2],rate=ele[3],
+                    print(ele)
+                    created = recurring_bills_items.objects.get_or_create(item = ele[0],account = ele[1],quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
-
-
         return redirect('add_recurring_bills')
-    return redirect('/')
-
-# edit bill
-# @login_required(login_url='login')
-# def edit_recurring_bills(request,id):
-#     company = company_details.objects.get(user = request.user)
-#     vendor = vendor_table.objects.filter(user = request.user)
-#     acnt = Account.objects.filter(user = request.user)
-#     cust = customer.objects.filter(user = request.user)
-#     item = AddItem.objects.filter(user = request.user)
-#     payments = payment_terms.objects.filter(user = request.user)
-#     units = Unit.objects.all()
-#     sales=Sales.objects.all()
-#     purchase=Purchase.objects.all()
-#     sales_type = set(Sales.objects.values_list('Account_type', flat=True))
-#     purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
-#     context = {
-#                 'company' : company,
-#                 'vendor' : vendor,
-#                 'account': acnt,
-#                 'customer' : cust,
-#                 'item' : item,
-#                 'payments' :payments,
-#                 'units' :units,
-#                 'sales' :sales,
-#                 'purchase':purchase,
-#                 'sales_type':sales_type,
-#                 'purchase_type':purchase_type,
-#             }
-#     return render(request,'edit_recurring_bills.html',context)
+    return redirect('recurring_bill')
 
 
+@login_required(login_url='login')
+def edit_recurring_bills(request,id):
 
-# def editpurchasebill(request,id):
-#     if 'uid' in request.session:
-#         if request.session.has_key('uid'):
-#             uid = request.session['uid']
-#         else:
-#             return redirect('/')
-#         cmp1 = company.objects.get(id=request.session['uid'])
-#         if request.method == 'POST':
-#             pbill=purchasebill.objects.get(billid=id)
-#             pbill.vendor_name = request.POST['vendor_name']
-#             pbill.billing_address = request.POST['billing_address']
-#             pbill.bill_no= request.POST['bill_no']
-#             pbill.sourceofsupply=request.POST['sourceofsupply']
-#             pbill.destiofsupply=request.POST['destiofsupply']
-#             pbill.branch=request.POST['branch']
-#             pbill.reference=request.POST['reference']
-#             pbill.contact_name=request.POST['contact_name']
-#             pbill.deliverto=request.POST['deliverto']
-#             pbill.date=request.POST['date']
-#             pbill.deliver_date=request.POST['deliver_date']
-#             pbill.credit_period=request.POST['credit_period']
-#             pbill.due_date=request.POST['due_date']
-#             pbill.sub_total=request.POST['sub_total']
-#             pbill.discount=request.POST['discount']
-#             pbill.sgst=request.POST['sgst']
-#             pbill.cgst=request.POST['cgst']
-#             pbill.igst=request.POST['igst']
-#             pbill.tax_amount=request.POST['tax_amount']
-#             pbill.tcs=request.POST['tcs']
-#             pbill.tcs_amount=request.POST['tcs_amount']
-#             pbill.balance_due=request.POST['balance_due']
-#             pbill.amtrecvd=request.POST['amtrecvd']
-#             pbill.round_off=request.POST['round_off']
-#             pbill.grand_total=request.POST['grand_total']
-#             pbill.note=request.POST['note']
+    company = company_details.objects.get(user = request.user)
+    vendor = vendor_table.objects.filter(user = request.user)
+    acnt = Account.objects.filter(user = request.user)
+    cust = customer.objects.filter(user = request.user)
+    item = AddItem.objects.filter(user = request.user)
+    payments = payment_terms.objects.filter(user = request.user)
+    units = Unit.objects.all()
+    sales=Sales.objects.all()
+    purchase=Purchase.objects.all()
+    sales_type = set(Sales.objects.values_list('Account_type', flat=True))
+    purchase_type = set(Purchase.objects.values_list('Account_type', flat=True))
+    recur_bills = recurring_bills.objects.get(user = request.user,id=id)
+    recur_item = recurring_bills_items.objects.filter(user = request.user,recur_bills = id)    
+    context = {
+        'company' : company,
+        'vendor' : vendor,
+        'account': acnt,
+        'customer' : cust,
+        'item' : item,
+        'payments' :payments,
+        'units' :units,
+        'sales' :sales,
+        'purchase':purchase,
+        'sales_type':sales_type,
+        'purchase_type':purchase_type,
+        'recur_bills': recur_bills,
+        'recur_items' : recur_item,
+    }
 
-#             if len(request.FILES) != 0:
-#                 if len(pbill.file) > 0  :
-#                     os.remove(pbill.file.path)    
-#                 pbill.file = request.FILES['file']
+    return render(request,'edit_recurring_bills.html',context)
 
-#             pbill.save()
 
-#             statment2=vendor_statment.objects.get(cid=cmp1,pbill=pbill)
-#             statment2.vendor = pbill.vendor_name
-#             statment2.cid = cmp1
-#             statment2.transactions = "Billed"
-#             statment2.pbill = pbill
-#             statment2.details = pbill.bill_no
-#             statment2.details2 = pbill.reference
-#             statment2.date = pbill.date
-#             statment2.balance = pbill.balance_due
-#             statment2.payments = pbill.grand_total
-#             statment2.save()
-
-#             pl3=profit_loss.objects.get(cid=cmp1,pbill=pbill)
-#             pl3.details = pbill.vendor_name
-#             pl3.cid = cmp1
-#             acctype = "Cost of Goods Sold"
-#             pl3.transactions = "Billed"
-#             pl3.accname = "Cost of Goods Sold"
-#             pl3.pbill = pbill
-#             pl3.details1 = pbill.bill_no
-#             pl3.details2 = pbill.reference
-#             pl3.date = pbill.date
-#             pl3.payments = pbill.sub_total
-#             pl3.save()
-
-#             bs3=balance_sheet.objects.get(cid=cmp1,bill=pbill,account='Accounts Payable(Creditors)')
-#             bs3.details = pbill.vendor_name
-#             bs3.cid = cmp1
-#             bs3.acctype = "Accounts Payable(Creditors)"
-#             bs3.transactions = "Billed"
-#             bs3.account = "Accounts Payable(Creditors)"
-#             bs3.bill = pbill
-#             bs3.details1 = pbill.bill_no
-#             bs3.details2 = pbill.reference
-#             bs3.date = pbill.date
-#             bs3.payments = pbill.grand_total
-#             bs3.save()
-
-#             sourceofsupply=request.POST['sourceofsupply']
-#             if sourceofsupply == cmp1.state:
-#                 bs4=balance_sheet.objects.get(cid=cmp1,bill=pbill,account='Input CGST')
-#                 bs4.details = pbill.vendor_name
-#                 bs4.cid = cmp1
-#                 bs4.acctype = "Current Assets"
-#                 bs4.transactions = "Billed"
-#                 bs4.account = "Input CGST"
-#                 bs4.bill = pbill
-#                 bs4.details1 = pbill.bill_no
-#                 bs4.details2 = pbill.reference
-#                 bs4.date = pbill.date
-#                 bs4.payments = pbill.cgst
-#                 bs4.save()
-
-#                 bs5=balance_sheet.objects.get(cid=cmp1,bill=pbill,account='Input SGST')
-#                 bs5.details = pbill.vendor_name
-#                 bs5.cid = cmp1
-#                 bs5.acctype = "Current Assets"
-#                 bs5.transactions = "Billed"
-#                 bs5.account = "Input SGST"
-#                 bs5.bill = pbill
-#                 bs5.details1 = pbill.bill_no
-#                 bs5.details2 = pbill.reference
-#                 bs5.date = pbill.date
-#                 bs5.payments = pbill.sgst
-#                 bs5.save()
-#             else:
-#                 bs6=balance_sheet.objects.get(cid=cmp1,bill=pbill,account='Input IGST')
-#                 bs6.details = pbill.vendor_name
-#                 bs6.cid = cmp1
-#                 bs6.acctype = "Current Assets"
-#                 bs6.transactions = "Billed"
-#                 bs6.account = "Input IGST"
-#                 bs6.bill = pbill
-#                 bs6.details1 = pbill.bill_no
-#                 bs6.details2 = pbill.reference
-#                 bs6.date = pbill.date
-#                 bs6.payments = pbill.igst
-#                 bs6.save()
+def change_recurring_bills(request,id):
             
-#             bs7=balance_sheet.objects.get(cid=cmp1,bill=pbill,account='TDS Payable')
-#             bs7.details = pbill.vendor_name
-#             bs7.cid = cmp1
-#             bs7.acctype = "Current Liabilities"
-#             bs7.transactions = "Billed"
-#             bs7.account = "TDS Payable"
-#             bs7.bill = pbill
-#             bs7.details1 = pbill.bill_no
-#             bs7.details2 = pbill.reference
-#             bs7.date = pbill.date
-#             bs7.payments = pbill.tcs_amount
-#             bs7.save()
+        r_bill=recurring_bills.objects.get(billid=id)
 
-#             items = request.POST.getlist("items[]")
-#             hsn = request.POST.getlist("hsn[]")
-#             quantity = request.POST.getlist("quantity[]")
-#             rate = request.POST.getlist("rate[]")
-#             tax = request.POST.getlist("tax[]")
-#             amount = request.POST.getlist("amount[]")
+        if request.method == 'POST':
 
-#             bitmid = request.POST.getlist("id[]")
+            r_bill.vendor_name = request.POST['vendor_name']
+            pbill.billing_address = request.POST['billing_address']
+            pbill.bill_no= request.POST['bill_no']
+            pbill.sourceofsupply=request.POST['sourceofsupply']
+            pbill.destiofsupply=request.POST['destiofsupply']
+            pbill.branch=request.POST['branch']
+            pbill.reference=request.POST['reference']
+            pbill.contact_name=request.POST['contact_name']
+            pbill.deliverto=request.POST['deliverto']
+            pbill.date=request.POST['date']
+            pbill.deliver_date=request.POST['deliver_date']
+            pbill.credit_period=request.POST['credit_period']
+            pbill.due_date=request.POST['due_date']
+            pbill.sub_total=request.POST['sub_total']
+            pbill.discount=request.POST['discount']
+            pbill.sgst=request.POST['sgst']
+            pbill.cgst=request.POST['cgst']
+            pbill.igst=request.POST['igst']
+            pbill.tax_amount=request.POST['tax_amount']
+            pbill.tcs=request.POST['tcs']
+            pbill.tcs_amount=request.POST['tcs_amount']
+            pbill.balance_due=request.POST['balance_due']
+            pbill.amtrecvd=request.POST['amtrecvd']
+            pbill.round_off=request.POST['round_off']
+            pbill.grand_total=request.POST['grand_total']
+            pbill.note=request.POST['note']
+
+            if len(request.FILES) != 0:
+                if len(r_bill.document) > 0  :
+                    os.remove(r_bill.file.path)    
+                r_bill.document = request.FILES['file']
+
+            r_bill.save()          
+
+         
+            items = request.POST.getlist("items[]")
+            hsn = request.POST.getlist("hsn[]")
+            quantity = request.POST.getlist("quantity[]")
+            rate = request.POST.getlist("rate[]")
+            tax = request.POST.getlist("tax[]")
+            amount = request.POST.getlist("amount[]")
+
+            bitmid = request.POST.getlist("id[]")
 
             
 
-#             billid=purchasebill.objects.get(billid=pbill.billid,cid=cmp1)
+            billid=purchasebill.objects.get(billid=pbill.billid,cid=cmp1)
 
-#             if len(items)==len(hsn)==len(quantity)==len(rate)==len(tax)==len(amount):
+            if len(items)==len(hsn)==len(quantity)==len(rate)==len(tax)==len(amount):
              
-#                 mapped=zip(items,hsn,quantity,rate,tax,amount)
-#                 mapped=list(mapped)
+                mapped=zip(items,hsn,quantity,rate,tax,amount)
+                mapped=list(mapped)
                 
-#                 count = purchasebill_item.objects.filter(bill=pbill.billid).count()
+                count = purchasebill_item.objects.filter(bill=pbill.billid).count()
                 
-#                 for ele in mapped:
+                for ele in mapped:
                     
-#                     if int(len(items))>int(count):
+                    if int(len(items))>int(count):
 
-#                         pbillss=purchasebill.objects.get(billid=id)
-#                         cmp1 = company.objects.get(id=request.session['uid'])
+                        pbillss=purchasebill.objects.get(billid=id)
+                        cmp1 = company.objects.get(id=request.session['uid'])
                         
 
-#                         billAdd,created = purchasebill_item.objects.get_or_create(items = ele[0],hsn = ele[1],quantity=ele[2],rate=ele[3],
-#                         tax=ele[4],amount=ele[5],bill_id=pbillss.billid,cid=cmp1)
+                        billAdd,created = purchasebill_item.objects.get_or_create(items = ele[0],hsn = ele[1],quantity=ele[2],rate=ele[3],
+                        tax=ele[4],amount=ele[5],bill_id=pbillss.billid,cid=cmp1)
                         
-#                         itemqty = itemtable.objects.get(name=ele[0],cid=cmp1)
-#                         if itemqty.stock != 0:
-#                             temp=0
-#                             temp = itemqty.stock 
+                        itemqty = itemtable.objects.get(name=ele[0],cid=cmp1)
+                        if itemqty.stock != 0:
+                            temp=0
+                            temp = itemqty.stock 
 
-#                             temp = temp+int(ele[2])
-#                             itemqty.stock =temp
-#                             itemqty.save()
+                            temp = temp+int(ele[2])
+                            itemqty.stock =temp
+                            itemqty.save()
 
-#                         elif itemqty.stock == 0:
-#                             temp=0
-#                             temp = itemqty.stock 
-#                             temp = temp+int(ele[2])
-#                             itemqty.stock =temp
-#                             itemqty.save()
+                        elif itemqty.stock == 0:
+                            temp=0
+                            temp = itemqty.stock 
+                            temp = temp+int(ele[2])
+                            itemqty.stock =temp
+                            itemqty.save()
 
-#                     else:
+                    else:
                       
-#                         dbs=purchasebill_item.objects.get(bill =pbill.billid,items = ele[0],hsn=ele[1])
-#                         created = purchasebill_item.objects.filter(bill =dbs.bill,items = ele[0],hsn=ele[1]).update(items = ele[0],hsn = ele[1],quantity=ele[2],rate=ele[3],
-#                         tax=ele[4],amount=ele[5])
-#                         itemqty = itemtable.objects.get(name=ele[0],cid=cmp1)
-#                         if itemqty.stock != 0:
-#                             temp=0
-#                             temp = itemqty.stock 
+                        dbs=purchasebill_item.objects.get(bill =pbill.billid,items = ele[0],hsn=ele[1])
+                        created = purchasebill_item.objects.filter(bill =dbs.bill,items = ele[0],hsn=ele[1]).update(items = ele[0],hsn = ele[1],quantity=ele[2],rate=ele[3],
+                        tax=ele[4],amount=ele[5])
+                        itemqty = itemtable.objects.get(name=ele[0],cid=cmp1)
+                        if itemqty.stock != 0:
+                            temp=0
+                            temp = itemqty.stock 
 
-#                             temp = temp+int(ele[2])
-#                             itemqty.stock =temp
-#                             itemqty.save()
+                            temp = temp+int(ele[2])
+                            itemqty.stock =temp
+                            itemqty.save()
 
-#                         elif itemqty.stock == 0:
-#                             temp=0
-#                             temp = itemqty.stock 
-#                             temp = temp+int(ele[2])
-#                             itemqty.stock =temp
-#                             itemqty.save()
+                        elif itemqty.stock == 0:
+                            temp=0
+                            temp = itemqty.stock 
+                            temp = temp+int(ele[2])
+                            itemqty.stock =temp
+                            itemqty.save()
 
-#             return redirect('viewbill',id)
-#         return render(request,'app1/gobilling.html',{'cmp1': cmp1})
-#     return redirect('/') 
+            return redirect('viewbill',id)
+        return render(request,'app1/gobilling.html',{'cmp1': cmp1})
 
-# @login_required(login_url='regcomp')
-# def deletebill(request, id):
-#     if 'uid' in request.session:
-#         if request.session.has_key('uid'):
-#             uid = request.session['uid']
-#         else:
-#             return redirect('/')
-#         cmp1 = company.objects.get(id=request.session['uid'])
-#         pbill=purchasebill.objects.get(billid=id)
-#         bitem = purchasebill_item.objects.all().filter(bill=id)
-#         stm = vendor_statment.objects.all().filter(pbill=id)
-#         bls = balance_sheet.objects.all().filter(bill=id)
-#         pl = profit_loss.objects.all().filter(pbill=id)
-#         pbill.delete() 
-#         bitem.delete() 
-#         stm.delete() 
-#         bls.delete() 
-#         pl.delete() 
-#         return redirect('gobilling')
-#     return redirect('gobilling')
+
+@login_required(login_url='login')
+def delete_recurring_bills(request, id):
+
+    company = company_details.objects.get(user = request.user)
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(recur_bills=id)
+
+    rbill.delete() 
+    billitem.delete() 
+     
+    return redirect('recurring_bill')
 
 @login_required(login_url='login')
 def get_vendordet(request):
@@ -3421,14 +3380,14 @@ def get_customerdet(request):
 
     company= company_details.objects.get(user = request.user)
 
-    name = request.POST.get('name')
     id = request.POST.get('id')
-    vdr = customer.objects.get(user=company.user_id,customerName = name,id=id)
+
+    vdr = customer.objects.get(user=company.user_id,id=id)
     email = vdr.customerEmail
-    # gstin = vdr.GSTIN
+    gstin = 0
     gsttr = vdr.GSTTreatment
 
-    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr},safe=False)
+    return JsonResponse({'customer_email' :email, 'gst_treatment':gsttr, 'gstin': gstin},safe=False)
 
 @login_required(login_url='login')
 def recurbills_vendor(request):
@@ -3504,7 +3463,6 @@ def recurbills_pay(request):
 
         name=request.POST.get('name')
         days=request.POST.get('days')
-        print(name)
         
         u = User.objects.get(id = request.user.id)
 
@@ -3559,7 +3517,6 @@ def recurbills_item(request):
 
     company = company_details.objects.get(user = request.user)
 
-    print(request.user)
     if request.method=='POST':
         type=request.POST.get('type')
         name=request.POST['name']
@@ -3575,7 +3532,6 @@ def recurbills_item(request):
 
         history="Created by " + str(request.user)
         user = User.objects.get(id = request.user.id)
-        print(user)
 
         item=AddItem(type=type,Name=name,p_desc=cost_desc,s_desc=sell_desc,s_price=sell_price,p_price=cost_price,
                     user=user,creat=history,interstate=inter,intrastate=intra)
@@ -3588,7 +3544,6 @@ def recurbills_item(request):
             units=Unit.objects.get(id=ut)
             it.unit = units
             it.save()
-            # AddItem(unit=units).save()
         if sell_acc:
             sel=Sales.objects.get(id=sell_acc)
             it.sales = sel
@@ -3660,7 +3615,6 @@ def get_cust_state(request):
     user = User.objects.get(id=request.user.id)
     if request.method=='POST':
         id=request.POST.get('id')
-        print(id)
 
         cust = customer. objects.get( id = id, user = user)
          

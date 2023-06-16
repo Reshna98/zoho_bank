@@ -148,23 +148,27 @@ urlpatterns = [
 
 
     #---------Nithya------Recurring Bills----------------
-    path('recurring_bills',views.recurring_bills,name='recurring_bills'),
+    path('recurring_bill',views.recurring_bill,name='recurring_bill'),
+
+    path('recur_custasc',views.recur_custasc,name='recur_custasc'),
+    path('recur_custdesc',views.recur_custdesc,name='recur_custdesc'),
+    path('recur_vendorasc',views.recur_vendorasc,name='recur_vendorasc'),
+    path('recur_vendordesc',views.recur_vendordesc,name='recur_vendordesc'),
+    path('recur_profileasc',views.recur_profileasc,name='recur_profileasc'),
+    path('recur_profiledesc',views.recur_profiledesc,name='recur_profiledesc'),
     path('add_recurring_bills',views.add_recurring_bills,name='add_recurring_bills'),
     path('create_recurring_bills',views.create_recurring_bills,name='create_recurring_bills'),
-    # path('edit_recurring_bills',views.edit_recurring_bills,name='edit_recurring_bills'),
-
+    path('edit_recurring_bills/<id>',views.edit_recurring_bills,name='edit_recurring_bills'),
+    path('change_recurring_bills/<id>',views.change_recurring_bills,name='change_recurring_bills'),
+    path('delete_recurring_bills/<id>',views.delete_recurring_bills,name='delete_recurring_bills'),
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
     path('get_customerdet',views.get_customerdet,name='get_customerdet'),
-
     path('recurbills_vendor',views.recurbills_vendor,name='recurbills_vendor'),
     path('vendor_dropdown',views.vendor_dropdown,name = 'vendor_dropdown'),
-
     path('recurbills_pay',views.recurbills_pay,name='recurbills_pay'),
     path('pay_dropdown',views.pay_dropdown,name = 'pay_dropdown'),
-
     path('recurbills_unit',views.recurbills_unit,name='recurbills_unit'),
     path('unit_dropdown',views.unit_dropdown,name = 'unit_dropdown'),
-
     path('recurbills_item',views.recurbills_item,name='recurbills_item'),
     path('item_dropdown',views.item_dropdown ,name = 'item_dropdown'),
     path('recurbills_account',views.recurbills_account,name='recurbills_account'),

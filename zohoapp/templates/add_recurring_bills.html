@@ -1,7 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+{% load tz %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<!-- <link rel="stylesheet" href="{% static 'assets/css/style.css' %}"> -->
+
 
 <style>
 
@@ -92,7 +95,8 @@
   </div>
 
   <div class="card radius-15 p-5">
-    <form action="{% url 'create_recurring_bills' %}" class="mt-2 mb-4">
+    <form action="{% url 'create_recurring_bills' %}" class="mt-2 mb-4" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
           <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
@@ -113,7 +117,7 @@
           <label for="email_inp">Vendor Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="email_inp" name="email_inp">
+          <input type="text" class="form-control" id="email_inp" name="email_inp">
         </div>
       </div>
 
@@ -122,7 +126,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="gst_trt_inp" name="gst_trt_inp">
+          <input type="text" class="form-control" id="gst_trt_inp" name="gst_trt_inp">
         </div>
       </div>
 
@@ -131,7 +135,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="gstin_inp" name="gstin_inp">
+          <input type="text" class="form-control"  id="gstin_inp" name="gstin_inp">
         </div>
       </div>
 
@@ -193,7 +197,7 @@
         </div>
 
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="prof_name" name="prof_name">
+          <input type="text" class="form-control"  id="prof_name" name="prof_name">
         </div>
       </div>
 
@@ -204,7 +208,7 @@
 
         <div class="col-md-6">
           <div class="d-flex">
-            <select class="form-control" required name="repeat">
+            <select class="form-control"  name="repeat">
 
                 <option selected value="1 Week">Week</option>
                 <option value="2 Weeks">2 Weeks</option>
@@ -228,7 +232,7 @@
             <label for="date1">Starts On</label>
           </div>
           <div class="col-md-3">
-            <input type="date" class="form-control" required id="date1" name="start_date">
+            <input type="date" class="form-control" id="date1" name="start_date">
           </div>
       </div>
       <div class="row mt-2">
@@ -236,7 +240,7 @@
           <label for="date2">Ends On</label>
         </div>
         <div class="col-md-3">
-          <input type="date" class="form-control" required id="date2" name="end_date">
+          <input type="date" class="form-control" id="date2" name="end_date">
         </div>
         <div class="col-md-3">
           <input type="checkbox" id="never-expire-checkbox" onchange="toggleDateInput()" />
@@ -250,7 +254,7 @@
         </div>
         <div class="col-md-6">
           <div class="d-flex">
-            <select class="form-control" id="terms" required name="terms">
+            <select class="form-control" id="terms" name="terms">
               {% for p in payments %}
                 <option selected value="{{p.id}} {{p.Terms}} {{ p.days}}">{{p.Terms}}</option>
               {% endfor %}
@@ -303,7 +307,7 @@
           <label for="cemail_inp">Customer Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cemail_inp" name="cemail_inp">
+          <input type="text" class="form-control"  id="cemail_inp" name="cemail_inp"  >
         </div>
       </div>
 
@@ -312,7 +316,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cgst_trt_inp" name="cgst_trt_inp">
+          <input type="text" class="form-control" id="cgst_trt_inp" name="cgst_trt_inp"  >
         </div>
       </div>
 
@@ -321,7 +325,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" required id="cgstin_inp" name="cgstin_inp">
+          <input type="text" class="form-control"  id="cgstin_inp" name="cgstin_inp" >
         </div>
       </div>
 
@@ -508,10 +512,9 @@
       <div class="row mt-5 mb-3">
         <center>
           <input type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
-                  style="width: 200px; text-align: center ;" value="SAVE CHANGES">
+                  style="width: 200px; text-align: center ;" value="SAVE CHANGES" id="save">
         </center>
       </div>
-      
     </form>
 
     <div class="modal fade" id="newvendor">
@@ -2024,6 +2027,7 @@
       
       if (checkbox.checked) {
           dateInput.disabled = true;
+         
           $("#terms").val("recpt");
       } 
       else {
@@ -2124,18 +2128,18 @@ $(document).ready(function() {
                 if( data.gst_treatment == 'Registered Business-Regular Business that is registered under GST'){
                   $("#cgstin_row").removeClass('d-none');
                   $("#cgstin_row").addClass('d-flex');
-                  // $('#cgstin_inp').val(' '+ data.gstin);
+                  $('#cgstin_inp').val(' '+ data.gstin);
 
                 }
                 else if( data.gst_treatment == 'Registered Business-Composition Business that is registered under the Composition scheme in GST'){
                   $("#cgstin_row").removeClass('d-none');
                   $("#cgstin_row").addClass('d-flex');
-                  // $('#cgstin_inp').val(' '+ data.gstin);
+                  $('#cgstin_inp').val(' '+ data.gstin);
                 }
                 else if( data.gst_treatment == 'Overseas- Persons with who you do import or exports of supplies outside india'){
                   $("#cgstin_row").removeClass('d-none');
                   $("#cgstin_row").addClass('d-flex');
-                  // $('#cgstin_inp').val(' '+ data.gstin);
+                  $('#cgstin_inp').val(' '+ data.gstin);
                 }
                 
                 else{
@@ -2226,7 +2230,7 @@ $(document).ready(function() {
           </td>
             
           <td>
-            <button type="button" id="${roinc}" class="btn btn-outline-primary text-center mb-1 p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
+            <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
                 style = "width:25px; height: 25px; border-radius: 90% " >
               <i class="fa-solid fa-clone"></i>
             </button> <br>
@@ -2245,6 +2249,18 @@ $(document).ready(function() {
   $(document).on('click','.remove_row',function(){
     var row_id = $(this).attr("id");
     $('#addr0'+row_id+'').remove();
+  });
+
+
+
+  $(document).on('click','.clone_row',function(){
+      var row_id = $(this);
+      var clickedRow = row_id.parentNode.parentNode;
+      console.log(clickedRow);
+
+    var newRow = clickedRow.cloneNode(true);
+
+    clickedRow.parentNode.insertBefore(newRow, clickedRow.nextSibling);
   });
 
 
@@ -2680,7 +2696,7 @@ $(document).on("change", "#customer", function(){
     $("#tax1").addClass('d-none');
 
     for(var i =1; i<= count;i++ ){
-      // console.log(i);
+      
       $("#selecttax" + i).removeClass('d-none');
       $("#selecttax" + i).addClass('d-flex');
       $("#tax1" + i).removeClass('d-flex');
@@ -2707,22 +2723,15 @@ $(document).ready(function() {
   });
 });
 
-  // $(document).on('change','#qty1',function(){
-  //   var rate = $("#rate").val();
-  //   var qnty = $("#qty1").val();
-      
-  //   var amount = rate*qnty;
-  //   $("#amount").val(amount);
-  // });
 
-
-  function showRate(id,val1) {
+  function showRate(id,name) {
+    
     var n = id[4];
     $.ajax({
       url: "{% url 'get_rate' %}",
       type : 'POST',
       data:{
-          id : val1,
+          id : name,
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
     
@@ -3068,12 +3077,12 @@ $(document).ready(function() {
   });
 
   $(document).on("change", "#addcharge", function(){
-
-    $("#shipcharge").val($("#addcharge").val());
+      $("#shipcharge").val($("#addcharge").val());
   });
+
   $(document).on("change", "#add_round_off", function(){
     console.log($("#add_round_off").val())
-    var round = parseFloat($("#grandtotal").val()) - parseFloat($("#add_round_off").val()) 
+    var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
     $("#round_off").val(round);
   });
 
@@ -3108,6 +3117,24 @@ $(document).ready(function() {
         $("#grandtotal").val(grand_total);
       }
     }
+  });
+
+
+  $(document).on("click",'#save',function(){
+    console.log("clicked")
+
+    var input1 = document.getElementById("disc");
+    if (input1.value === "") {
+      input1.value = 0;
+    }
+    var input2 = document.getElementById("date1");
+    if (input2.value === "") {
+      input2.value = "{% now 'Y-m-d' %}";
+    }
+    // var input3 = document.getElementById("date2");
+    // if (input3.value === "") {
+    //   input3.value = '99-99-9999';
+    // }
   });
 
 </script>

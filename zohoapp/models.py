@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime,date
+
 
 class company_details(models.Model):
 
@@ -409,8 +411,8 @@ class recurring_bills(models.Model):
     vendor_name = models.CharField(max_length=100,null=True,blank=True)
     customer_name = models.CharField(max_length=100,null=True,blank=True)
     repeat_every = models.CharField(max_length=100,null=True,blank=True)
-    start_date=models.DateField()
-    end_date=models.DateField()
+    start_date=models.DateField(null=True,blank=True)
+    end_date=models.DateField(null=True,blank=True)
     payment_terms = models.CharField(max_length=100,null=True,blank=True)
     sub_total = models.FloatField(null=True,blank=True)
     igst = models.FloatField(null=True,blank=True)
@@ -421,7 +423,8 @@ class recurring_bills(models.Model):
     adjustment = models.FloatField(null=True,blank=True)
     grand_total = models.FloatField(null=True,blank=True)
     note = models.CharField(max_length=255,null=True,blank=True)
-    document=models.FileField(upload_to='doc/recurring_bills')
+    document=models.FileField(upload_to='doc/recurring_bills',null=True,blank=True)
+    
 
 class recurring_bills_items (models.Model):
 
