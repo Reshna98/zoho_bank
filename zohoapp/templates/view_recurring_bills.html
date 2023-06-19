@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+
+<style>
+    #details-list {
+        float: left;
+        width: 30%;
+    }
+    
+    #quick-template {
+        float: left;
+        width: 70%;
+    }
+    a{
+        list-style: none;
+        color: azure;
+    }
+    a:hover{
+    color: rgb(218, 164, 48);
+    }
+    li{
+        list-style: none;
+    }
+    
+</style>
+
+<div class="container-fulid containerprof">
+  <div id="details-list" style="border-right: 0.5px solid; color: dimgray;">
+    <div class="card radius-5">
+        <div class="card-body">
+            <div class="card-title">
+                <div class="row p-3">
+                    <div class="col-md-8">
+                        <h5 class="mb-0 text-uppercase text-right">Recurring Bills</h5>
+                    </div>
+                    <div class="col-md-1 ">
+                        <a href="{% url 'add_recurring_bills' %}" class="btn btn-primary fa fa-plus text-right px-3 py-1" 
+                        role="button" ></a> 
+                    </div>
+                    <div class="col-md-1"></div>
+                    <div class="col-md-1 ml-1">
+                        <a class="btn text-center btn-primary fa fa-filter px-3 py-1" data-toggle="dropdown" role="button">
+                        </a>
+                        <div class="dropdown-menu ">
+                            <a class="dropdown-item" href="{% url 'recurring_bill' %}">All</a>
+                            <a class="dropdown-item" href="{% url 'recur_custasc' %}">Customer A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_custdesc' %}">Customer Z-A</a>
+                            <a class="dropdown-item" href="{% url 'recur_vendorasc' %}">Vendor A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_vendordesc' %}">Vendor Z-A</a>
+                            <a class="dropdown-item" href="{% url 'recur_profileasc' %}">Profile A-Z</a>
+                            <a class="dropdown-item" href="{% url 'recur_profiledesc' %}">Profile Z-A</a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card radius-5 mb-5">
+        <div class="card-body" >
+            <div class="row mt-1">
+                <ul>
+                    {% for b in recur_bills %}
+                    <li class="p-2 text-capitalize" id="link_details">
+                        <a href="" ><input type="hidden" hidden id="id_details" value="{{b.id}}"> {{b.profile_name}} </a> <br>
+                        <label class="px-5 mt-2 mx-5 input-group " disabled>₹ {{ b.grand_total }} </label>
+                    </li>
+                    {% endfor %}
+                    
+                </ul> 
+            </div>
+        </div>
+    </div>
+  </div>
+
+  <div class="page-content" >
+    <div class="card radius-15">
+        <div class="card-body">
+
+            <div id="quick-template" class="p-3"> </div>
+        </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+<script>
+
+
+    $(document).ready(function(){
+        $("#link_details").click(function(){
+            console.log("clicked");
+
+            var billid = $('#id_details').val();
+            console.log(billid);
+            $.ajax({
+                url:"{% url 'view_recurring_section'%}",
+                type:"POST",
+                data: {
+                    id : billid,
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+
+                    
+                },
+                success: function (data) {
+                    console.log(data);
+                    $("#quick-template").html(`<div class="card-title">
+                                                    <center><h2 class="mb-0">{{ recur_bill.profile_name }}</h2> </center><hr>
+                                                </div>
+                                                <div class="btn-group" style="float: right; ">
+                                                    <a href="" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;"> Edit</a>
+
+                                                    <a href=""  style="padding: 10px; margin-top: -5px; cursor: pointer;" > 
+                                                        <i class="fa fa-trash-o delete"> </i>
+                                                    </a>
+                                                    <a class="fa fa-print" style="padding: 10px; cursor: pointer;"  href="" > PDF</a>
+                                                </div>
+                                            `);
+                    
+                }
+            
+            });
+        });
+    }); 
+
+</script>
+
+{% endblock %}

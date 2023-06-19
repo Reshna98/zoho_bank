@@ -149,7 +149,6 @@ urlpatterns = [
 
     #---------Nithya------Recurring Bills----------------
     path('recurring_bill',views.recurring_bill,name='recurring_bill'),
-
     path('recur_custasc',views.recur_custasc,name='recur_custasc'),
     path('recur_custdesc',views.recur_custdesc,name='recur_custdesc'),
     path('recur_vendorasc',views.recur_vendorasc,name='recur_vendorasc'),
@@ -161,6 +160,8 @@ urlpatterns = [
     path('edit_recurring_bills/<id>',views.edit_recurring_bills,name='edit_recurring_bills'),
     path('change_recurring_bills/<id>',views.change_recurring_bills,name='change_recurring_bills'),
     path('delete_recurring_bills/<id>',views.delete_recurring_bills,name='delete_recurring_bills'),
+    path('view_recurring_bills',views.view_recurring_bills,name='view_recurring_bills'),
+    path('view_recurring_section',views.view_recurring_section,name='view_recurring_section'),
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
     path('get_customerdet',views.get_customerdet,name='get_customerdet'),
     path('recurbills_vendor',views.recurbills_vendor,name='recurbills_vendor'),

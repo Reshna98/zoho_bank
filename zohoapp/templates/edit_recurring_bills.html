@@ -102,7 +102,7 @@
         </div>
         <div class="col-md-6">
           <select name="vendor" id="vendor" class="form-control" >
-            <option value="{{recur_bills.vendor_name}}" selected>{{recur_bills.vendor_name}}</option>
+            <option value="{{recur_bills.vendor_name}} {{vend.id}}" selected>{{recur_bills.vendor_name}}</option>
 
             <div class="dropdown-divider"></div>
             {% for v in vendor %}
@@ -293,7 +293,7 @@
         </div>
         <div class="col-md-6">
           <select name="customer" id="customer" class="form-control" >
-            <option value="{{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
+            <option value="{{c.id}} {{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
             {% for c in customer %}
             <option value="{{c.id}} {{ c.customerName }} ">{{ c.customerName }}</option>
             {% endfor %}
@@ -3118,6 +3118,25 @@ $(document).ready(function() {
         $("#grandtotal").val(grand_total);
       }
     }
+  });
+
+  $(document).on("click",'#save',function(){
+    console.log("clicked")
+
+    var input1 = document.getElementById("disc");
+    if (input1.value === "") {
+      input1.value = 0;
+    }
+    var input2 = document.getElementById("date1");
+    if (input2.value === "") {
+      input2.value = "{% now 'Y-m-d' %}";
+    }
+
+    var input3 = document.getElementById("tax1");
+    var input4 = document.getElementById("igst");
+    var input5 = document.getElementById("cgst");
+    var input6 = document.getElementById("tsgst");
+
   });
 
 </script>

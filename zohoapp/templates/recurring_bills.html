@@ -102,6 +102,13 @@
         outline: none;
         
     }
+    a{
+        list-style: none;
+        color: azure;
+    }
+     a:hover{
+        color: rgb(218, 164, 48);
+     }
 </style>
 <div class="container-fluid containerprof" >
     
@@ -166,12 +173,14 @@
                         </thead>
                         <tbody>
                             {% for r in recur_bill %}
-                                <tr onclick="window.location='';">
-                                    <td>{{ r.start_date }}</td>
-                                    <td>{{ r.profile_name }}</td>
-                                    <td class="text-capitalize">{{ r.vendor_name }}</td>
-                                    <td class="text-capitalize">{{ r.customer_name }}</td>
-                                    <td>{{ r.grand_total }}</td>
+                                <tr>
+                                    <td><a href="{% url 'view_recurring_bills' %}">{{ r.start_date }}</a></td>
+                                    <td><a href="{% url 'view_recurring_bills' %}">{{ r.profile_name }}</a></td>
+                                    <td class="text-capitalize">
+                                        <a href="{% url 'view_recurring_bills' %}">{{ r.vendor_name }}</a>
+                                    </td>
+                                    <td class="text-capitalize"><a href="{% url 'view_recurring_bills'%}">{{ r.customer_name }}</a></td>
+                                    <td><a href="{% url 'view_recurring_bills' %}">{{ r.grand_total }}</a></td>
                                     <td class="text-right">
                                         <a href="{% url 'edit_recurring_bills' r.id %}" 
                                         data-toggle="tooltip" data-placement="top" title="Edit Recurring Expense">edit

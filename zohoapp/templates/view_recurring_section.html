@@ -1,0 +1,44 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<div class="page-content" >
+
+    <div class="card radius-15">
+        <div class="card-body">
+            <div class="card-title">
+                <center><h2 class="mb-0">{{ recur_bill.profile_name }}</h2> <h4></h4></center>
+                <hr>
+            </div>
+            <div class="btn-group" style="float: right; ">
+
+               
+            <a href="{% url 'edit_recurring_bills' recur_bill.id %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;"> Edit</a>
+
+            
+            <a href="{% url 'delete_recurring_bills' recur_bill.id %}"  style="padding: 10px; margin-top: -5px; cursor: pointer;" > 
+                <i class="fa fa-trash-o delete"> </i>
+            </a>
+
+                
+            
+            <a class="fa fa-print" style="padding: 10px; cursor: pointer;"  href="" > PDF</a>
+
+            
+        </div>
+        
+                   
+            <div class="dropdown  " style="padding: 10px; cursor: pointer; margin-top: -8px;">
+                <li  class=" dropdown-toggle fa fa-download  "data-toggle="dropdown"> &nbsp;Attach file
+            </li>
+                <ul class="dropdown-menu" style="background-color: black;">
+                    <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal" data-target="#exampleModal">Attach file</a>
+               
+                    
+                </ul>
+        </div>           
+          
+        
+   
+       
+        </div>    
+        </div>
+    </div>
+
