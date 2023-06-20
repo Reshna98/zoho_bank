@@ -3324,32 +3324,34 @@ def delete_recurring_bills(request, id):
 
     
 @login_required(login_url='login')
-def view_recurring_bills(request):
+def view_recurring_bills(request,id):
 
     company = company_details.objects.get(user = request.user)
     bills = recurring_bills.objects.filter(user = request.user)
-
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
     context = {
                 'company' : company,
                 'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
             }
 
     return render(request, 'view_recurring_bills.html',context)
 
 
-def view_recurring_section(request):
+# def view_recurring_section(request):
 
-    id = request.POST.get('id')
+#     id = request.POST.get('id')
 
-    company = company_details.objects.get(user = request.user)
-    rbill=recurring_bills.objects.get(user = request.user, id= id)
-    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
-    context = {
-                    'company' : company,
-                    'recur_bill' : rbill,
-                    'bill_item' : billitem,
-                }
-    return JsonResponse(data)
+#     rbill=recurring_bills.objects.get(user = request.user, id= id)
+#     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+#     context = {      'prof_name':rbill.profile_name,
+#                     # 'recur_bill' : rbill,
+#                     # 'bill_item' : billitem,
+#                 }
+#     return JsonResponse(context)
 
 
 @login_required(login_url='login')
