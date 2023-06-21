@@ -111,6 +111,22 @@
      a:hover{
         color: rgb(218, 164, 48);
      }
+     ::-webkit-scrollbar {
+        width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+    
 </style>
 <div class="container-fluid containerprof" >
     
@@ -182,7 +198,7 @@
                                         <a href="{% url 'view_recurring_bills' r.id %}">{{ r.vendor_name }}</a>
                                     </td>
                                     <td class="text-capitalize"><a href="{% url 'view_recurring_bills' r.id %}">{{ r.customer_name }}</a></td>
-                                    <td><a href="{% url 'view_recurring_bills' r.id %}">{{ r.grand_total }}</a></td>
+                                    <td><a href="{% url 'view_recurring_bills' r.id %}">{{ r.grand_total|floatformat:3 }}</a></td>
                                     <td class="text-right">
                                         <!-- <a href="{% url 'edit_recurring_bills' r.id %}" 
                                         data-toggle="tooltip" data-placement="top" title="Edit Recurring Expense">edit

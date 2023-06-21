@@ -16,8 +16,13 @@ from django.http import JsonResponse
 from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
-import pytz
 import os
+
+from django.template.loader import render_to_string
+from weasyprint import HTML
+import tempfile
+from django.db.models import Sum
+
 
 
 def index(request):
@@ -3330,11 +3335,25 @@ def view_recurring_bills(request,id):
     bills = recurring_bills.objects.filter(user = request.user)
     rbill=recurring_bills.objects.get(user = request.user, id= id)
     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
+
     context = {
                 'company' : company,
                 'recur_bills' : bills,
                 'recur_bill' : rbill,
                 'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
 
     return render(request, 'view_recurring_bills.html',context)
@@ -3616,3 +3635,48 @@ def get_cust_state(request):
 
         return JsonResponse({"state": state},safe=False)
 
+def export_pdf(request,id):
+    response = HttpResponse(content_type = 'application/pdf')
+    response['Content-Disposition'] = 'attachment; filename = Recurring_Bills' + \
+                        str(datetime.datetime.now())+'.pdf'
+
+    response['Content-Transfer-Endcoding'] = 'binary'
+
+    company = company_details.objects.get(user = request.user)
+    bills = recurring_bills.objects.filter(user = request.user)
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
+
+    context = {
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
+            }
+    html_string = render_to_string('view_recurring_bills.html',context)
+
+    html = HTML(string=html_string)
+
+    result = html.write_pdf()
+
+    with tempfile .NamedTemporaryFile(delete=True) as output:
+        output.write(result)
+        output.flush()
+        output = open(output.name,'rb')
+        response.write(output.read())
+
+    
+    return response

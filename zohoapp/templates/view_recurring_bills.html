@@ -4,20 +4,29 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
 
 
 <style>
+    .containerprof{
+        min-height: 450px;
+        background-size: contain;
+        display: flex;
+    }
     #details-list {
         float: left;
         width: 30%;
-        background-color:rgb(25, 26, 27);
-        
+        flex: 1;
+        height: 100%;
+        overflow: auto;
     }
     
     #quick-template {
         float: left;
         width: 70%;
+        border-left: 0.5px solid;
+        color: dimgray; 
+        background-color:rgb(25, 26, 27);
     }
     a{
         list-style: none;
@@ -26,21 +35,15 @@
     a:hover{
     color: rgb(218, 164, 48);
     }
-    li{
-        list-style: none;
-    }
+
     .card{
         top: 0;
         bottom: 0;
         left: 0;
         right: 0;
-        /* overflow-y: none;  */
         overflow: auto;
         background-color: transparent;
-    }
-    .containerprof{
-        min-height: 450px;
-        background-size: contain;
+        
     }
 
     .tab {
@@ -94,12 +97,89 @@
     td{
         color: rgba(0, 0, 0, 0.5);
     }
-        
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+        font-size: 1rem;
+        /* line-height: 2.15; */
+        color: azure;
+        /* padding-left: .75em;
+        padding-right: .75em; */
+    }
+    .card-registration .select-arrow {
+        top: 13px;
+    }
+    .bg-grey {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+    @media (min-width: 992px) {
+        .card-registration-2 .bg-grey {
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+    @media (max-width: 991px) {
+        .card-registration-2 .bg-grey {
+            border-bottom-left-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+    }
+   
+    .amnt{
+        border: none;
+        color: #fff;
+        text-align: left;
+        font-size: 20px;
+        background-color: rgba(0, 0, 0, 0.001);
+        /* background-color: darkgrey; */
+    }
+    .tx{
+        border: none;
+        width: 21px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: left;
+        background-color: rgba(0, 0, 0, 0.01);
+    }
+
+    ::-webkit-scrollbar {
+        width: 0.5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555; 
+    }
+
+    .print-only {
+      display: none;
+    }
+
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .print-only, .print-only * {
+        visibility: visible;
+      }
+      .print-only {
+        position: absolute;
+        left: 0;
+        top: 0;
+        /* width: 17cm;
+        height: 23cm;
+        overflow: hidden; */
+      }
+    }
 </style>
 
 <div class="container-fulid containerprof">
-  <div id="details-list" style="border-right: 0.5px solid; color: dimgray; line-height: auto;" class="vh-100">
-    <div class="card radius-5">
+  <div id="details-list" class="vh-100">
+    <div class="card radius-5 p-2" >
         <div class="card-body">
             <div class="card-title">
                 <div class="row p-3">
@@ -132,52 +212,57 @@
     <div class="card radius-5 mb-5">
         <div class="card-body" >
             <div class="row mt-1">
-                <ul>
+                <ol>
                     {% for b in recur_bills %}
-                    <li class="p-2 text-capitalize font-weight-bold" id="link_details" onclick="showDetails()">
+                    <li class="p-2 m-4 text-capitalize" id="link_details" onclick="showDetails()">
                         <a href="{% url 'view_recurring_bills' b.id %}" > {{b.profile_name}} </a> <br>
-                        <label class="px-5 mt-2 mx-4 input-group " disabled>₹ {{ b.grand_total }} </label>
-                    </li><hr>
+
+                        <div class="px-5 mt-1 mx-2input-group ">
+                            <label style="color: rgba(103, 97, 97); font-size: 15px;">{{ b.start_date }} </label>
+                            <label style="color: rgba(103, 97, 97); font-size: 15px;">₹ {{ b.grand_total|floatformat:2 }} </label>
+                        </div>
+                        
+                    </li>
                     {% endfor %}
                     
-                </ul> 
+                </ol> 
             </div>
         </div>
     </div>
   </div>
-  <div class="quick-template ">
-    <div class="card radius-15 " style="border-bottom: 0.5px double #ccc;">
+  <div id="quick-template" class="quick-template">
+    <div class="card radius-15 " style="border-bottom: 0.5px solid; color: dimgray;">
         <div class="card-body">
             <div class="card-title">
                 <h3 class="mb-0" id="prof_name">{{recur_bill.profile_name}}</h3>
             </div>
-        
+            
             <div class="btn-group" style="float: right; ">
                 <a href="" class=" far fa-comment-alt" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="ADD COMMENTS"> </a>
                 <div class=" input-group mx-4">
                     <a href="{% url 'edit_recurring_bills' recur_bill.id %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="EDIT"> </a>
                     <a  href="{% url 'delete_recurring_bills' recur_bill.id %} " class="delete fa fa-trash" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="DELETE"> </a>                
                 </div>
-                <a href="" class="fa fa-file-pdf" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PDF"></a>
-                <a href="" class=" fa fa-print" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PRINT"> </a>
+                <a href="{% url  'export_pdf' recur_bill.id %}" class="fa fa-file-pdf" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PDF"></a>
+                <a href="" class=" fa fa-print" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PRINT" onclick="window.print()"> </a>
                 <a  href=" " class="fa fa-envelope" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="MAIL"> </a>
                 <a href=" " class=" fas fa-paperclip" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="ATTACH"> </a>
             </div>
 
             <div class="tab">
-                <a class="tablinks  mx-2" onclick="openTab(event, 'Template')" role="button"><i class="fa fa-file-word"></i> Template</a>
-                <a class="tablinks " onclick="openTab(event, 'Overview')" role="button"><i class="fa fa-eye"></i> Overview</a>
+                <a class="tablinks p-1  mx-2" onclick="openTab(event, 'Template')" role="button"><i class="fa fa-file-word"></i> Template</a>
+                <a class="tablinks p-1" onclick="openTab(event, 'Overview')" role="button"><i class="fa fa-eye"></i> Overview</a>
             </div>
         </div>
     </div> 
     
     
-    <div id="Template" class="tabcontent p-2 mx-5" style="display: block;">
+    <div id="Template" class=" print-only tabcontent p-2 mx-5" style="display: block;">
         <div  id="toPrint">
             <div class="my-5 page" size="A4" >
                 <div class="p-5">
                     <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
-                        <div class="ribbon-inner ribbon-open">Draft<!----></div>
+                        <div class="ribbon-inner ribbon-open">{{company.company_name}}</div>
                     </div>
                     <section class="top-content bb d-flex justify-content-between">
                         <div class="top-left">
@@ -197,15 +282,20 @@
                                     <p style="color: black;">FROM,</p>
                                     <h5 style="color: black;">{{company.company_name }}</h5>
                                     <p class="address " style="color: black;"> {{company.address}}<br>
-                                        {{company.city}}
+                                        {{company.city}} <br>
                                         {{company.state}}<br>
                                         {{company.pincode}}<br>
                                     </p>
                                 </div>
                                 <div class="col-5">
                                     <p style="color: black;">TO,</p>
-                                    <h5 style="color: black;">{{recur_bill.customer}}</h5>
-                                    <p class="address col-6" style="margin-left: -14px;color: black;" > {{ recur_bill.billingaddress}} </p>
+                                    <h5 style="color: black;">{{customer.customerName}}</h5>
+                                    <p class="address col-6" style="margin-left: -14px;color: black;" > {{customer.Address1}} <br>
+                                        {{customer.Address2}}<br>
+                                        {{customer.city}}<br>
+                                        {{customer.state}}<br>
+                                        {{customer.zipcode}}<br>
+                                    </p>
                                     
                                 </div>
                             </div>
@@ -241,7 +331,7 @@
                                     <td >{{b.quantity}}</td>
                                     <td >{{b.discount}}</td>
                                     <td >{{b.tax}} %</td>
-                                    <td >{{b.amount}}</td>
+                                    <td >{{b.amount|floatformat:2}}</td>
                                 </tr>
                                 {% endfor %}
   
@@ -259,30 +349,30 @@
                                 <table class="table border-0 table-hover">
                                     <tr >
                                         <td style="font-weight:bold">Sub Total :</td>
-                                        <td style="font-weight:bold">{{recur_bill.sub_total}}</td>
+                                        <td style="font-weight:bold">{{recur_bill.sub_total|floatformat:2}}</td>
                                     </tr>
                                     {% if recur_bill.IGST != "" %}
                                     <tr>
                                         <td style="font-weight:bold">IGST :</td>
-                                        <td style="font-weight:bold">{{recur_bill.igst}}</td>
+                                        <td style="font-weight:bold">{{recur_bill.igst|floatformat:2}}</td>
                                     </tr>
                                     {% endif %}
                                     {% if recur_bill.CGST != "" %}
                                     <tr>
                                         <td style="font-weight:bold">CGST :</td>
-                                        <td style="font-weight:bold">{{recur_bill.cgst}}</td>
+                                        <td style="font-weight:bold">{{recur_bill.cgst|floatformat:2}}</td>
                                     </tr>
                                     {% endif %}
                                     {% if recur_bill.SGST != "" %}
                                     <tr>
                                         <td style="font-weight:bold">SGST:</td>
-                                        <td style="font-weight:bold">{{recur_bill.sgst}}</td>
+                                        <td style="font-weight:bold">{{recur_bill.sgst|floatformat:2}}</td>
                                     </tr>
                                     {% endif %}
                                     <tfoot>
                                         <tr>
                                             <td style="font-weight:bold">Total:</td>
-                                            <td style="font-weight:bold ;">{{recur_bill.grand_total}}</td>
+                                            <td style="font-weight:bold ;">{{recur_bill.grand_total|floatformat:2}}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -298,11 +388,191 @@
 
     <!-- overview -->
     <div id="Overview" class="tabcontent">
-    
-    </div>
-      
+        <div class="card radius-15">
+            <div class="card-body">
+                <div class="card-title">
+                    <h6 class="mb-0 mx-5 text-muted">{{ company.company_name }}</h6>
+                    <center><h3 class="mb-0">RECURRING BILLS</h3></center>
+                    <!-- <hr class="hr"> -->
+                </div>
+            </div>
+        </div>
 
-      
+        <div class="card card-registration card-registration-2" style="border-radius: 15px; overflow: none;">
+            <div class="card-body">
+                <div class="row g-0">
+                    <div class="col-md-7">
+                        <div class="p-5">
+                            <p class="text-muted">Bill Amount</p>
+                            <div class="d-flex justify-content-between align-items-center mb-5">
+                                <b>
+                                    <span class="text-muted" style="font-size: 20px;">
+                                        ₹ <input type="text" value="{{ recur_bill.grand_total|floatformat:2 }}" class="amnt "> 
+                                    </span>
+                                </b>
+                            </div>
+                            <hr class="my-4">
+
+                            
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Profile Name :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0">{{ recur_bill.profile_name }}</p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Repeat Every :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0">{{ recur_bill.repeat_every }}</p>
+                                </div>
+                            </div>
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Start Date :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0">{{ recur_bill.start_date |date:'d-m-Y' }}</p>
+                                </div>
+                                
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">End Date :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0">{{ recur_bill.end_date |date:'d-m-Y' }}</p>
+                                </div>
+                            </div>
+                           
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Payment Terms:</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0"> NET {{ recur_bill.payment_terms }}</p>
+                                </div>
+                            </div>
+
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Tax :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <span>{{ gst_or_igst }}</span>&nbsp;&nbsp;<input type="text" value="{{ tax }}" class="tax 1 tx"><span>%</span>
+                                </div>
+                            </div>
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Source of Supply :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0 text-capitalize">{{ recur_bill.source_supply }}</p>
+                                </div>
+
+                            </div>
+                            <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="mb-0 text-muted">Note :</h6>
+                                </div>
+                                <div class="col-md-6 mt-3">
+                                    <p class="mb-0 text-capitalize">{{ recur_bill.note }}</p>
+                                </div>
+
+                            </div>
+                            <!-- <hr class="my-4"> -->
+                        </div>
+                    </div>
+                    <div class="col-md-5 bg-grey" >
+                        <div class="p-5">
+                            <div class="d-block justify-content-between mb-5">
+                                <div class="col-md-12 mt-3">
+                                    <h5 class="text-muted">Vendor :</h5>
+                                </div><br>
+                                <div class="col-md-12 my-0 mx-5">
+                                    <h6 class="text-capitalize" style="color: azure;">{{ recur_bill.vendor_name }}</h6>
+                                </div>
+                            </div>
+                            <div class="d-block justify-content-between mb-5">
+                                <div class="col-md-12 mt-3">
+                                    <h5 class="text-muted">Customer :</h5>
+                                </div><br>
+                                <div class="col-md-12 my-0 mx-5">
+                                    <h6 class="text-capitalize" style="color: azure;">{{ recur_bill.customer_name }}</h6>
+                                </div>
+                            </div>
+                            
+                            <hr class="my-4">
+
+                            <div class="d-flex justify-content-between mb-5">
+                                <div class="col-md-5 mt-3">
+                                    <h6 class="text-muted">Subtotal :</h5><br>
+                                </div>
+                                <div class="col-md-7 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.sub_total|floatformat:2 }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+                            <div class="justify-content-between mb-5 d-none" id="igst">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="text-muted">IGST :</h5><br>
+                                </div>
+                                <div class="col-md-8 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.igst|floatformat:2 }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+                            <div class=" justify-content-between mb-5 d-none" id="cgst">
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="text-muted">CGST :</h5><br>
+                                </div>
+                                <div class="col-md-8 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.cgst|floatformat:2 }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+                            <div class=" justify-content-between mb-5  d-none" id="sgst" >
+                                <div class="col-md-4 mt-3">
+                                    <h6 class="text-muted">SGST :</h5><br>
+                                </div>
+                                <div class="col-md-8 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-5">
+                                <div class="col-md-8 mt-3">
+                                    <h6 class="text-muted">Shipping Charge :</h5><br>
+                                </div>
+                                <div class="col-md-4 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.shipping_charge }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mb-5">
+                                <div class="col-md-6 mt-3">
+                                    <h6 class="text-muted">Grand Total :</h5><br>
+                                </div>
+                                <div class="col-md-6 mt-3 mx-3">
+                                    <input type="text" value="{{ recur_bill.grand_total|floatformat:2 }} INR"
+                                    class="amnt" style="font-size: 16px; color: azure;" readonly> 
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
   </div>
 </div>
 
@@ -378,6 +648,23 @@
                     }
             });
         });
+
+        function showTax(){
+            if('{{gst_or_igst}}' == "GST"){
+                $("#sgst").removeClass('d-none')
+                $('#sgst').addClass('d-flex')
+                $("#cgst").removeClass('d-none')
+                $('#cgst').addClass('d-flex')
+            }
+            else{
+                $("#igst").removeClass('d-none')
+                $('#igst').addClass('d-flex')
+            }
+        }
+        window.onload = showTax;
+
+
+
 </script>
 
 {% endblock %}
