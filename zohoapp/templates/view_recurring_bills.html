@@ -5,7 +5,10 @@
 <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 
+</body>
 
 <style>
     .containerprof{
@@ -209,7 +212,7 @@
             </div>
         </div>
     </div>
-    <div class="card radius-5 mb-5">
+    <div class="card radius-5 mb-5" style="height: auto;">
         <div class="card-body" >
             <div class="row mt-1">
                 <ol>
@@ -243,7 +246,7 @@
                     <a href="{% url 'edit_recurring_bills' recur_bill.id %}" class=" fa fa-pencil" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="EDIT"> </a>
                     <a  href="{% url 'delete_recurring_bills' recur_bill.id %} " class="delete fa fa-trash" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="DELETE"> </a>                
                 </div>
-                <a href="{% url  'export_pdf' recur_bill.id %}" class="fa fa-file-pdf" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PDF"></a>
+                <a href="{% url 'export_pdf' recur_bill.id %}" class="fa fa-file-pdf" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PDF"></a>
                 <a href="" class=" fa fa-print" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PRINT" onclick="window.print()"> </a>
                 <a  href=" " class="fa fa-envelope" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="MAIL"> </a>
                 <a href=" " class=" fas fa-paperclip" style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="ATTACH"> </a>
@@ -383,6 +386,12 @@
                 </div>
             </div>
         </div> 
+
+        <form id="confirmationForm" style="display: none;">
+            <h2>Confirmation Form</h2>
+            <p>Are you sure you want to delete?</p>
+            <button type="submit">Confirm</button>
+        </form>
     </div>
     
 
@@ -576,6 +585,8 @@
   </div>
 </div>
 
+
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
@@ -623,31 +634,31 @@
     }
 
 
-    $('.delete').click(function(event) {
-            var form =  $(this).closest("form");
-            var name = $(this).data("name");
-            event.preventDefault();
-            swal({
-                title: `Are you sure you want to delete this record?`,
-                text: "If you delete this, it will be gone forever.",
-                icon: "warning",
-                buttons: true,
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    swal("Poof! Your imaginary file has been deleted!", {
-                    icon: "success" ,
+    // $('.delete').click(function(event) {
+    //         var form =  $(this).closest("form");
+    //         var name = $(this).data("name");
+    //         event.preventDefault();
+    //         swal({
+    //             title: `Are you sure you want to delete this record?`,
+    //             text: "If you delete this, it will be gone forever.",
+    //             icon: "warning",
+    //             buttons: true,
+    //             dangerMode: true,
+    //         })
+    //         .then((willDelete) => {
+    //             if (willDelete) {
+    //                 swal("Poof! Your imaginary file has been deleted!", {
+    //                 icon: "success" ,
               
-                    });
-                    form.submit();
+    //                 });
+    //                 form.submit();
         
                     
                     
                     
-                    }
-            });
-        });
+    //                 }
+    //         });
+    //     });
 
         function showTax(){
             if('{{gst_or_igst}}' == "GST"){
@@ -662,6 +673,24 @@
             }
         }
         window.onload = showTax;
+
+
+
+    // function generatePDF() {
+
+
+    //   const doc = new jsPDF();
+
+    //   const pdfSection = document.getElementById('toPrint').innerHTML;
+
+      
+    //     doc.fromHTML(pdfContent, 15, 15, {
+    //             width: 170
+    //             }, function() { doc.save('document.pdf');
+      
+    //         });
+      
+    // }
 
 
 

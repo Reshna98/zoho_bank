@@ -2726,7 +2726,7 @@ $(document).ready(function() {
 
   function showRate(id,name) {
     
-    var n = id[4];
+    var n = id.slice(3);
     $.ajax({
       url: "{% url 'get_rate' %}",
       type : 'POST',
@@ -2748,7 +2748,7 @@ $(document).ready(function() {
 
   $(document).on('change','.qty',function(){
 
-    var q = $(this).attr('id')[4]
+    var q = $(this).attr('id').slice(3)
     var rate = 0;
     var qnty = 0;
     var amount = 0;
@@ -2818,7 +2818,7 @@ $(document).ready(function() {
 
   $(document).on('change','.disc',function(){
 
-    var d = $(this).attr('id')[4]
+    var d = $(this).attr('id').slice(3)
     if(d){
       var am = $("#amount" + d).val();
 
@@ -2886,7 +2886,7 @@ $(document).ready(function() {
 
   $(document).on("click", ".selecttax",function(){
 
-      var n = $(this).attr('id')[9];
+      var n = $(this).attr('id').slice(8);
 
       if(n){
         if($("#cust_state").val() == $("#company_state").val()){

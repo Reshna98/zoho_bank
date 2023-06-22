@@ -17,11 +17,12 @@ from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 import os
-
+import io
+from xhtml2pdf import pisa
 from django.template.loader import render_to_string
-from weasyprint import HTML
-import tempfile
-from django.db.models import Sum
+from xhtml2pdf.default import DEFAULT_CSS
+
+
 
 
 
@@ -3191,14 +3192,18 @@ def create_recurring_bills(request):
         discount = request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
 
-        if len(items)==len(accounts)==len(quantity)==len(rate)==len(tax) == len(discount)==len(amount) and items and accounts and quantity and rate and tax and discount and amount:
+        if len(items)==len(accounts)==len(amount) and items and accounts  and amount:
                 mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
-                print(mapped)
+                # print(mapped)
                 mapped=list(mapped)
-                print(mapped)
+                # print(mapped)
                 for ele in mapped:
-                    print(ele)
-                    created = recurring_bills_items.objects.get_or_create(item = ele[0],account = ele[1],quantity=ele[2],rate=ele[3],
+                    # print(ele)
+
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+
+                    created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
         return redirect('add_recurring_bills')
@@ -3285,21 +3290,24 @@ def change_recurring_bills(request,id):
 
         # billid=recurring_bills.objects.get(id=r_bill.id,user = request.user)
 
-        if len(items)==len(account)==len(quantity)==len(rate)==len(tax)== len(discount)==len(amount):
+        if len(items)==len(account)==len(amount) and items and account  and amount:
             
             mapped=zip(items,account,quantity,rate,tax,discount,amount)
             mapped=list(mapped)
+            print(mapped)
             
             count = recurring_bills_items.objects.filter(recur_bills=r_bill.id).count()
             
             for ele in mapped:
-                
+
                 if int(len(items))>int(count):
 
                     pbillss=recurring_bills.objects.get(id=id)
                     company = company_details.objects.get(user = request.user)
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    ac = Account.objects.get(user = request.user,id = ele[1]).accountName
                     
-                    created = recurring_bills_items.objects.get_or_create(item = ele[0],account = ele[1],quantity=ele[2],rate=ele[3],
+                    created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],recur_bills=r_bill.id,company=company,user = request.user)
 
 
@@ -3636,11 +3644,6 @@ def get_cust_state(request):
         return JsonResponse({"state": state},safe=False)
 
 def export_pdf(request,id):
-    response = HttpResponse(content_type = 'application/pdf')
-    response['Content-Disposition'] = 'attachment; filename = Recurring_Bills' + \
-                        str(datetime.datetime.now())+'.pdf'
-
-    response['Content-Transfer-Endcoding'] = 'binary'
 
     company = company_details.objects.get(user = request.user)
     bills = recurring_bills.objects.filter(user = request.user)
@@ -3665,18 +3668,21 @@ def export_pdf(request,id):
                 'tax' : tax_total,
                 "gst_or_igst" : gst_or_igst,
                 'customer' : cust,
-            }
-    html_string = render_to_string('view_recurring_bills.html',context)
+    }
 
-    html = HTML(string=html_string)
+    html_content = render_to_string('view_recurring_bills.html', context)
+    part1_selector = '#toPrint'
+   
+    fname=rbill.profile_name
+   
+    response = HttpResponse(content_type='application/pdf')
 
-    result = html.write_pdf()
+    response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
 
-    with tempfile .NamedTemporaryFile(delete=True) as output:
-        output.write(result)
-        output.flush()
-        output = open(output.name,'rb')
-        response.write(output.read())
-
+    buffer = io.BytesIO()
+    pisa_status =  pisa.CreatePDF(html_content, dest= buffer, encoding='utf-8', show_error_as_pdf=True, debug=True, pdfcss=part1_selector)
     
+
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html_content + '</pre>')
     return response
