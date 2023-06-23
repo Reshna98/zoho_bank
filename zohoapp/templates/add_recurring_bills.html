@@ -2192,7 +2192,7 @@ $(document).ready(function() {
           <td style="width: 15%;">
             <input type="text" id="tax_total${roinc}" class = 'form-control d-none'>
 
-            <input type="text" placeholder="Select Tax" class="form-control selecttax" id="selecttax${roinc}">
+            <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex" id="selecttax${roinc}">
 
             <select name="tax[]" id="tax1${roinc}" class="form-control tax1 d-none ">
                     <optgroup class="d-none" id="intra_tax${roinc}" label="Choose GST">
@@ -2891,6 +2891,7 @@ $(document).ready(function() {
       if(n){
         if($("#cust_state").val() == $("#company_state").val()){
 
+          $("#selecttax" + n).remove('d-flex');
           $("#selecttax" + n).addClass('d-none');
           $("#tax1" + n).removeClass('d-none');
           $("#tax1" + n).addClass('d-flex');
@@ -2901,6 +2902,7 @@ $(document).ready(function() {
         }
         else{
 
+          $("#selecttax" + n).remove('d-flex');
           $("#selecttax" + n).addClass('d-none');
           $("#tax1" + n).removeClass('d-none');
           $("#tax1" + n).addClass('d-flex');

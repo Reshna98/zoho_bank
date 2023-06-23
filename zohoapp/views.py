@@ -3367,20 +3367,6 @@ def view_recurring_bills(request,id):
     return render(request, 'view_recurring_bills.html',context)
 
 
-# def view_recurring_section(request):
-
-#     id = request.POST.get('id')
-
-#     rbill=recurring_bills.objects.get(user = request.user, id= id)
-#     billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
-
-#     context = {      'prof_name':rbill.profile_name,
-#                     # 'recur_bill' : rbill,
-#                     # 'bill_item' : billitem,
-#                 }
-#     return JsonResponse(context)
-
-
 @login_required(login_url='login')
 def get_vendordet(request):
 
@@ -3401,9 +3387,10 @@ def get_customerdet(request):
 
     company= company_details.objects.get(user = request.user)
 
-    id = request.POST.get('id')
+    name = request.POST.get('name')
+    print(name)
 
-    vdr = customer.objects.get(user=company.user_id,id=id)
+    vdr = customer.objects.get(user=company.user_id,customerName=name.strip())
     email = vdr.customerEmail
     gstin = 0
     gsttr = vdr.GSTTreatment
@@ -3635,9 +3622,9 @@ def get_cust_state(request):
 
     user = User.objects.get(id=request.user.id)
     if request.method=='POST':
-        id=request.POST.get('id')
+        name=request.POST.get('name')
 
-        cust = customer. objects.get( id = id, user = user)
+        cust = customer.objects.get(customerName = name.strip(), user = user)
          
         state = 'Not Specified' if cust.placeofsupply == "" else cust.placeofsupply
 

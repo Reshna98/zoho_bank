@@ -257,7 +257,7 @@
         </div>
         <div class="col-md-6">
           <div class="d-flex">
-            <select class="form-control" id="terms" required name="terms">
+            <select class="form-control" id="terms" required name="terms" >
               <option selected value="{{recur_bills.payment_terms}}">NET {{recur_bills.payment_terms }}</option>
               {% for p in payments %}
                 <option  value="{{p.id}} {{p.Terms}} {{ p.days}}">{{p.Terms}}</option>
@@ -292,10 +292,10 @@
           <label style="color: rgb(190, 88, 88);">Customer Name *</label><br>
         </div>
         <div class="col-md-6">
-          <select name="customer" id="customer" class="form-control" >
-            <option value="{{c.id}} {{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
+          <select name="customer" id="customer" class="form-control">
+            <option value=" {{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
             {% for c in customer %}
-            <option value="{{c.id}} {{ c.customerName }} ">{{ c.customerName }}</option>
+            <option value=" {{ c.customerName }}">{{ c.customerName }}</option>
             {% endfor %}
           </select>
           <a href="" data-toggle="modal" data-target="#newcustomer">+ Add New Customer</a>
@@ -386,10 +386,10 @@
                 <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
 
-                  <!-- <input type="text" placeholder="Select Tax" class="form-control selecttax" id="selecttax"> -->
-                  <select name="tax[]" id="tax{{forloop.counter}}" class="form-control tax1 d-flex mb-2">
-                    <optgroup class="d-none" id="intra_tax" label="Choose GST">
-                      <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }} selected>{{ ri.tax }}% GST({{ ri.tax }}%) </option>
+                  <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex" id="selecttax{{forloop.counter}}" value="{{ ri.tax }}% GST({{ ri.tax }}%)">
+                  <select name="tax[]" id="tax{{forloop.counter}}" class="form-control tax1 d-none mb-2">
+                    <optgroup class="d-none" id="intra_tax{{forloop.counter}}" label="Choose GST">
+                      <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }} >{{ ri.tax }}% GST({{ ri.tax }}%)</option>
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                       <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
                       <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
@@ -402,8 +402,8 @@
                       <option value=0 text={{ cmp1.state }}>Out of Scope(0%)</option>
                     </optgroup>
 
-                    <optgroup class="d-none" id="inter_tax" label="Choose IGST">
-                      <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }} selected>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>                      <option value=28 text=" ">28.0% IGST(28%)</option>
+                    <optgroup class="d-none" id="inter_tax{{forloop.counter}}" label="Choose IGST">
+                      <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>                      <option value=28 text=" ">28.0% IGST(28%)</option>
                       <option value=18 text=" ">18.0% IGST(18%)</option>
                       <option value=12 text=" ">12.0% IGST(12%)</option>
                       <option value=6 text=" ">06.0% IGST(06%)</option>
@@ -2028,6 +2028,27 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
+
+$(document).ready(function() {
+    var initialCustomer = $("#customer").val();
+    
+    $.ajax({
+      url: "{% url 'get_cust_state' %}",
+      type : 'POST',
+      data:{
+          name : initialCustomer,
+          
+          csrfmiddlewaretoken: '{{ csrf_token }}'
+        },
+    
+      success: function(response) {
+        console.log(response.state)
+        $("#cust_state").val(response.state);
+
+      },
+    });
+  });
   
   function toggleDateInput() {
       var checkbox = document.getElementById("never-expire-checkbox");
@@ -2061,9 +2082,7 @@
   const checkbox1 = document.getElementById("rvsCharge");
   if (checkbox1.checked) {
     console.log(checkbox1.value);
-  } else {
-    console.log('Checkbox is not checked.');
-  }
+  } 
 
 
 
@@ -2109,14 +2128,14 @@ $(document).ready(function() {
 
         var name = $("#customer").val();
         var na = name.split(' ')
-        // console.log(name)
+        console.log(name)
         $.ajax({
 
             url: "{% url 'get_customerdet' %}", 
 
             data: { 
-                    name : na[1]+ " " + na[2],
-                    id :na[0],
+                    name : na[1]+ " " + na[2]+" " + na[3],
+                    // id :na[0],
                     csrfmiddlewaretoken: '{{ csrf_token }}' 
                 },
 
@@ -2202,8 +2221,9 @@ $(document).ready(function() {
           </td>
           <td style="width: 15%;">
             <input type="text" id="tax_total${roinc}" class = 'form-control d-none'>
+            <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex" id="selecttax${roinc}">
 
-            <select name="tax[]" id="tax${roinc}" class="form-control tax1 d-flex ">
+            <select name="tax[]" id="tax${roinc}" class="form-control tax1 d-none ">
                     <optgroup class="d-none" id="intra_tax${roinc}" label="Choose GST">
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                       <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
@@ -2265,7 +2285,7 @@ $(document).ready(function() {
 
   $(document).ready(function() {
     $("#fname, #lname").change(function() {
-      $("#vdisplayname").text("Display Name : "+$("#title").val() +" " + $("#fname").val() + " " + $("#lname").val());
+      $("#vdisplayname").text($("#title").val() +" " + $("#fname").val() + " " + $("#lname").val());
     });
   });
 
@@ -2675,7 +2695,7 @@ $(document).on("change", "#customer", function(){
       url: "{% url 'get_cust_state' %}",
       type : 'POST',
       data:{
-          id : $(this).val().split(" ")[0],
+          id : $(this).val(),
           
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
@@ -2688,38 +2708,16 @@ $(document).on("change", "#customer", function(){
     });
 
     var count = $(".item").length;
-    $("#selecttax").removeClass('d-none');
-    $("#selecttax").addClass('d-flex');
-    $("#tax1").removeClass('d-flex');
-    $("#tax1").addClass('d-none');
-
+    
     for(var i =1; i<= count;i++ ){
       // console.log(i);
       $("#selecttax" + i).removeClass('d-none');
       $("#selecttax" + i).addClass('d-flex');
-      $("#tax1" + i).removeClass('d-flex');
-      $("#tax1" + i).addClass('d-none');
+      $("#tax" + i).removeClass('d-flex');
+      $("#tax" + i).addClass('d-none');
     }
   });
 
-
-$(document).ready(function() {
-  $("#item").change(function() {
-    $.ajax({
-      url: "{% url 'get_rate' %}",
-      type : 'POST',
-      data:{
-          id : $("#item").val(),
-      
-          csrfmiddlewaretoken: '{{ csrf_token }}'
-        },
-    
-      success: function(response) {
-        $("#rate").val(response.rate);
-      },
-    });
-  });
-});
 
 
   function showRate(id,val1) {
@@ -2810,7 +2808,7 @@ $(document).ready(function() {
   $(document).on('change','.disc',function(){
 
     var d = $(this).attr('id').slice(4)
-    console.log(d);
+    // console.log(d);
     if(d){
       var am = $("#amount" + d).val();
 
@@ -2870,129 +2868,41 @@ $(document).ready(function() {
   });
 
 
-  $(document).on("click", ".tax1",function(){
+  $(document).on("click", ".selecttax",function(){
+    
 
-      var n = $(this).attr('id').slice(8);
+      var n = $(this).attr('id').slice(9);
+      console.log($("#cust_state").val());
 
-      if(n){
+      
         if($("#cust_state").val() == $("#company_state").val()){
-
-          // $("#selecttax" + n).addClass('d-none');
-          // $("#tax1" + n).removeClass('d-none');
-          // $("#tax1" + n).addClass('d-flex');
+        console.log("gst");
+          $("#selecttax" + n).remove('d-flex');
+          $("#selecttax" + n).addClass('d-none');
+          $("#tax" + n).removeClass('d-none');
+          $("#tax" + n).addClass('d-flex');
           $("#inter_tax" + n).addClass('d-none');
           $("#intra_tax" + n).removeClass('d-none');
           $("#intra_tax" + n).addClass('d-flex');
          
         }
         else{
-
-          // $("#selecttax" + n).addClass('d-none');
-          // $("#tax1" + n).removeClass('d-none');
-          // $("#tax1" + n).addClass('d-flex');
+        console.log("igst");
+          $("#selecttax" + n).remove('d-flex');
+          $("#selecttax" + n).addClass('d-none');
+          $("#tax" + n).removeClass('d-none');
+          $("#tax" + n).addClass('d-flex');
           $("#intra_tax" + n).addClass('d-none');
           $("#inter_tax" + n).removeClass('d-none');
           $("#inter_tax" + n).addClass('d-flex');
 
         }
-      }
+ 
 
-      else{
-
-        if($("#cust_state").val() == $("#company_state").val()){
-
-          // $("#selecttax").addClass('d-none');
-          // $("#tax1").removeClass('d-none');
-          // $("#tax1").addClass('d-flex');
-          $("#inter_tax").addClass('d-none');
-          $("#intra_tax").removeClass('d-none');
-          $("#intra_tax").addClass('d-flex');
-
-        }
-        else{
-
-          // $("#selecttax").addClass('d-none');
-          // $("#tax1").removeClass('d-none');
-          // $("#tax1").addClass('d-flex');
-          $("#intra_tax").addClass('d-none');
-          $("#inter_tax").removeClass('d-none');
-          $("#inter_tax").addClass('d-flex');
-
-        }
-      }
-
-
-
-    $("#tax1").change(function(){
-
-      // SGST- CGST
-
-      if($("#cust_state").val() == $("#company_state").val()){
-
-        $("#cgst1").removeClass('d-none');
-        $("#cgst1").addClass('d-flex');
-        $("#sgst1").removeClass('d-none');
-        $("#sgst1").addClass('d-flex');
-
-        $("#igst1").removeClass('d-flex');
-        $("#igst1").addClass('d-none');
-
-        var tax = $("#tax1").val();
-        var amnt = $("#amount").val();
-
-        var tot_tax = amnt * (tax/100);
-        $("#tax_total0").val(tot_tax);
-        // var gst = tot_tax/2;
-      }
-
-      // IGST
-
-      else{
-
-        $("#igst1").removeClass('d-none');
-        $("#igst1").addClass('d-flex');
-
-        $("#cgst1").removeClass('d-flex');
-        $("#cgst1").addClass('d-none');
-        $("#sgst1").removeClass('d-flex');
-        $("#sgst1").addClass('d-none');
-
-        var tax = $("#tax1").val();
-        var amnt = $("#amount").val();
-
-        var tot_tax = amnt * (tax/100);
-        $("#tax_total0").val(tot_tax);
-        console.log("igst tax" + tot_tax)
-
-      }
-
-      var tax_t = 0;
-      c = $(".tax1").length;
-      for(var i = 0; i <= c - 1 ; i++){
-        tax_t += parseFloat( $("#tax_total" + i).val());
-        
-      }
-
-      var gst = tax_t/2;
-      console.log(gst);
-      $("#igst").val(tax_t);
-      $("#cgst").val(gst);
-      $("#sgst").val(gst);
-
-      if(isNaN(parseFloat($("#shipcharge").val())) == false){
-        var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
-        $("#grandtotal").val(grand_total);
-      }
-      else{
-        var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) ;
-        $("#grandtotal").val(grand_total);
-      }
-
-    });
 
 
     // SGST- CGST
-      $("#tax1"+n).change(function(){
+      $("#tax"+n).change(function(){
 
         if($("#cust_state").val() == $("#company_state").val()){
 
@@ -3004,7 +2914,7 @@ $(document).ready(function() {
           $("#igst1").removeClass('d-flex');
           $("#igst1").addClass('d-none');
 
-          var tax = $("#tax1" + n).val();
+          var tax = $("#tax" + n).val();
           var amnt = $("#amount" +n).val();
           console.log("gst tax " + tax)
 
@@ -3025,7 +2935,7 @@ $(document).ready(function() {
           $("#sgst1").removeClass('d-flex');
           $("#sgst1").addClass('d-none');
 
-          var tax = $("#tax1" + n).val();
+          var tax = $("#tax" + n).val();
           var amnt = $("#amount" +n).val();
 
           var tot_tax = amnt * (tax/100);
@@ -3057,8 +2967,6 @@ $(document).ready(function() {
 
 
       });
-
-     
 
   });
 
@@ -3123,6 +3031,8 @@ $(document).ready(function() {
     var input6 = document.getElementById("tsgst");
 
   });
+
+
 
 </script>
 
