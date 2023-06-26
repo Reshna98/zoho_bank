@@ -424,6 +424,7 @@ class recurring_bills(models.Model):
     grand_total = models.FloatField(null=True,blank=True)
     note = models.CharField(max_length=255,null=True,blank=True)
     document=models.FileField(upload_to='doc/recurring_bills',null=True,blank=True)
+    comments = models.CharField(max_length=255,null=True,blank=True)
     
 
 class recurring_bills_items (models.Model):

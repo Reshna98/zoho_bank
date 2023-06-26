@@ -146,6 +146,3 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'altostechnologies6@gmail.com'
 EMAIL_HOST_PASSWORD = 'jkdpqggohjsmhyay'
 
-
-
-WKHTMLTOPDF_CMD = "C:\Program Files\wkhtmltopdf"

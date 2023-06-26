@@ -3189,7 +3189,7 @@ def create_recurring_bills(request):
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
         tax = request.POST.getlist("tax[]")
-        discount = request.POST.getlist("discount[]")
+        discount = 0 if request.POST.getlist("discount[]") == "" else request.POST.getlist("discount[]")
         amount = request.POST.getlist("amount[]")
 
         if len(items)==len(accounts)==len(amount) and items and accounts  and amount:
@@ -3281,6 +3281,7 @@ def change_recurring_bills(request,id):
         r_bill.save()          
 
         items = request.POST.getlist("item[]")
+        print(items)
         account = request.POST.getlist("account[]")
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
@@ -3290,7 +3291,7 @@ def change_recurring_bills(request,id):
 
         # billid=recurring_bills.objects.get(id=r_bill.id,user = request.user)
 
-        if len(items)==len(account)==len(amount) and items and account  and amount:
+        if len(items)==len(account)==len(amount) :
             
             mapped=zip(items,account,quantity,rate,tax,discount,amount)
             mapped=list(mapped)
@@ -3388,7 +3389,7 @@ def get_customerdet(request):
     company= company_details.objects.get(user = request.user)
 
     name = request.POST.get('name')
-    print(name)
+    # print(name)
 
     vdr = customer.objects.get(user=company.user_id,customerName=name.strip())
     email = vdr.customerEmail
@@ -3622,9 +3623,11 @@ def get_cust_state(request):
 
     user = User.objects.get(id=request.user.id)
     if request.method=='POST':
-        name=request.POST.get('name')
+        print(request.POST.get('name'))
 
-        cust = customer.objects.get(customerName = name.strip(), user = user)
+        name=request.POST.get('name').strip()
+
+        cust = customer.objects.get(customerName = name, user = user)
          
         state = 'Not Specified' if cust.placeofsupply == "" else cust.placeofsupply
 
@@ -3673,3 +3676,19 @@ def export_pdf(request,id):
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html_content + '</pre>')
     return response
+
+
+def recurbill_comment(request):
+
+    company = company_details.objects.get(user = request.user)
+
+    if request.method=='POST':
+        id =request.POST.get('id')
+        cmnt =request.POST.get('comment')
+        
+        u = User.objects.get(id = request.user.id)
+        r_bill = recurring_bills.objects.get(user = request.user, id = id)
+        r_bill.comments = cmnt
+        r_bill.save()
+
+        return HttpResponse({"message": "success"})

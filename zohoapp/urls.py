@@ -177,7 +177,7 @@ urlpatterns = [
     path('get_rate',views.get_rate ,name = 'get_rate'),
     path('get_cust_state',views.get_cust_state,name = "get_cust_state"),
     path('export_pdf/<id>',views.export_pdf,name = "export_pdf"),
-
+    path('recurbill_comment',views.recurbill_comment,name = "recurbill_comment"),
     
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

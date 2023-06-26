@@ -2032,6 +2032,7 @@
 
 $(document).ready(function() {
     var initialCustomer = $("#customer").val();
+    console.log(initialCustomer)
     
     $.ajax({
       url: "{% url 'get_cust_state' %}",
@@ -2079,10 +2080,10 @@ $(document).ready(function() {
   });
 
 
-  const checkbox1 = document.getElementById("rvsCharge");
-  if (checkbox1.checked) {
-    console.log(checkbox1.value);
-  } 
+  // const checkbox1 = document.getElementById("rvsCharge");
+  // if (checkbox1.checked) {
+  //   console.log(checkbox1.value);
+  // } 
 
 
 
@@ -2128,7 +2129,7 @@ $(document).ready(function() {
 
         var name = $("#customer").val();
         var na = name.split(' ')
-        console.log(name)
+        // console.log(name)
         $.ajax({
 
             url: "{% url 'get_customerdet' %}", 
@@ -2277,7 +2278,7 @@ $(document).ready(function() {
 
   $(document).on('click','.remove_row',function(){
     var row_id = $(this).attr("id");
-    console.log(row_id)
+    // console.log(row_id)
     $('#addr0'+row_id+'').remove();
   });
 
@@ -2692,18 +2693,19 @@ function reloadAccount() {
 
 $(document).on("change", "#customer", function(){
     $.ajax({
+
       url: "{% url 'get_cust_state' %}",
       type : 'POST',
       data:{
-          id : $(this).val(),
+
+            name : $(this).val(),
           
           csrfmiddlewaretoken: '{{ csrf_token }}'
         },
     
       success: function(response) {
-        
-        $("#cust_state").val(response.state);
 
+        $("#cust_state").val(response.state);
       },
     });
 
@@ -2872,11 +2874,11 @@ $(document).on("change", "#customer", function(){
     
 
       var n = $(this).attr('id').slice(9);
-      console.log($("#cust_state").val());
+      // console.log($("#cust_state").val());
 
       
         if($("#cust_state").val() == $("#company_state").val()){
-        console.log("gst");
+        // console.log("gst");
           $("#selecttax" + n).remove('d-flex');
           $("#selecttax" + n).addClass('d-none');
           $("#tax" + n).removeClass('d-none');
@@ -2887,7 +2889,7 @@ $(document).on("change", "#customer", function(){
          
         }
         else{
-        console.log("igst");
+        // console.log("igst");
           $("#selecttax" + n).remove('d-flex');
           $("#selecttax" + n).addClass('d-none');
           $("#tax" + n).removeClass('d-none');
@@ -2916,7 +2918,7 @@ $(document).on("change", "#customer", function(){
 
           var tax = $("#tax" + n).val();
           var amnt = $("#amount" +n).val();
-          console.log("gst tax " + tax)
+          // console.log("gst tax " + tax)
 
           var tot_tax = amnt * (tax/100);
           $("#tax_total" + n).val(tot_tax);
@@ -2946,7 +2948,7 @@ $(document).on("change", "#customer", function(){
 
         var tax_t = 0;
         c = $(".tax1").length;
-        console.log(c)
+        // console.log(c)
         for(var i = 0; i <= c - 1 ; i++){
           tax_t += parseFloat(  $("#tax_total" + i).val());
         }
@@ -3014,7 +3016,7 @@ $(document).on("change", "#customer", function(){
   });
 
   $(document).on("click",'#save',function(){
-    console.log("clicked")
+    // console.log("clicked")
 
     var input1 = document.getElementById("disc");
     if (input1.value === "") {
