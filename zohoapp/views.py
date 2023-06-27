@@ -16,15 +16,7 @@ from django.http import JsonResponse
 from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
-import os
-import io
-from xhtml2pdf import pisa
-from django.template.loader import render_to_string
-from xhtml2pdf.default import DEFAULT_CSS
-
-
-
-
+import codecs
 
 def index(request):
 
@@ -3265,7 +3257,7 @@ def change_recurring_bills(request,id):
         r_bill.end_date=None if request.POST.get('end_date') == "" else  request.POST.get('end_date')
         r_bill.payment_terms=request.POST['terms']
         r_bill.note=request.POST['note']
-        r_bill.document=request.POST['file']
+        # r_bill.document=request.POST.get('file')
         r_bill.sub_total=None if request.POST.get('subtotal') == "" else  request.POST.get('subtotal')
         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
         r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
@@ -3274,9 +3266,9 @@ def change_recurring_bills(request,id):
         r_bill.grand_total=request.POST.get('grand_total')
 
         if len(request.FILES) != 0:
-            if len(r_bill.document) > 0  :
-                os.remove(r_bill.document.path)    
+             
             r_bill.document = request.FILES['file']
+            
 
         r_bill.save()          
 
@@ -3632,7 +3624,8 @@ def get_cust_state(request):
         state = 'Not Specified' if cust.placeofsupply == "" else cust.placeofsupply
 
         return JsonResponse({"state": state},safe=False)
-
+    
+@login_required(login_url='login')
 def export_pdf(request,id):
 
     company = company_details.objects.get(user = request.user)
@@ -3650,6 +3643,8 @@ def export_pdf(request,id):
     for b in billitem:
         tax_total += b.tax
 
+    template_path = "view_recurring_bills"
+
     context = {
                 'company' : company,
                 'recur_bills' : bills,
@@ -3660,24 +3655,38 @@ def export_pdf(request,id):
                 'customer' : cust,
     }
 
-    html_content = render_to_string('view_recurring_bills.html', context)
-    part1_selector = '#toPrint'
-   
     fname=rbill.profile_name
    
-    response = HttpResponse(content_type='application/pdf')
+    # response = HttpResponse(content_type='application/pdf')
 
-    response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
+    # response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
 
-    buffer = io.BytesIO()
-    pisa_status =  pisa.CreatePDF(html_content, dest= buffer, encoding='utf-8', show_error_as_pdf=True, debug=True, pdfcss=part1_selector)
+    template = get_template(template_path)
+    html = template.render(context)
+
+    with codecs.open(template_path, 'r', 'utf-8') as file:
+        html_content = file.read()
+
+    start_marker = '<div class="print-only">'
+    end_marker = '</div>'
+    start_index = html_content.find(start_marker) + len(start_marker)
+    end_index = html_content.find(end_marker, start_index)
+    print_only_content = html_content[start_index:end_index].strip()
+
+    pdf_file = {fname}.pdf
+
+    with open(pdf_file, 'w+b') as file:
+        pisa.CreatePDF(print_only_content, dest=file)
+
+
+    # pisa_status = pisa.CreatePDF(html, dest=response)
     
+    # if pisa_status.err:
+    #    return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    # return response
 
-    if pisa_status.err:
-       return HttpResponse('We had some errors <pre>' + html_content + '</pre>')
-    return response
 
-
+@login_required(login_url='login')
 def recurbill_comment(request):
 
     company = company_details.objects.get(user = request.user)
@@ -3692,3 +3701,21 @@ def recurbill_comment(request):
         r_bill.save()
 
         return HttpResponse({"message": "success"})
+
+@login_required(login_url='login')
+def recurbill_add_file(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bill = recurring_bills.objects.get(user = request.user,id=id)
+    print(bill)
+
+    if request.method == 'POST':
+
+        bill.document=request.POST.get('file')
+
+        if len(request.FILES) != 0:
+             
+            bill.document = request.FILES['file']
+
+        bill.save()
+        return redirect('view_recurring_bills',id)
