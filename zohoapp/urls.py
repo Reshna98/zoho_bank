@@ -161,7 +161,12 @@ urlpatterns = [
     path('change_recurring_bills/<id>',views.change_recurring_bills,name='change_recurring_bills'),
     path('delete_recurring_bills/<id>',views.delete_recurring_bills,name='delete_recurring_bills'),
     path('view_recurring_bills/<id>',views.view_recurring_bills,name='view_recurring_bills'),
-    # path('view_recurring_section',views.view_recurring_section,name='view_recurring_section'),
+    path('view_custasc',views.view_custasc,name='view_custasc'),
+    path('view_custdesc',views.view_custdesc,name='view_custdesc'),
+    path('view_vendorasc',views.view_vendorasc,name='view_vendorasc'),
+    path('view_vendordesc',views.view_vendordesc,name='view_vendordesc'),
+    path('view_profileasc',views.view_profileasc,name='view_profileasc'),
+    path('view_profiledesc',views.view_profiledesc,name='view_profiledesc'),
     path('get_vendordet',views.get_vendordet,name='get_vendordet'),
     path('get_customerdet',views.get_customerdet,name='get_customerdet'),
     path('recurbills_vendor',views.recurbills_vendor,name='recurbills_vendor'),
@@ -179,6 +184,7 @@ urlpatterns = [
     path('export_pdf/<id>',views.export_pdf,name = "export_pdf"),
     path('recurbill_comment',views.recurbill_comment,name = "recurbill_comment"),
     path('recurbill_add_file/<id>',views.recurbill_add_file,name = "recurbill_add_file"),
+    
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

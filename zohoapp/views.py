@@ -16,7 +16,10 @@ from django.http import JsonResponse
 from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
-import codecs
+from bs4 import BeautifulSoup
+import os
+from django.template import Context, Template
+
 
 def index(request):
 
@@ -1042,12 +1045,6 @@ def updateestimate(request,pk):
         tax = [float(x) for x in tax1]
         amount1 = request.POST.getlist('amount[]')
         amount = [float(x) for x in amount1]
-        # print(item)
-        # print(quantity)
-        # print(rate)
-        # print(discount)
-        # print(tax)
-        # print(amount)
 
         objects_to_delete = EstimateItems.objects.filter(estimate_id=estimate.id)
         objects_to_delete.delete()
@@ -3049,7 +3046,7 @@ def recur_custasc(request):
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
 
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3060,7 +3057,7 @@ def recur_custdesc(request):
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
 
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3071,7 +3068,7 @@ def recur_vendorasc(request):
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
 
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3082,7 +3079,7 @@ def recur_vendordesc(request):
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
 
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3091,9 +3088,9 @@ def recur_vendordesc(request):
 def recur_profileasc(request):
     cmp1 = company_details.objects.get(user = request.user)
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
-
+    print(rec_bill)
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3104,7 +3101,7 @@ def recur_profiledesc(request):
     rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
 
     context = {
-            'rec_bill':rec_bill,
+            'recur_bill':rec_bill,
             'cmp1': cmp1
             }
     return render(request,'recurring_bills.html',context)
@@ -3186,11 +3183,8 @@ def create_recurring_bills(request):
 
         if len(items)==len(accounts)==len(amount) and items and accounts  and amount:
                 mapped=zip(items,accounts,quantity,rate,tax,discount,amount)
-                # print(mapped)
                 mapped=list(mapped)
-                # print(mapped)
                 for ele in mapped:
-                    # print(ele)
 
                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
                     ac = Account.objects.get(user = request.user,id = ele[1]).accountName
@@ -3358,6 +3352,73 @@ def view_recurring_bills(request,id):
             }
 
     return render(request, 'view_recurring_bills.html',context)
+
+
+@login_required(login_url='login')
+def view_custasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
+
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def view_custdesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
+
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def view_vendorasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
+
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def view_vendordesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
+
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.htmll',context)
+
+@login_required(login_url='login')
+def view_profileasc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
+    print(rec_bill)
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def view_profiledesc(request):
+    cmp1 = company_details.objects.get(user = request.user)
+    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
+
+    context = {
+            'recur_bill':rec_bill,
+            'cmp1': cmp1
+            }
+    return render(request,'view_recurring_bills.html',context)
 
 
 @login_required(login_url='login')
@@ -3626,64 +3687,54 @@ def get_cust_state(request):
         return JsonResponse({"state": state},safe=False)
     
 @login_required(login_url='login')
-def export_pdf(request,id):
-
-    company = company_details.objects.get(user = request.user)
-    bills = recurring_bills.objects.filter(user = request.user)
-    rbill=recurring_bills.objects.get(user = request.user, id= id)
-    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+def export_pdf(request, id):
+    company = company_details.objects.get(user=request.user)
+    bills = recurring_bills.objects.filter(user=request.user)
+    rbill = recurring_bills.objects.get(user=request.user, id=id)
+    billitem = recurring_bills_items.objects.filter(user=request.user, recur_bills=id)
 
     comp_state = company.state
-    cust = customer.objects.get(customerName = rbill.customer_name)
+    cust = customer.objects.get(customerName=rbill.customer_name)
 
     gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
 
-
-    tax_total = 0 
+    tax_total = 0
     for b in billitem:
         tax_total += b.tax
 
-    template_path = "view_recurring_bills"
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    template_filename = 'view_recurring_bills.html'
+    template_path = os.path.join(script_directory, 'templates', template_filename)
 
-    context = {
-                'company' : company,
-                'recur_bills' : bills,
-                'recur_bill' : rbill,
-                'bill_item' : billitem,
-                'tax' : tax_total,
-                "gst_or_igst" : gst_or_igst,
-                'customer' : cust,
-    }
-
-    fname=rbill.profile_name
-   
-    # response = HttpResponse(content_type='application/pdf')
-
-    # response['Content-Disposition'] =f'attachment; filename= {fname}.pdf'
-
-    template = get_template(template_path)
-    html = template.render(context)
-
-    with codecs.open(template_path, 'r', 'utf-8') as file:
+    with open(template_path, 'r') as file:
         html_content = file.read()
 
-    start_marker = '<div class="print-only">'
-    end_marker = '</div>'
-    start_index = html_content.find(start_marker) + len(start_marker)
-    end_index = html_content.find(end_marker, start_index)
-    print_only_content = html_content[start_index:end_index].strip()
+    soup = BeautifulSoup(html_content, 'html.parser')
+    section = soup.find('div', class_='print-only')
+    section_html = section.prettify()
+    template = Template(section_html)
 
-    pdf_file = {fname}.pdf
+    context = {
+        'company': company,
+        'recur_bills': bills,
+        'recur_bill': rbill,
+        'bill_item': billitem,
+        'tax': tax_total,
+        "gst_or_igst": gst_or_igst,
+        'customer': cust,
+    }
+    html = template.render(Context(context))
 
-    with open(pdf_file, 'w+b') as file:
-        pisa.CreatePDF(print_only_content, dest=file)
+    fname = rbill.profile_name
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename={fname}.pdf'
 
-
-    # pisa_status = pisa.CreatePDF(html, dest=response)
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
-    # if pisa_status.err:
-    #    return HttpResponse('We had some errors <pre>' + html + '</pre>')
-    # return response
+    return response
+
 
 
 @login_required(login_url='login')
