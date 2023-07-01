@@ -230,6 +230,10 @@
             height: auto;
         }
     }
+
+    .modal{
+      z-index: 9999;
+    }
 </style>
 
 <div class="container-fulid containerprof">
@@ -256,12 +260,12 @@
                                 role="button"></a>
                             <div class="dropdown-menu " style="z-index: 1;">
                                 <!-- <a class="dropdown-item" href="{% url 'recurring_bill' %}">All</a> -->
-                                <a class="dropdown-item" href="{% url 'view_custasc' %}">Customer A-Z</a>
-                                <a class="dropdown-item" href="{% url 'view_custdesc' %}">Customer Z-A</a>
-                                <a class="dropdown-item" href="{% url 'view_vendorasc' %}">Vendor A-Z</a>
-                                <a class="dropdown-item" href="{% url 'view_vendordesc' %}">Vendor Z-A</a>
-                                <a class="dropdown-item" href="{% url 'view_profileasc' %}">Profile A-Z</a>
-                                <a class="dropdown-item" href="{% url 'view_profiledesc' %}">Profile Z-A</a>
+                                <a class="dropdown-item" href="{% url 'view_custasc' recur_bill.id  %}">Customer A-Z</a>
+                                <a class="dropdown-item" href="{% url 'view_custdesc' recur_bill.id %}">Customer Z-A</a>
+                                <a class="dropdown-item" href="{% url 'view_vendorasc' recur_bill.id %}">Vendor A-Z</a>
+                                <a class="dropdown-item" href="{% url 'view_vendordesc' recur_bill.id %}">Vendor Z-A</a>
+                                <a class="dropdown-item" href="{% url 'view_profileasc' recur_bill.id %}">Profile A-Z</a>
+                                <a class="dropdown-item" href="{% url 'view_profiledesc' recur_bill.id %}">Profile Z-A</a>
 
                             </div>
                         </div>
@@ -299,6 +303,7 @@
                 <div class="btn-group" style="float: right; ">
                     <a href="" class=" far fa-comment-alt" style="padding: 10px; cursor: pointer;" title="ADD COMMENTS"
                         data-toggle="modal" data-target="#cmnts"> </a>
+
                     <div class=" input-group mx-4">
                         <a href="{% url 'edit_recurring_bills' recur_bill.id %}" class=" fa fa-pencil"
                             style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="EDIT"> </a>
@@ -306,16 +311,21 @@
                             style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="DELETE"
                             onclick="return confirm('Do you want to Delete this Recurring Bill?');"> </a>
                     </div>
+
                     <a href="{% url 'export_pdf' recur_bill.id %}" class="fa fa-file-pdf"
                         style="padding: 10px; cursor: pointer;" data-toggle="tooltip" title="PDF"></a>
+
                     <a href="" class=" fa fa-print" style="padding: 10px; cursor: pointer;" data-toggle="tooltip"
                         title="PRINT" onclick="window.print()"> </a>
-                    <a href=" " class="fa fa-envelope" style="padding: 10px; cursor: pointer;" data-toggle="tooltip"
-                        title="MAIL" onclick="attachSectionToEmail()"> </a>
+
+                    <a href="" class="fa fa-envelope" style="padding: 10px; cursor: pointer;"
+                        title="MAIL" data-toggle="modal" data-target="#emails" > </a>
+
                     <div class="dropdown m-0 p-0">
                         <a href=" " class=" fas fa-paperclip dropdown-toggle" style="padding: 10px; cursor: pointer;"
                             data-bs-toggle="dropdown" id="attachmentDropdown" aria-haspopup="true"
                             aria-expanded="false"> </a>
+
                         <div class="dropdown-menu" aria-labelledby="attachmentDropdown">
                             <a class="dropdown-item" style="cursor: pointer;" data-toggle="modal"
                                 data-target="#files"><i class="fa fa-paperclip"></i> Attach File</a>
@@ -577,7 +587,7 @@
                                     <h5 class="text-muted">Customer :</h5>
                                 </div><br>
                                 <div class="col-md-12 my-0 mx-5">
-                                    <h6 class="text-capitalize" style="color: azure;">{{ recur_bill.customer_name }}
+                                    <h6 class="text-capitalize " style="color: azure;">{{ recur_bill.customer_name }}
                                     </h6>
                                 </div>
                             </div>
@@ -589,7 +599,7 @@
                                     <h6 class="text-muted">Subtotal :</h5><br>
                                 </div>
                                 <div class="col-md-7 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.sub_total|floatformat:2 }} INR" class="amnt"
+                                    <input type="text" value="{{ recur_bill.sub_total|floatformat:2 }} INR" class="amnt text-dark bg-light"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -598,7 +608,7 @@
                                     <h6 class="text-muted">IGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.igst|floatformat:2 }} INR" class="amnt"
+                                    <input type="text" value="{{ recur_bill.igst|floatformat:2 }} INR" class="amnt text-dark bg-light"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -607,7 +617,7 @@
                                     <h6 class="text-muted">CGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.cgst|floatformat:2 }} INR" class="amnt"
+                                    <input type="text" value="{{ recur_bill.cgst|floatformat:2 }} INR" class="amnt text-dark bg-light"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -616,7 +626,7 @@
                                     <h6 class="text-muted">SGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR" class="amnt"
+                                    <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR" class="amnt text-dark bg-light"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -625,7 +635,7 @@
                                     <h6 class="text-muted">Shipping Charge :</h5><br>
                                 </div>
                                 <div class="col-md-4 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.shipping_charge }} INR" class="amnt"
+                                    <input type="text" value="{{ recur_bill.shipping_charge }} INR" class="amnt text-dark bg-light"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -636,7 +646,7 @@
                                 </div>
                                 <div class="col-md-6 mt-3 mx-3">
                                     <input type="text" value="{{ recur_bill.grand_total|floatformat:2 }} INR"
-                                        class="amnt" style="font-size: 16px; color: azure;" readonly>
+                                        class="amnt text-dark bg-light" style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
 
@@ -647,6 +657,7 @@
 
         </div>
     </div>
+
     <!-- comment modal -->
 
     <div class="modal fade " id="cmnts"
@@ -667,10 +678,10 @@
                                 <input type="hidden" value="{{recur_bill.id}}" id="com_id">
                                 <div class="col-md-6 mt-2">
                                     {% if recur_bill.comments %}
-                                    <textarea class="form-control" id="comment" name="comment" required
+                                    <textarea class="form-control text-dark bg-light" id="comment" name="comment" required
                                         style="height: 200px; width: 550px;">{{recur_bill.comments}}</textarea>
                                     {% else %}
-                                    <textarea class="form-control" id="comment" name="comment" required
+                                    <textarea class="form-control text-dark bg-light" id="comment" name="comment" required
                                         style="height: 200px; width: 550px;"></textarea>
                                     {% endif %}
                                 </div>
@@ -715,7 +726,7 @@
                         <form action="" id="modalAddfile">
                             <div class="row mt-2 mx-5 text-center">
                                 <input type="hidden" value="{{recur_bill.id}}" id="file_id">
-                                <input type="file" class="form-control" name="file" id="filess" style="width: 400px;">
+                                <input type="file" class="form-control text-dark bg-light" name="file" id="filess" style="width: 400px;">
 
                             </div>
 
@@ -742,9 +753,84 @@
         </div>
     </div>
 
-</div>
+
+    <!-- email modal -->
+
+    <div class="modal fade p-3" id="emails" style="width: 800px; margin-left: 350px; overflow-x: hidden;">
+        <div class="modal-dialog modal-xl m-5 p-5">
+            <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                <div class="modal-header " style="background: rgb(32, 35, 37);">
+                    <h5 class="m-3 text-uppercase text-light" id="exampleModalLabel">Send Email</h5>
+                    <button type="button" class="close text-dark bg-none" data-dismiss="modal"
+                        aria-label="Close">&times;</button>
+                </div>
+                <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow: hidden;">
+                    <div class="card p-0 m-0">
+                        <form action="" id="modalEmail">
+                            <!-- <input type="hidden" value="{{recur_bill.id}}" id="email_id"> -->
+                            <div class="row mt-2">
+                                <div class="col-md-3 mt-2">
+                                  <label for="">To : </label><br>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                  <input type="text" class="form-control text-dark bg-light" id="to" name="to" required style="width: 350px;">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-3 mt-2">
+                                  <label for="">From : </label><br>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                  <input type="text" class="form-control text-dark bg-light" id="from" name="from" required style="width: 350px;">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-3 mt-2">
+                                  <label for="">Subject : </label><br>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                  <input type="text" class="form-control text-dark bg-light" id="sub" name="sub" required style="width:350px;">
+                                </div>
+                            </div>
+
+                            <div class="row mt-2">
+                                <div class="col-md-3 mt-2">
+                                  <label for="">Message : </label><br>
+                                </div>
+                                <div class="col-md-6 mt-2">
+                                    <textarea class="form-control text-dark bg-light" id="msg" name="msg" required
+                                    style="height: 200px; width: 350px;"> </textarea>
+                                </div>
+                            </div>
+
+                            <div class="row mt-5">
+                                <div class="col-md-4"></div>
+                                <div class="col-md-4">
+                                    <div class="d-flex">
+                                        <button
+                                            class=" font-weight-bold save_btn rounded-pill text-light w-50 my-4 mx-2"
+                                            type="submit" data-dismiss="modal" id="emailSave">Send </button>
+
+
+                                        <button type="button"
+                                            class="font-weight-bold save_btn rounded-pill text-light w-50 my-4"
+                                            data-dismiss="modal" aria-label="Close"> Cancel</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-4"></div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
+
+<!-- </div> -->
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -788,49 +874,17 @@
 
 
 
-    // function generatePDF() {
+    // function attachSectionToEmail() {
+    //     var section = document.getElementById("Template");
+    //     console.log(section)
+    //     var content = section.innerHTML;
+    //     console.log(content)
+    //     var subject = "Attached Section";
+    //     var body = content;
+    //     var mailtoLink = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
 
-
-    //   const doc = new jsPDF();
-
-    //   const pdfSection = document.getElementById('toPrint').innerHTML;
-
-
-    //     doc.fromHTML(pdfContent, 15, 15, {
-    //             width: 170
-    //             }, function() { doc.save('document.pdf');
-
-    //         });
-
+    //     window.location.href = mailtoLink;
     // }
-
-    // function printForm(){
-    //     var selectedArea = document.getElementById("toPrint");
-
-
-    //     var printWindow = window.open('', 'PrintWindow', 'height=800,width=800,padding = 20');
-
-
-    //     printWindow.document.write('<html><head><title>Print Selected Area</title></head><body>' + selectedArea.innerHTML + '</body></html>');
-
-
-    //     printWindow.print();
-
-
-    //     printWindow.close();
-    // }
-
-
-    function attachSectionToEmail() {
-        var section = document.getElementById("Template");
-        var content = section.innerHTML;
-
-        var subject = "Attached Section";
-        var body = content;
-        var mailtoLink = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
-
-        window.location.href = mailtoLink;
-    }
 
     $(document).ready(function () {
         $("#commentSave").click(function () {
@@ -874,6 +928,34 @@
 
                 success: function (response) {
                     document.getElementById("modalAddfile").reset();
+                },
+            });
+        });
+    });
+
+
+    $(document).ready(function () {
+        $("#emailSave").click(function () {
+
+            $.ajax({
+
+                type: 'POST',
+                url: "{% url 'recurbill_email' recur_bill.id %}",
+
+                data: {
+                    // id: $("#email_id").val(),
+                    recipient: $("#to").val(),
+                    sender: $("#from").val(),
+                    subject : $("#sub").val(),
+                    message : $("#msg").val(),
+
+
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+
+                },
+
+                success: function (response) {
+                    document.getElementById("modalEmail").reset();
                 },
             });
         });

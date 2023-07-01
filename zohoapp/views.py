@@ -17,8 +17,12 @@ from datetime import datetime,date, timedelta
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 from bs4 import BeautifulSoup
+import io
 import os
 from django.template import Context, Template
+import tempfile
+from django.template.loader import render_to_string
+from django.views.decorators.http import require_POST
 
 
 def index(request):
@@ -3355,68 +3359,177 @@ def view_recurring_bills(request,id):
 
 
 @login_required(login_url='login')
-def view_custasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
+def view_custasc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('customer_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
     return render(request,'view_recurring_bills.html',context)
 
 @login_required(login_url='login')
-def view_custdesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
+def view_custdesc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('-customer_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
     return render(request,'view_recurring_bills.html',context)
 
 @login_required(login_url='login')
-def view_vendorasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
+def view_vendorasc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('vendor_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
     return render(request,'view_recurring_bills.html',context)
 
 @login_required(login_url='login')
-def view_vendordesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
+def view_vendordesc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('-vendor_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
-            }
-    return render(request,'view_recurring_bills.htmll',context)
-
-@login_required(login_url='login')
-def view_profileasc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
-    print(rec_bill)
-    context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
     return render(request,'view_recurring_bills.html',context)
 
 @login_required(login_url='login')
-def view_profiledesc(request):
-    cmp1 = company_details.objects.get(user = request.user)
-    rec_bill =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
+def view_profileasc(request,id):
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('profile_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
 
     context = {
-            'recur_bill':rec_bill,
-            'cmp1': cmp1
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
+            }
+    return render(request,'view_recurring_bills.html',context)
+
+@login_required(login_url='login')
+def view_profiledesc(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bills =recurring_bills.objects.filter(user = request.user).order_by('-profile_name')
+
+    rbill=recurring_bills.objects.get(user = request.user, id= id)
+    billitem = recurring_bills_items.objects.filter(user = request.user,recur_bills=id)
+
+    comp_state = company.state
+    cust = customer.objects.get(customerName = rbill.customer_name)
+
+    gst_or_igst = "GST" if comp_state == cust.placeofsupply else "IGST"
+
+
+    tax_total = 0 
+    for b in billitem:
+        tax_total += b.tax
+
+    context = {
+                'company' : company,
+                'recur_bills' : bills,
+                'recur_bill' : rbill,
+                'bill_item' : billitem,
+                'tax' : tax_total,
+                "gst_or_igst" : gst_or_igst,
+                'customer' : cust,
             }
     return render(request,'view_recurring_bills.html',context)
 
@@ -3770,3 +3883,52 @@ def recurbill_add_file(request,id):
 
         bill.save()
         return redirect('view_recurring_bills',id)
+    
+
+@require_POST
+def recurbill_email(request,id):
+
+    company = company_details.objects.get(user = request.user)
+    bill = recurring_bills.objects.get(user = request.user,id=id)
+
+    if request.method == 'POST':
+
+        recipient =request.POST.get('recipient')
+        sender =request.POST.get('sender')
+        sub =request.POST.get('subject')
+        message =request.POST.get('message')
+
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    template_filename = 'view_recurring_bills.html'
+    template_path = os.path.join(script_directory, 'templates', template_filename)
+
+    with open(template_path, 'r') as file:
+        html_content = file.read()
+        
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    section = soup.find('div', class_='print-only')
+    section_html = section.prettify()
+    template = Template(section_html)
+
+    if template:
+        prntonly_content = str(template)
+
+    # print(prntonly_content)
+    with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as temp_file:
+        temp_file.write(prntonly_content.encode('utf-8'))
+
+    with open(temp_file.name, 'rb') as attachment_file:
+        attachment_content = attachment_file.read()
+
+    email = EmailMessage(
+        subject=sub,
+        body=message,
+        from_email=sender,
+        to=[recipient],
+    )
+    email.attach('Recurring Bill',attachment_content , 'text/html')
+
+    email.send()
+     
+    return HttpResponse(status=200)

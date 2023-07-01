@@ -76,7 +76,9 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
   }
-
+  .modal{
+      z-index: 9999;
+    }
 
     </style>
 
@@ -101,8 +103,8 @@
           <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
         </div>
         <div class="col-md-6">
-          <select name="vendor" id="vendor" class="form-control" >
-            <option value="{{recur_bills.vendor_name}} {{vend.id}}" selected>{{recur_bills.vendor_name}}</option>
+          <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
+            <option value="{{recur_bills.vendor_name}} {{vend.id}}" selected class="text-dark bg-light">{{recur_bills.vendor_name}}</option>
 
             <div class="dropdown-divider"></div>
             {% for v in vendor %}
@@ -118,7 +120,7 @@
           <label for="email_inp">Vendor Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="email_inp" name="email_inp">
+          <input type="text" class="form-control text-dark bg-light" id="email_inp" name="email_inp">
         </div>
       </div>
 
@@ -127,7 +129,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="gst_trt_inp" name="gst_trt_inp" >
+          <input type="text" class="form-control text-dark bg-light" id="gst_trt_inp" name="gst_trt_inp" >
         </div>
       </div>
 
@@ -136,7 +138,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="gstin_inp" name="gstin_inp">
+          <input type="text" class="form-control text-dark bg-light" id="gstin_inp" name="gstin_inp">
         </div>
       </div>
 
@@ -146,7 +148,7 @@
         </div>
 
         <div class="col-md-6">
-            <select name="srcofsupply" id="" class="form-control">
+            <select name="srcofsupply" id="" class="form-control text-dark bg-light">
                 <option value="{{recur_bill.source_supply}}" selected>{{recur_bill.source_supply}}</option>    
 
                 <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
@@ -200,7 +202,7 @@
         </div>
 
         <div class="col-md-6">
-          <input type="text" class="form-control"  id="prof_name" name="prof_name" value="{{recur_bills.profile_name}}">
+          <input type="text" class="form-control text-dark bg-light"  id="prof_name" name="prof_name" value="{{recur_bills.profile_name}}">
         </div>
       </div>
 
@@ -211,7 +213,7 @@
 
         <div class="col-md-6">
           <div class="d-flex">
-            <select class="form-control" required name="repeat">
+            <select class="form-control text-dark bg-light" required name="repeat">
                 <option selected value="{{recur_bills.repeat_every}}">{{recur_bills.repeat_every}}</option>
                 <option value="1 Week">Week</option>
                 <option value="2 Weeks">2 Weeks</option>
@@ -235,7 +237,7 @@
             <label for="date1">Starts On</label>
           </div>
           <div class="col-md-3">
-            <input type="date" class="form-control" id="date1" name="start_date" value="{{ recur_bills.start_date| date:'Y-m-d' }}">
+            <input type="date" class="form-control text-dark bg-light" id="date1" name="start_date" value="{{ recur_bills.start_date| date:'Y-m-d' }}">
           </div>
       </div>
       <div class="row mt-2">
@@ -243,7 +245,7 @@
           <label for="date2">Ends On</label>
         </div>
         <div class="col-md-3">
-          <input type="date" class="form-control"  id="date2" name="end_date" value="{{ recur_bills.end_date| date:'Y-m-d' }}">
+          <input type="date" class="form-control text-dark bg-light"  id="date2" name="end_date" value="{{ recur_bills.end_date| date:'Y-m-d' }}">
         </div>
         <div class="col-md-3">
           <input type="checkbox" id="never-expire-checkbox" onchange="toggleDateInput()" />
@@ -257,7 +259,7 @@
         </div>
         <div class="col-md-6">
           <div class="d-flex">
-            <select class="form-control" id="terms" required name="terms" >
+            <select class="form-control text-dark bg-light" id="terms" required name="terms" >
               <option selected value="{{recur_bills.payment_terms}}">NET {{recur_bills.payment_terms }}</option>
               {% for p in payments %}
                 <option  value="{{p.id}} {{p.Terms}} {{ p.days}}">{{p.Terms}}</option>
@@ -292,8 +294,8 @@
           <label style="color: rgb(190, 88, 88);">Customer Name *</label><br>
         </div>
         <div class="col-md-6">
-          <select name="customer" id="customer" class="form-control">
-            <option value=" {{recur_bills.customer_name}}" selected>{{recur_bills.customer_name}}</option>    
+          <select name="customer" id="customer" class="form-control text-dark bg-light">
+            <option value=" {{recur_bills.customer_name}}" selected class="text-dark bg-light">{{recur_bills.customer_name}}</option>    
             {% for c in customer %}
             <option value=" {{ c.customerName }}">{{ c.customerName }}</option>
             {% endfor %}
@@ -311,7 +313,7 @@
           <label for="cemail_inp">Customer Email</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control"  id="cemail_inp" name="cemail_inp">
+          <input type="text" class="form-control text-dark bg-light"  id="cemail_inp" name="cemail_inp">
         </div>
       </div>
 
@@ -320,7 +322,7 @@
           <label for="gst_trt_inp">GST Treatment</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control"  id="cgst_trt_inp" name="cgst_trt_inp">
+          <input type="text" class="form-control text-dark bg-light"  id="cgst_trt_inp" name="cgst_trt_inp">
         </div>
       </div>
 
@@ -329,7 +331,7 @@
           <label for="gstin_inp">GST Number</label>
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" id="cgstin_inp" name="cgstin_inp">
+          <input type="text" class="form-control text-dark bg-light" id="cgstin_inp" name="cgstin_inp">
         </div>
       </div>
 
@@ -357,7 +359,7 @@
               <tr id='addr{{forloop.counter}}'>
                 <td style="width: 20%;">
                   <div class="d-flex">
-                    <select name='item[]' id="item{{forloop.counter}}" class="form-control item" onchange = "showRate(this.id,this.value);">
+                    <select name='item[]' id="item{{forloop.counter}}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
                       <option value=" {{ri.item }}" selected >{{ ri.item }}</option>
                       {% for i in item %}
                         <option value="{{i.id}}">{{ i.Name  }} </option>
@@ -368,7 +370,7 @@
                 </td>
                 <td  style="width: 20%;">
                   <div class="d-flex">
-                    <select name='account[]' id="account{{forloop.counter}}" class="form-control acnt">
+                    <select name='account[]' id="account{{forloop.counter}}" class="form-control acnt text-dark bg-light">
                       <option value="{{ ri.account }} " selected>{{ ri.account }}</option>
                       <hr>
                       {% for i in account %}
@@ -378,16 +380,16 @@
                   </div>  
                 </td>
                 <td style="width: 10%;">
-                  <input type="number" name='qty[]' placeholder='Qty' id="qty{{forloop.counter}}" value=" {{ ri.quantity }} "  class="form-control qty" step=0 min=0/>
+                  <input type="number" name='qty[]' placeholder='Qty' id="qty{{forloop.counter}}" value=" {{ ri.quantity }} "  class="form-control qty text-dark bg-light" step=0 min=0/>
                 </td>
                 <td style="width: 10%;">
-                  <input type="text" name='rate[]' id="rate{{forloop.counter}}" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate" />
+                  <input type="text" name='rate[]' id="rate{{forloop.counter}}" placeholder='Rate' value=" {{ ri.rate }} " class="form-control rate text-dark bg-light" />
                 </td>
                 <td style="width: 15%;">
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
 
-                  <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex" id="selecttax{{forloop.counter}}" value="{{ ri.tax }}% GST({{ ri.tax }}%)">
-                  <select name="tax[]" id="tax{{forloop.counter}}" class="form-control tax1 d-none mb-2">
+                  <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex text-dark bg-light" id="selecttax{{forloop.counter}}" value="{{ ri.tax }}% GST({{ ri.tax }}%)">
+                  <select name="tax[]" id="tax{{forloop.counter}}" class="form-control tax1 d-none mb-2 text-dark bg-light">
                     <optgroup class="d-none" id="intra_tax{{forloop.counter}}" label="Choose GST">
                       <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }} >{{ ri.tax }}% GST({{ ri.tax }}%)</option>
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
@@ -402,7 +404,7 @@
                       <option value=0 text={{ cmp1.state }}>Out of Scope(0%)</option>
                     </optgroup>
 
-                    <optgroup class="d-none" id="inter_tax{{forloop.counter}}" label="Choose IGST">
+                    <optgroup class="d-none text-dark bg-light" id="inter_tax{{forloop.counter}}" label="Choose IGST">
                       <option id="ta1" value="{{ ri.tax  }} " text={{ cmp1.state }}>{{ ri.tax }}% IGST({{ ri.tax }}%) </option>                      <option value=28 text=" ">28.0% IGST(28%)</option>
                       <option value=18 text=" ">18.0% IGST(18%)</option>
                       <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -418,11 +420,11 @@
 
                 </td>
                 <td style="width: 11%;">
-                  <input type="text" name='discount[]' id="disc{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="form-control disc"/>
+                  <input type="text" name='discount[]' id="disc{{forloop.counter}}" value=" {{ri.discount}} " placeholder='Discount' class="text-dark bg-light form-control disc"/>
                 </td>
 
                 <td style="width: 11%;">
-                  <input type="text" name='amount[]' id="amount{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class="form-control amount1" step="0.00" min="0"  />
+                  <input type="text" name='amount[]' id="amount{{forloop.counter}}" value=" {{ri.amount}} " placeholder='Amount' class=" text-dark bg-light form-control amount1" step="0.00" min="0"  />
                 </td>
 
               </tr>
@@ -442,7 +444,7 @@
         <div class="col-md-5 mt-2 p-3 mx-5">
           <label for="">Note</label>
           <div class="form-row">
-            <textarea class="form-control" name="note" rows="15" style="height: 200px;" value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
+            <textarea class="form-control text-dark bg-light" name="note" rows="15" style="height: 200px;" value="{{recur_bills.note}}">{{recur_bills.note}}</textarea>
           </div><br>
           <div>
             <input type="file" class="form-control" name="file" value="{{recur_bills.document}}">
@@ -458,7 +460,7 @@
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
               <input type="number" step="any" name='subtotal' placeholder=0 value="{{recur_bills.sub_total}}"
-                class="form-control" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
+                class="form-control text-dark bg-light" id="subtotal" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;">
             </div>
           </div>
           
@@ -466,21 +468,21 @@
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">IGST</label></div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2"><input type="number" name='igst' step="any" id="igst" placeholder=0 value="{{recur_bills.igst}}"
-                class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="cgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">CGST</label></div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2"><input type="number" name='cgst' step="any" id="cgst" placeholder=0 value="{{recur_bills.cgst}}"
-                class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
           <div class="row container-fluid p-2 m-0 d-none" id="sgst1">
             <div class="col-sm-5 mt-2"><label for="a" class="text-center">SGST</label></div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2"><input type="number" name='sgst' step="any" id="sgst" placeholder=0 value="{{recur_bills.sgst}}"
-                class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
 
@@ -490,28 +492,28 @@
             </div>
             <div class="col-sm-3 mt-2">
               <input type="number" name='addcharge' step="any" value="{{recur_bills.shipping_charge}}" id="addcharge" placeholder=0 
-              class="form-control"/>
+              class="form-control text-dark bg-light"/>
             </div>
             <div class="col-sm-4 mt-2">
               <input type="number" name='shipcharge' step="any" id="shipcharge" placeholder=0 value="{{recur_bills.shipping_charge}}"
-                class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div>
 
           <div class="row container-fluid p-2 m-0">
             <div class="col-sm-5 mt-2"><label class="text-right" >Adjustment</label></div>
             <div class="col-sm-3 mt-2"><input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 
-              class="form-control"></div>
+              class="form-control text-dark bg-light"></div>
             <div class="col-sm-4 mt-2"><input type="number" name='round_off' step="any" id="round_off" placeholder=0 
-                class="form-control" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
             </div>
           </div><hr>
                  
           <div class="row container-fluid  p-2 m-0">
-            <div class="col-sm-5 mt-2"><label for="a" class="text-center" id="grandtotallbl">Grand Total</label></div>
+            <div class="col-sm-5 mt-2"><label for="a" class="text-center " id="grandtotallbl">Grand Total</label></div>
             <div class="col-sm-2 mt-2"></div>
             <div class="col-sm-5 mt-2"><input type="number" name='grand_total' id="grandtotal" placeholder="0" step="any" 
-                value="{{recur_bills.grand_total}}"class="form-control text-dark" readonly>
+                value="{{recur_bills.grand_total}}"class="form-control text-dark bg-light" readonly>
             </div>
           </div>
         </div>   
@@ -543,7 +545,7 @@
                     <label for="validationCustom01">Title</label>
                   </div>
                   <div class="col-md-3 mt-2">
-                    <select name="title" id="title" class="form-control">
+                    <select name="title" id="title" class="form-control text-dark bg-light">
                       <option value="Mr">Mr</option>
                       <option value="Mrs">Mrs</option>
                       <option value="Miss">Miss</option>
@@ -556,7 +558,7 @@
                     <label for="fname">First name</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="fname" name="firstname" required>
+                    <input type="text" class="form-control text-dark bg-light" id="fname" name="firstname" required>
                   </div>
                 </div>
                 <div class="row">
@@ -565,7 +567,7 @@
                     <label id="vdisplayname" name = "vdisplayname" hidden></label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="lname" name="lastname">
+                    <input type="text" class="form-control text-dark bg-light" id="lname" name="lastname">
                   </div>
                 </div>
 
@@ -574,7 +576,7 @@
                     <label for="company">Company Name</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="vcompany" name="vcompany_name">
+                    <input type="text" class="form-control text-dark bg-light" id="vcompany" name="vcompany_name">
                   </div>
                 </div>
 
@@ -583,7 +585,7 @@
                     <label for="email">Email</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="email" class="form-control" id="vemail" name="vemail" placeholder="example@gmail.com">    
+                    <input type="email" class="form-control text-dark bg-light" id="vemail" name="vemail" placeholder="example@gmail.com">    
                   </div>              
                 </div>
 
@@ -592,10 +594,10 @@
                     <label for="email">Vendor Phone</label>
                   </div>
                   <div class="col-md-3 mt-2">
-                    <input type="text" class="form-control" id="vw_mobile" placeholder="Work Number" maxlength="10" name="vw_mobile">
+                    <input type="text" class="form-control text-dark bg-light" id="vw_mobile" placeholder="Work Number" maxlength="10" name="vw_mobile">
                   </div>        
                   <div class="col-md-3 mt-2">
-                    <input type="text" class="form-control" id="vp_mobile" placeholder="Personal Number" maxlength="10" name="vp_mobile">
+                    <input type="text" class="form-control text-dark bg-light" id="vp_mobile" placeholder="Personal Number" maxlength="10" name="vp_mobile">
                   </div>          
                 </div>
 
@@ -608,7 +610,7 @@
                     <label for="wsite">Website</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="wsite" placeholder="www.example.com" name="website">
+                    <input type="text" class="form-control text-dark bg-light" id="wsite" placeholder="www.example.com" name="website">
                   </div>       
                 </div>
 
@@ -617,7 +619,7 @@
                     <label for="vskype">Skype name/Number</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="vskype" name="vskype">
+                    <input type="text" class="form-control text-dark bg-light" id="vskype" name="vskype">
                   </div>       
                 </div>
 
@@ -626,7 +628,7 @@
                     <label for="v_desg">Designation</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_desg" name="v_desg">
+                    <input type="text" class="form-control text-dark bg-light" id="v_desg" name="v_desg">
                   </div>       
                 </div>
 
@@ -635,7 +637,7 @@
                     <label for="v_dpt">Department</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_dpt" name="v_dpt">
+                    <input type="text" class="form-control text-dark bg-light" id="v_dpt" name="v_dpt">
                   </div>       
                 </div>
 
@@ -644,7 +646,7 @@
                     <label for="v_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <select class="form-control" id="v_gsttype" name="v_gsttype" required>
+                    <select class="form-control text-dark bg-light" id="v_gsttype" name="v_gsttype" required>
                       <option selected disabled value="">Choose..</option>
                       <option value="Registered Business - Regular">Registered Business - Regular <span><i>(Business that is registered under gst)</i></span></option>
                       <option value="Registered Business - Composition">Registered Business - Composition (Business that is registered under composition scheme in gst)</option>
@@ -663,7 +665,7 @@
                     <label id="glbl" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_gstin" name="v_gstin" placeholder="29APPCK7465F1Z1">
+                    <input type="text" class="form-control text-dark bg-light" id="v_gstin" name="v_gstin" placeholder="29APPCK7465F1Z1">
                     <label id="gst_label"></label>
                   </div>       
                 </div>
@@ -673,7 +675,7 @@
                     <label for="v_pan">PAN Number</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_pan" name="v_pan" placeholder="APPCK7465F">
+                    <input type="text" class="form-control text-dark bg-light" id="v_pan" name="v_pan" placeholder="APPCK7465F">
                     <label id="pan_label"></label>
                   </div>       
                 </div>
@@ -683,7 +685,7 @@
                     <label for="" style="color: rgb(190, 88, 88);">Source of Supply *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <select class="form-control" id="v_srcsupply" name="v_sourceofsupply">
+                    <select class="form-control text-dark bg-light" id="v_srcsupply" name="v_sourceofsupply">
                       <option value="Nill"></option>
                       <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                       <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
@@ -732,7 +734,7 @@
                     <label for="v_curn">Currency </label>
                   </div>
                   <div class="col-md-3 mt-2">
-                    <select class="form-control" id="v_curn" name="v_curn" required>
+                    <select class="form-control text-dark bg-light" id="v_curn" name="v_curn" required>
                       <option selected disabled value="">Choose..</option>
                       <option value="INR">INR</option>
                     </select>
@@ -744,7 +746,7 @@
                     <label for="v_open">Opening Balance</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="v_open" name="v_open">
+                    <input type="text" class="form-control text-dark bg-light" id="v_open" name="v_open">
                   </div>       
                 </div>
 
@@ -754,7 +756,7 @@
                   </div>
                   <div class="col-md-6 mt-2">
                     <div class="d-flex">
-                      <select class="form-control" id="v_terms" name="v_terms" required>
+                      <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
                         <option selected value="15">NET 15</option>
                         <option value="30">NET 30</option>
                         <option value="45">NET 45</option>
@@ -794,7 +796,7 @@
                     <label for="vstreet">Street</label>
                   </div>
                   <div class="col-md-4">
-                    <textarea class="form-control street" id="vstreet" name="vstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="vstreet" name="vstreet"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
@@ -802,7 +804,7 @@
                     <label for="vsstreet">Street</label>
                   </div>
                   <div class="col-md-4 ">
-                    <textarea class="form-control street" id="vsstreet" name="vsstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="vsstreet" name="vsstreet"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
@@ -813,7 +815,7 @@
                     <label for="vcity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vcity" name="vcity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="vcity" name="vcity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
@@ -821,7 +823,7 @@
                     <label for="vscity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vscity" name="vscity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="vscity" name="vscity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
@@ -832,7 +834,7 @@
                     <label for="vstate">State</label>
                   </div>
                   <div class="col-md-4">
-                    <select type="text" class="form-control" id="vstate" name="vstate">
+                    <select type="text" class="form-control text-dark bg-light" id="vstate" name="vstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -882,7 +884,7 @@
                     <label for="vsstate">State</label>
                   </div>
                   <div class="col-md-4 ">
-                    <select type="text" class="form-control" id="vsstate" name="vsstate">
+                    <select type="text" class="form-control text-dark bg-light" id="vsstate" name="vsstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -936,7 +938,7 @@
                     <label for="vcountry">Country</label>
                   </div>
                   <div class="col-md-4 ">
-                    <input type="text" class="form-control" id="vcountry" name="vcountry" placeholder="Country">  
+                    <input type="text" class="form-control text-dark bg-light" id="vcountry" name="vcountry" placeholder="Country">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -944,7 +946,7 @@
                     <label for="vscountry">Country</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vscountry"  name="vscountry" placeholder="Country">
+                    <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="vscountry" placeholder="Country">
                   </div>
                   <div class="col-md-1 "></div>
 
@@ -956,7 +958,7 @@
                     <label for="vpincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -964,7 +966,7 @@
                     <label for="vspincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
+                    <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -976,7 +978,7 @@
                     <label for="vphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vphone" name="vphone" maxlength="6" placeholder="Phone"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vphone" name="vphone" maxlength="6" placeholder="Phone"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -984,7 +986,7 @@
                     <label for="vsphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vsphone" name="vsphone" maxlength="6" placeholder="Phone">  
+                    <input type="text" class="form-control text-dark bg-light" id="vsphone" name="vsphone" maxlength="6" placeholder="Phone">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -996,7 +998,7 @@
                     <label for="vfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vfax" name="vfax" maxlength="6" placeholder="FAX"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vfax" name="vfax" maxlength="6" placeholder="FAX"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1004,7 +1006,7 @@
                     <label for="vsfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vsfax" name="vsfax" maxlength="6" placeholder="FAX">  
+                    <input type="text" class="form-control text-dark bg-light" id="vsfax" name="vsfax" maxlength="6" placeholder="FAX">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1072,11 +1074,11 @@
                   <div class="col-md-2 mt-2"></div>
 
                   <div class="col-md-4 mt-2">
-                    <input type="text" class="form-control" id="term_name" name="term_name" required>      
+                    <input type="text" class="form-control text-dark bg-light" id="term_name" name="term_name" required>      
                   </div>
 
                   <div class="col-md-4 mt-2">
-                    <input type="text" class="form-control" id="term_days" name="term_days" required>
+                    <input type="text" class="form-control text-dark bg-light" id="term_days" name="term_days" required>
                   </div>
                   <div class="col-md-2 mt-2"></div>
 
@@ -1144,7 +1146,7 @@
                     <label for="ctitle">Title</label>
                   </div>
                   <div class="col-md-3">
-                    <select name="ctitle" id="ctitle" class="form-control">
+                    <select name="ctitle" id="ctitle" class="form-control text-dark bg-light">
                       <option value="Mr." selected>Mr.</option>
                       <option value="Mrs.">Mrs.</option>
                       <option value="Ms.">Ms.</option>
@@ -1158,7 +1160,7 @@
                     <label for="cfname">First name</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="cfname" name="cfirstname" required>
+                    <input type="text" class="form-control text-dark bg-light" id="cfname" name="cfirstname" required>
                   </div>
                 </div>
                 <div class="row mt-2">
@@ -1167,7 +1169,7 @@
                     <label id="cdisplayname" name = "cdisplayname" hidden></label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="clname" name="clastname">
+                    <input type="text" class="form-control text-dark bg-light" id="clname" name="clastname">
                   </div>
                 </div>
 
@@ -1176,7 +1178,7 @@
                     <label for="ccompany">Company Name</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="ccompany" name="ccompany_name">
+                    <input type="text" class="form-control text-dark bg-light" id="ccompany" name="ccompany_name">
                   </div>
                 </div>
 
@@ -1185,7 +1187,7 @@
                     <label for="cemail">Customer Email</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="email" class="form-control" id="cemail" name="cemail" placeholder="example@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">    
+                    <input type="email" class="form-control text-dark bg-light" id="cemail" name="cemail" placeholder="example@gmail.com" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$">    
                   </div>              
                 </div>
 
@@ -1194,7 +1196,7 @@
                     <label for="email">Customer Phone</label>
                   </div>
                   <div class="col-md-3 mt-2">
-                    <input type="text" class="form-control" id="cw_mobile" placeholder="Work Number" maxlength="10" name="cw_mobile">
+                    <input type="text" class="form-control text-dark bg-light" id="cw_mobile" placeholder="Work Number" maxlength="10" name="cw_mobile">
                   </div>        
                   <div class="col-md-3 mt-2">
                     <input type="text" class="form-control" id="cp_mobile" placeholder="Personal Number" maxlength="10" name="cp_mobile">
@@ -1209,7 +1211,7 @@
                     <label for="facebook">Facebook</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="facebook" placeholder="www.example.com" name="facebook">
+                    <input type="text" class="form-control text-dark bg-light" id="facebook" placeholder="www.example.com" name="facebook">
                   </div>       
                 </div>
                 <div class="row mt-2">
@@ -1217,7 +1219,7 @@
                     <label for="twitter">Twitter</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="twitter" placeholder="www.example.com" name="twitter">
+                    <input type="text" class="form-control text-dark bg-light " id="twitter" placeholder="www.example.com" name="twitter">
                   </div>       
                 </div>
 
@@ -1227,7 +1229,7 @@
                     <label for="website">Website</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="website" placeholder="www.example.com" name="website">
+                    <input type="text" class="form-control text-dark bg-light" id="website" placeholder="www.example.com" name="website">
                   </div>       
                 </div>
 
@@ -1236,7 +1238,7 @@
                     <label for="cskype">Skype name/Number</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="cskype" name="cskype">
+                    <input type="text" class="form-control text-dark bg-light" id="cskype" name="cskype">
                   </div>       
                 </div>
 
@@ -1245,7 +1247,7 @@
                     <label for="c_desg">Designation</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="c_desg" name="c_desg">
+                    <input type="text" class="form-control text-dark bg-light" id="c_desg" name="c_desg">
                   </div>       
                 </div>
 
@@ -1254,7 +1256,7 @@
                     <label for="c_dpt">Department</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="c_dpt" name="c_dpt">
+                    <input type="text" class="form-control text-dark bg-light" id="c_dpt" name="c_dpt">
                   </div>       
                 </div>
 
@@ -1263,7 +1265,7 @@
                     <label for="c_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <select class="form-control" id="c_gsttype" name="c_gsttype" required>
+                    <select class="form-control text-dark bg-light" id="c_gsttype" name="c_gsttype" required>
                       <option value="value" selected>Select a Gst Treatment</option>
                       <option value="Registered Business-Regular Business that is registered under GST">Registered Business-Regular Business that is registered under GST</option>
                       <option value="Registered Business-Composition Business that is registered under the Composition scheme in GST">Registered Business-Composition Business that is registered under the Composition scheme in GST</option>
@@ -1300,7 +1302,7 @@
                     <label for="" style="color: rgb(190, 88, 88);">Place of Supply *</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <select class="form-control" id="placesupply" name="placesupply">
+                    <select class="form-control text-dark bg-light" id="placesupply" name="placesupply">
                       <option value="Nill"></option>
                       <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                       <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
@@ -1367,7 +1369,7 @@
                     <label for="c_curn">Currency </label>
                   </div>
                   <div class="col-md-3 mt-2">
-                    <select class="form-control" id="c_curn" name="c_curn" required>
+                    <select class="form-control text-dark bg-light" id="c_curn" name="c_curn" required>
                       <option selected disabled value="">Choose..</option>
                       <option value="INR">INR</option>
                     </select>
@@ -1379,7 +1381,7 @@
                     <label for="c_open">Opening Balance</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="c_open" name="c_open">
+                    <input type="text" class="form-control text-dark bg-light" id="c_open" name="c_open">
                   </div>       
                 </div>
 
@@ -1389,7 +1391,7 @@
                   </div>
                   <div class="col-md-6 mt-2">
                     <div class="d-flex">
-                      <select class="form-control" id="v_terms" name="v_terms" required>
+                      <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
                         <option selected value="15">NET 15</option>
                         <option value="30">NET 30</option>
                         <option value="45">NET 45</option>
@@ -1430,7 +1432,7 @@
                     <label for="vstreet">Street</label>
                   </div>
                   <div class="col-md-4">
-                    <textarea class="form-control street" id="vstreet" name="vstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="vstreet" name="vstreet"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1438,7 +1440,7 @@
                     <label for="vsstreet">Street</label>
                   </div>
                   <div class="col-md-4 ">
-                    <textarea class="form-control street" id="vsstreet" name="vsstreet"></textarea>
+                    <textarea class="form-control street text-dark bg-light" id="vsstreet" name="vsstreet"></textarea>
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1449,7 +1451,7 @@
                     <label for="vcity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vcity" name="vcity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="vcity" name="vcity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
@@ -1457,7 +1459,7 @@
                     <label for="vscity">City</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vscity" name="vscity" placeholder="City">  
+                    <input type="text" class="form-control text-dark bg-light" id="vscity" name="vscity" placeholder="City">  
                   </div>
                   <div class="col-md-1">
                   </div>
@@ -1468,7 +1470,7 @@
                     <label for="vstate">State</label>
                   </div>
                   <div class="col-md-4">
-                    <select type="text" class="form-control" id="vstate" name="vstate">
+                    <select type="text" class="form-control text-dark bg-light" id="vstate" name="vstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads</option>
@@ -1517,7 +1519,7 @@
                     <label for="vsstate">State</label>
                   </div>
                   <div class="col-md-4 ">
-                    <select type="text" class="form-control" id="vsstate" name="vsstate">
+                    <select type="text" class="form-control text-dark bg-light" id="vsstate" name="vsstate">
                       <option value="" selected>Choose</option>
                       <option value="None Of This">None Of This</option>
                       <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -1571,7 +1573,7 @@
                     <label for="vcountry">Country</label>
                   </div>
                   <div class="col-md-4 ">
-                    <input type="text" class="form-control" id="vcountry" name="vcountry" placeholder="Country">  
+                    <input type="text" class="form-control text-dark bg-light" id="vcountry" name="vcountry" placeholder="Country">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1579,7 +1581,7 @@
                     <label for="vscountry">Country</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vscountry"  name="vscountry" placeholder="Country">
+                    <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="vscountry" placeholder="Country">
                   </div>
                   <div class="col-md-1 "></div>
 
@@ -1591,7 +1593,7 @@
                     <label for="vpincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
+                    <input type="text" class="form-control text-dark bg-light" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1599,7 +1601,7 @@
                     <label for="vspincode">Pincode</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
+                    <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1611,7 +1613,7 @@
                     <label for="vphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="cphone" name="cphone" maxlength="6" placeholder="Phone"> 
+                    <input type="text" class="form-control text-dark bg-light" id="cphone" name="cphone" maxlength="6" placeholder="Phone"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1619,7 +1621,7 @@
                     <label for="csphone">Phone</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="csphone" name="csphone" maxlength="6" placeholder="Phone">  
+                    <input type="text" class="form-control text-dark bg-light" id="csphone" name="csphone" maxlength="6" placeholder="Phone">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1631,7 +1633,7 @@
                     <label for="cfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="cfax" name="cfax" maxlength="6" placeholder="FAX"> 
+                    <input type="text" class="form-control text-dark bg-light" id="cfax" name="cfax" maxlength="6" placeholder="FAX"> 
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1639,7 +1641,7 @@
                     <label for="csfax">Fax</label>
                   </div>
                   <div class="col-md-4">
-                    <input type="text" class="form-control" id="csfax" name="csfax" maxlength="6" placeholder="FAX">  
+                    <input type="text" class="form-control text-dark bg-light" id="csfax" name="csfax" maxlength="6" placeholder="FAX">  
                   </div>
                   <div class="col-md-1"></div>
 
@@ -1710,7 +1712,7 @@
                     <label for="name" style="color: rgb(190, 88, 88);">Name *</label>
                   </div>
                   <div class="col-md-6">
-                    <input type="text" class="form-control" id="item_name" name="item_name" required>
+                    <input type="text" class="form-control text-dark bg-light" id="item_name" name="item_name" required>
                   </div>
                 </div>
                 <div class="row mt-2">
@@ -1719,7 +1721,7 @@
                   </div>
                   <div class="col-md-6">
                     <div class="d-flex">
-                      <select class="form-control" id="item_units" name="item_units" required>
+                      <select class="form-control text-dark bg-light" id="item_units" name="item_units" required>
                         <option value="">Select Unit</option>
                         {% for u in units %}
                         <option value="{{u.id}}">{{u.unit}}</option>
@@ -1753,7 +1755,7 @@
                     <label for="intra">Intra-State TAX</label>
                   </div>
                   <div class="col-md-3">
-                    <select name="intra" class="form-control" id="intra">
+                    <select name="intra" class="form-control text-dark bg-light" id="intra">
                       <option value="">Select GST</option>
 
                       <option value="GST0[0%]">GST0[0%]</option>
@@ -1769,7 +1771,7 @@
                     <label for="inter">Inter-State TAX</label>
                   </div>
                   <div class="col-md-3">
-                    <select name="inter" class="form-control" id="inter">
+                    <select name="inter" class="form-control text-dark bg-light" id="inter">
                       <option value="">Select GST</option>
 
                       <option value="IGST0[0%]">IGST0[0%]</option>
@@ -1805,7 +1807,7 @@
                       <div class="input-group-prepend">
                         <div class="input-group-text">INR</div>
                       </div>
-                      <input required type="text" class="form-control" name="sell_price" id="sell_price">
+                      <input required type="text" class="form-control text-dark bg-light" name="sell_price" id="sell_price">
                     </div>                  
                   </div>
 
@@ -1817,7 +1819,7 @@
                       <div class="input-group-prepend">
                         <div class="input-group-text">INR</div>
                       </div>
-                      <input required type="text" class="form-control" name="cost_price" id="cost_price">
+                      <input required type="text" class="form-control text-dark bg-light" name="cost_price" id="cost_price">
                     </div>
                   </div>
                 </div>
@@ -1827,7 +1829,7 @@
                     <label for="vcity">Account</label>
                   </div>
                   <div class="col-md-4">
-                    <select name="sell_acc" id="sell_acc" class="form-control">
+                    <select name="sell_acc" id="sell_acc" class="form-control text-dark bg-light">
                       <option value="">Select Account</option>
        
                       {% for sale in sales_type %}
@@ -1844,7 +1846,7 @@
                     <label for="cost_acc">Account</label>
                   </div>
                   <div class="col-md-4">
-                    <select name="cost_acc" class="form-control" id="cost_acc">
+                    <select name="cost_acc" class="form-control text-dark bg-light" id="cost_acc">
                       <option value="">Select Account</option>
 
 
@@ -1866,14 +1868,14 @@
                     <label for="sell_desc">Description</label>
                   </div>
                   <div class="col-md-4">
-                    <input  type="text" name="sell_desc" class="form-control"  id="sell_desc">
+                    <input  type="text" name="sell_desc" class="form-control text-dark bg-light"  id="sell_desc">
                   </div>
   
                   <div class="col-md-2">
                     <label for="cost_desc">Description</label>
                   </div>
                   <div class="col-md-4 ">
-                    <input  type="text" name="cost_desc" class="form-control"  id="cost_desc">
+                    <input  type="text" name="cost_desc" class="form-control text-dark bg-light"  id="cost_desc">
                   </div>
 
                 </div>
@@ -1930,7 +1932,7 @@
                   </div>
 
                   <div class="col-md-4 mt-2">
-                    <input type="text" class="form-control" id="unit" name="unit" required>
+                    <input type="text" class="form-control text-dark bg-light" id="unit" name="unit" required>
                   </div>
                   <div class="col-md-4 mt-2"></div>
                 </div>
@@ -1980,7 +1982,7 @@
                     <label for="">Account Type</label><br>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="acct_type" name="acct_type" required>
+                    <input type="text" class="form-control text-dark bg-light" id="acct_type" name="acct_type" required>
                   </div>
                 </div>
                 
@@ -1989,7 +1991,7 @@
                     <label for="cfname">Account name</label>
                   </div>
                   <div class="col-md-6 mt-2">
-                    <input type="text" class="form-control" id="acct_name" name="acct_name" required>
+                    <input type="text" class="form-control text-dark bg-light" id="acct_name" name="acct_name" required>
                   </div>
                 </div>            
 
