@@ -82,6 +82,7 @@
 
     .modal{
       z-index: 9999;
+      overflow: scroll;
     }
     </style>
 
@@ -97,7 +98,7 @@
   </div>
 
   <div class="card radius-15 p-5">
-    <form action="{% url 'create_recurring_bills' %}" class="mt-2 mb-4" method="post" enctype="multipart/form-data">
+    <form action="{% url 'create_recurring_bills' %}" class="mt-2 mb-4" method="post" enctype="multipart/form-data" id="myForm">
       {% csrf_token %}
       <div class="row">
         <div class="col-md-3">
@@ -384,7 +385,7 @@
                   <input type="hidden" id="tax_total0" class="form-control mb-2 d-none">
 
                   <input type="text" placeholder="Select Tax" class="form-control selecttax text-dark bg-light" id="selecttax">
-                  <select name="tax[]" id="tax1" class="form-control tax1 d-none mb-2">
+                  <select name="tax[]" id="tax1" class="form-control tax1 d-none mb-2 text-dark bg-light">
                     <optgroup class="d-none text-dark bg-light" id="intra_tax" label="Choose GST">
                       <!-- <option id="ta1" value=0 text={{ cmp1.state }} disabled>Choose</option> -->
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
@@ -448,7 +449,7 @@
         <div class="col-md-5 table-responsive-md mt-3 ml-5 mr-0 p-2" id="tab_logic_total" style="background-color:rgba(5, 5, 5, 0.4); border: 1px solid rgba(128, 128, 128, 0.6);"><br>
           <div class="row container-fluid p-2 m-0">
             <div class="col-sm-5 mt-2">
-              <label for="a" class="text-center text-dark bg-light">Sub Total</label>
+              <label for="a" class="text-center">Sub Total</label>
             </div>
             <div class="col-sm-3 mt-2"></div>
             <div class="col-sm-4 mt-2">
@@ -484,21 +485,26 @@
               <label for="addcharge" class="text-right">Shipping Charges</label>
             </div>
             <div class="col-sm-3 mt-2">
-              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 
-              class="form-control text-dark bg-light"/>
+              <!-- <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 
+              class="form-control text-dark bg-light"/> -->
             </div>
             <div class="col-sm-4 mt-2">
-              <input type="number" name='shipcharge' step="any" id="shipcharge" placeholder=0 
-                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+              <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 
+              class="form-control text-dark bg-light"/>
+              <!-- <input type="number" name='addcharge' step="any" id="addcharge" placeholder=0 
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/> -->
             </div>
           </div>
 
           <div class="row container-fluid p-2 m-0">
             <div class="col-sm-5 mt-2"><label class="text-right" >Adjustment</label></div>
-            <div class="col-sm-3 mt-2"><input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 
-              class="form-control text-dark bg-light"></div>
-            <div class="col-sm-4 mt-2"><input type="number" name='round_off' step="any" id="round_off" placeholder=0 
-                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/>
+            <div class="col-sm-3 mt-2">
+              <!-- <input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 class="form-control text-dark bg-light"> -->
+            </div>
+            <div class="col-sm-4 mt-2">
+              <input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 class="form-control text-dark bg-light">
+              <!-- <input type="number" name='add_round_off' step="any" id="add_round_off" placeholder=0 
+                class="form-control text-dark bg-light" readonly style="background-color: #2A3038;border: 1px solid #2c2e33;"/> -->
             </div>
           </div><hr>
                  
@@ -512,10 +518,14 @@
         </div>   
       </div>
       <div class="row mt-5 mb-3">
-        <center>
-          <input type="submit" class="btn save_btn text-align-center font-weight-bold mt-2" 
-                  style="width: 200px; text-align: center ;" value="SAVE CHANGES" id="save">
-        </center>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+          <div class="d-flex">
+            <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey w-50 my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE CHANGES" id="save">
+            <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4 mt-2 py-2" aria-label="Close" id="cancelButton">CANCEL</button>
+          </div>
+        </div>
+        <div class="col-md-4"></div>
       </div>
     </form>
 
@@ -2022,6 +2032,11 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
+
+document.getElementById("cancelButton").addEventListener("click", function() {
+  document.getElementById("myForm").reset(); // Reset the form
+  location.reload(); // Reload the page
+});
   
   function toggleDateInput() {
       var checkbox = document.getElementById("never-expire-checkbox");
@@ -2158,8 +2173,8 @@ $(document).ready(function() {
         `<tr id='addr0${roinc}'>
           <td style="width: 20%;">
             <div class="d-flex">
-              <select name='item[]' id="item${roinc}" class="form-control item" onchange = "showRate(this.id,this.value);">
-                <option value=" " selected disabled>Select Item</option>
+              <select name='item[]' id="item${roinc}" class="form-control item text-dark bg-light" onchange = "showRate(this.id,this.value);">
+                <option value=" " selected disabled >Select Item</option>
                 {% for i in item %}
                       <option value="{{ i.id }}">{{ i.Name  }} </option>
                 {% endfor %}
@@ -2168,7 +2183,7 @@ $(document).ready(function() {
           </td>
           <td  style="width: 20%;">
             <div class="d-flex">
-              <select name='account[]' id="account${roinc}" class="form-control acnt">
+              <select name='account[]' id="account${roinc}" class="form-control acnt text-dark bg-light ">
                 <option value=" " selected disabled >Select Account</option>
                 <hr>
                 {% for i in account %}
@@ -2178,18 +2193,18 @@ $(document).ready(function() {
             </div>  
           </td>
           <td style="width: 10%;">
-            <input type="number" name='qty[]'  placeholder='Qty' id="qty1${roinc}"  class="form-control qty" step=0 min=0/>
+            <input type="number" name='qty[]'  placeholder='Qty' id="qty1${roinc}"  class="form-control qty text-dark bg-light" step=0 min=0/>
           </td>
           <td style="width: 10%;">
-            <input type="text" name='rate[]' id="rate${roinc}" placeholder='Rate' class="form-control rate" />
+            <input type="text" name='rate[]' id="rate${roinc}" placeholder='Rate' class="form-control rate text-dark bg-light" />
           </td>
           <td style="width: 15%;">
-            <input type="text" id="tax_total${roinc}" class = 'form-control d-none'>
+            <input type="text" id="tax_total${roinc}" class = 'form-control d-none text-dark bg-light'>
 
-            <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex" id="selecttax${roinc}">
+            <input type="text" placeholder="Select Tax" class="form-control selecttax d-flex text-dark bg-light" id="selecttax${roinc}">
 
-            <select name="tax[]" id="tax1${roinc}" class="form-control tax1 d-none ">
-                    <optgroup class="d-none" id="intra_tax${roinc}" label="Choose GST">
+            <select name="tax[]" id="tax1${roinc}" class="form-control tax1 d-none text-dark bg-light">
+                    <optgroup class="d-none text-dark bg-light" id="intra_tax${roinc}" label="Choose GST">
                       <option value=28 text={{ cmp1.state }}>28.0% GST(28%)</option>
                       <option value=18 text={{ cmp1.state }}>18.0% GST(18%)</option>
                       <option value=12 text={{ cmp1.state }}>12.0% GST(12%)</option>
@@ -2202,7 +2217,7 @@ $(document).ready(function() {
                       <option value=0 text={{ cmp1.state }}>Out of Scope(0%)</option>
                     </optgroup>
 
-                    <optgroup class="d-none" id="inter_tax${roinc}" label="Choose IGST">
+                    <optgroup class="d-none text-dark bg-light" id="inter_tax${roinc}" label="Choose IGST">
                       <option value=28 text=" ">28.0% IGST(28%)</option>
                       <option value=18 text=" ">18.0% IGST(18%)</option>
                       <option value=12 text=" ">12.0% IGST(12%)</option>
@@ -2217,14 +2232,14 @@ $(document).ready(function() {
                 </select>
           </td>
           <td style="width: 11%;">
-            <input type="text" name='discount[]' id="disc${roinc}" placeholder='Discount' class="form-control disc" step="0.00" min="0"/>
+            <input type="text" name='discount[]' id="disc${roinc}" placeholder='Discount' class="form-control disc text-dark bg-light" step="0.00" min="0"/>
           </td>
           <td style="width: 11%;">
-            <input type="text" name='amount[]' id="amount${roinc}" placeholder='Amount' class="form-control amount1" step="0.00" min="0"  />
+            <input type="text" name='amount[]' id="amount${roinc}" placeholder='Amount' class="form-control amount1 text-dark bg-light" step="0.00" min="0"  />
           </td>
             
           <td>
-            <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1" data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
+            <button type="button" id="${roinc}" class="btn btn-outline-primary clone_row text-center mb-1 p-1 " data-toggle= "tooltip" data-placement="bottom" tooltip="Clone"
                 style = "width:25px; height: 25px; border-radius: 90% " >
               <i class="fa-solid fa-clone"></i>
             </button> <br>
@@ -2787,15 +2802,15 @@ $(document).ready(function() {
     } 
     $("#subtotal").val(tot);
 
-    if(isNaN(parseFloat($("#shipcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
+    if(isNaN(parseFloat($("#addcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
 
-      var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+      var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
       $("#grandtotal").val(grand_total);
       
     }
     else{
-      if(isNaN(parseFloat($("#shipcharge").val())) == false ){
-        var grand_total = parseFloat($("#subtotal").val())  + parseFloat($("#shipcharge").val());
+      if(isNaN(parseFloat($("#addcharge").val())) == false ){
+        var grand_total = parseFloat($("#subtotal").val())  + parseFloat($("#addcharge").val());
         $("#grandtotal").val(grand_total);
       }
       if(isNaN(parseFloat($("#igst").val()))== false){
@@ -2856,15 +2871,15 @@ $(document).ready(function() {
     } 
     $("#subtotal").val(tot);
 
-    if(isNaN(parseFloat($("#shipcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
+    if(isNaN(parseFloat($("#addcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
 
-      var grand_total = tot + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+      var grand_total = tot + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
       $("#grandtotal").val(grand_total);
 
     }
     else{
-      if(isNaN(parseFloat($("#shipcharge").val())) == false ){
-        var grand_total = tot  + parseFloat($("#shipcharge").val());
+      if(isNaN(parseFloat($("#addcharge").val())) == false ){
+        var grand_total = tot  + parseFloat($("#addcharge").val());
         $("#grandtotal").val(grand_total);
       }
       if(isNaN(parseFloat($("#igst").val()))== false){
@@ -2996,8 +3011,8 @@ $(document).ready(function() {
       $("#cgst").val(gst);
       $("#sgst").val(gst);
 
-      if(isNaN(parseFloat($("#shipcharge").val())) == false){
-        var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+      if(isNaN(parseFloat($("#addcharge").val())) == false){
+        var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
         $("#grandtotal").val(grand_total);
       }
       else{
@@ -3063,8 +3078,8 @@ $(document).ready(function() {
         $("#cgst").val(gst);
         $("#sgst").val(gst);
 
-        if(isNaN(parseFloat($("#shipcharge").val())) == false){
-          var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+        if(isNaN(parseFloat($("#addcharge").val())) == false){
+          var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
           $("#grandtotal").val(grand_total);
         }
         else{
@@ -3080,34 +3095,34 @@ $(document).ready(function() {
   });
 
   $(document).on("change", "#addcharge", function(){
-      $("#shipcharge").val($("#addcharge").val());
+      $("#addcharge").val($("#addcharge").val());
   });
 
   $(document).on("change", "#add_round_off", function(){
     console.log($("#add_round_off").val())
     var round = parseFloat($("#grandtotal").val()) + parseFloat($("#add_round_off").val()) 
-    $("#round_off").val(round);
+    $("#grandtotal").val(round);
   });
 
 
   $(document).on("change", "#addcharge", function(){
 
-    var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+    var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
     $("#grandtotal").val(grand_total);
 
   });
 
   $(document).on("click", "#grandtotallbl", function(){
 
-    if(isNaN(parseFloat($("#shipcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
+    if(isNaN(parseFloat($("#addcharge").val())) == false || isNaN(parseFloat($("#igst").val()))== false){
 
-      var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#shipcharge").val());
+      var grand_total = parseFloat($("#subtotal").val()) + parseFloat($("#igst").val()) + parseFloat($("#addcharge").val());
       $("#grandtotal").val(grand_total);
 
     }
     else{
-      if(isNaN(parseFloat($("#shipcharge").val())) == false ){
-        var grand_total = parseFloat($("#subtotal").val())  + parseFloat($("#shipcharge").val());
+      if(isNaN(parseFloat($("#addcharge").val())) == false ){
+        var grand_total = parseFloat($("#subtotal").val())  + parseFloat($("#addcharge").val());
         $("#grandtotal").val(grand_total);
       }
       if(isNaN(parseFloat($("#igst").val()))== false){

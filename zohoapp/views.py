@@ -3196,7 +3196,7 @@ def create_recurring_bills(request):
                     created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
-        return redirect('add_recurring_bills')
+        return redirect('recurring_bill')
     return redirect('recurring_bill')
 
 
