@@ -34,6 +34,7 @@
         border-left: 0.5px solid;
         color: dimgray;
         background-color: rgb(25, 26, 27);
+        
     }
 
     @media (max-width: 650px) {
@@ -198,6 +199,12 @@
         height: auto;
         overflow-y: auto;
         border: none;
+        box-shadow: inset 2px 2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset -2px -2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset 2px -2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset -2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+
+        /* box-shadow: 5px 2px 5px 2px  grey; */
     }
 
     @media print {
@@ -350,8 +357,29 @@
 
 
             <div id="Template" class=" print-only page tabcontent p-5 m-5" style="display: block;">
-
-                <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
+                <div class="row extra-info pt-3">
+                    <div class="col-5">
+                        <h5 style="color: black;">{{company.company_name }}</h5>
+                        <p class="address " style="color: black;"> {{company.address}}<br>
+                            {{company.city}} <br>
+                            {{company.state}}<br>
+                            {{company.pincode}}<br>
+                        </p>                    </div>
+                    <div class="col-7">
+                        <h2 class="text-uppercase">recurring bills</h2>
+                        <section class="top-content bb d-flex justify-content-between">
+                            <div class="top-right">
+                                <div class="graphic-path">
+                                    <h5 style="color: black;">{{recur_bill.profile_name}}</h5>
+                                </div>
+                                <div class="position-relative">
+                                    <p style="color: black;">Bill No.# <span>{{recur_bill.id }}</span></p>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <!-- <div id="ember2512" class="tooltip-container ember-view ribbon text-ellipsis">
                     <div class="ribbon-inner ribbon-open">{{company.company_name}}</div>
                 </div>
                 <section class="top-content bb d-flex justify-content-between">
@@ -363,61 +391,64 @@
                             <p style="color: black;">Bill No. <span>{{recur_bill.id }}</span></p>
                         </div>
                     </div>
-                </section>
+                </section> -->
 
                 <section class="store-user mt-5">
                     <div class="col-12">
                         <div class="row bb pb-3">
-                            <div class="col-7">
-                                <p style="color: black;">FROM,</p>
-                                <h5 style="color: black;">{{company.company_name }}</h5>
-                                <p class="address " style="color: black;"> {{company.address}}<br>
-                                    {{company.city}} <br>
-                                    {{company.state}}<br>
-                                    {{company.pincode}}<br>
-                                </p>
-                            </div>
+                            
                             <div class="col-5">
-                                <p style="color: black;">TO,</p>
+                                <p style="color: black;">Bill To,</p>
                                 <h5 style="color: black;">{{customer.customerName}}</h5>
-                                <p class="address col-6" style="margin-left: -14px;color: black;"> {{customer.Address1}}
+                                <p class="address col-6 mx-2 p-2" style="margin-left: -14px;color: black;"> {{customer.Address1}}
                                     <br>
                                     {{customer.Address2}}<br>
                                     {{customer.city}}<br>
-                                    {{customer.state}}<br>
-                                    {{customer.zipcode}}<br>
+                                    <!-- {{customer.state}}<br>
+                                    {{customer.zipcode}}<br> -->
                                 </p>
 
                             </div>
+                            <div class="col-3"></div>
+                            <div class="col-4 mt-5">
+                                <p style="color: black; font-weight: 500;">Bill Date : &nbsp <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
+                                <p style="color: black; font-weight: 500;">Due Date : &nbsp <span style="color: black;">{{recur_bill.end_date|date:'d-m-Y'}}</span></p>
+                                <p style="color: black; font-weight: 500;">Term : &nbsp <span style="color: black;">NET {{recur_bill.payment_terms}}</span></p>
+
+                            </div>
                         </div>
-                        <div class="row extra-info pt-3">
+                        <!-- <div class="row extra-info pt-3">
                             <div class="col-7">
                                 <p style="color: black;">Start Date: <span style="color: black;">{{recur_bill.start_date|date:'d-m-Y'}}</span></p>
                             </div>
                             <div class="col-5">
                                 <p style="color: black;">End Date : <span style="color: black;">{{recur_bill.end_date |date:'d-m-Y'}}</span></p>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </section>
 
                 <section class="product-area mt-4">
                     <table class="table table-hover">
-                        <thead>
+                        <thead style="background-color: burlywood;">
                             <tr>
-                                <td>Item &nbsp;&nbsp; Account</td>
-                                <td>Price</td>
+                                <td>#</td>
+                                <td>Item</td>
+                                <td>Account</td>
+                                <td>Rate</td>
                                 <td>Quantity</td>
                                 <td>Discount</td>
                                 <td>Tax</td>
                                 <td>Total</td>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody style=":hover{color: #ddd; background-color: transparent;}">
 
                             {% for b in bill_item %}
-                            <tr>
-                                <td>{{b.item}} &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; {{b.account}} </td>
+                            <tr >
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{b.item}}</td>
+                                <td>{{b.account}} </td>
                                 <td>{{b.rate}}</td>
                                 <td>{{b.quantity}}</td>
                                 <td>{{b.discount}}</td>
@@ -433,8 +464,8 @@
                 <section class="balance-info p-5">
                     <div class="row">
                         <div class="col-8 btn-group">
-                            <p class="m-0 font-weight-bold" style="color: black;"> Note: </p>
-                            <p class="py-0 px-5" style="color: black;">{{recur_bill.note}}</p>
+                            <!-- <p class="m-0 font-weight-bold" style="color: black;"> Note: </p>
+                            <p class="py-0 px-5" style="color: black;">{{recur_bill.note}}</p> -->
                         </div>
                         <div class="col-4">
                             <table class="table border-0 table-hover">
@@ -475,7 +506,7 @@
 
 
             <!-- overview -->
-            <div id="Overview" class="tabcontent">
+            <div id="Overview" class="tabcontent mt-5 border-0 p-0 mx-0" style="overflow-x: hidden; border-top: #ccc double 2px;">
 
                 <h6 class="mb-0 mx-5 text-light">{{ company.company_name }}</h6>
                 <center>
@@ -600,7 +631,7 @@
                                     <h6 class="text-muted">Subtotal :</h5><br>
                                 </div>
                                 <div class="col-md-7 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.sub_total|floatformat:2 }} INR" class="amnt text-dark bg-light"
+                                    <input type="text" value="{{ recur_bill.sub_total|floatformat:2 }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -609,7 +640,7 @@
                                     <h6 class="text-muted">IGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.igst|floatformat:2 }} INR" class="amnt text-dark bg-light"
+                                    <input type="text" value="{{ recur_bill.igst|floatformat:2 }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -618,7 +649,7 @@
                                     <h6 class="text-muted">CGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.cgst|floatformat:2 }} INR" class="amnt text-dark bg-light"
+                                    <input type="text" value="{{ recur_bill.cgst|floatformat:2 }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -627,7 +658,7 @@
                                     <h6 class="text-muted">SGST :</h5><br>
                                 </div>
                                 <div class="col-md-8 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR" class="amnt text-dark bg-light"
+                                    <input type="text" value="{{ recur_bill.sgst|floatformat:2 }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -636,7 +667,7 @@
                                     <h6 class="text-muted">Shipping Charge :</h5><br>
                                 </div>
                                 <div class="col-md-4 mt-3 mx-3">
-                                    <input type="text" value="{{ recur_bill.shipping_charge }} INR" class="amnt text-dark bg-light"
+                                    <input type="text" value="{{ recur_bill.shipping_charge }} INR" class="amnt"
                                         style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
@@ -647,7 +678,7 @@
                                 </div>
                                 <div class="col-md-6 mt-3 mx-3">
                                     <input type="text" value="{{ recur_bill.grand_total|floatformat:2 }} INR"
-                                        class="amnt text-dark bg-light" style="font-size: 16px; color: azure;" readonly>
+                                        class="amnt " style="font-size: 16px; color: azure;" readonly>
                                 </div>
                             </div>
 

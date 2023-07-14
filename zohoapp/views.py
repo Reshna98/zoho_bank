@@ -11,12 +11,12 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.core.mail import EmailMessage
 from django.views import View
-from .forms import EmailForm
+# from .forms import EmailForm
 from django.http import JsonResponse
 from datetime import datetime,date, timedelta
-from xhtml2pdf import pisa
+# from xhtml2pdf import pisa
 from django.template.loader import get_template
-from bs4 import BeautifulSoup
+# from bs4 import BeautifulSoup
 import io
 import os
 from django.template import Context, Template
@@ -1083,9 +1083,9 @@ def converttoinvoice(request,est_id):
         items.save()
     return redirect('allestimates')
 
-class EmailAttachementView(View):
-    form_class = EmailForm
-    template_name = 'newmail.html'
+# class EmailAttachementView(View):
+#     form_class = EmailForm
+#     template_name = 'newmail.html'
 
     def get(self, request, *args, **kwargs):
         form = self.form_class()
@@ -3158,7 +3158,8 @@ def create_recurring_bills(request):
         cgst=request.POST['cgst']
         igst=request.POST['igst']
         tax = request.POST['igst']
-        shipping_charge=0 if request.POST['shipcharge'] == "" else request.POST['shipcharge']
+        # print(request.POST['addcharge'])
+        shipping_charge=0 if request.POST['addcharge'] == "" else request.POST['addcharge']
         grand_total=request.POST['grand_total']
         note=request.POST['note']
 
@@ -3182,7 +3183,7 @@ def create_recurring_bills(request):
         quantity = request.POST.getlist("qty[]")
         rate = request.POST.getlist("rate[]")
         tax = request.POST.getlist("tax[]")
-        discount = 0 if request.POST.getlist("discount[]") == "" else request.POST.getlist("discount[]")
+        discount = request.POST.get("discount[]", 0)
         amount = request.POST.getlist("amount[]")
 
         if len(items)==len(accounts)==len(amount) and items and accounts  and amount:
@@ -3191,8 +3192,14 @@ def create_recurring_bills(request):
                 for ele in mapped:
 
                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
-                    ac = Account.objects.get(user = request.user,id = ele[1]).accountName
-
+                    try:
+                        int(ele[1])
+                        ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+                        
+                    except ValueError:
+                        
+                        ac = ele[1]
+                    
                     created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],user = u,company = company, recur_bills = r_bill)
 
@@ -3260,7 +3267,7 @@ def change_recurring_bills(request,id):
         r_bill.igst=None if request.POST.get('igst') == "" else  request.POST.get('igst')
         r_bill.cgst=None if request.POST.get('cgst') == "" else  request.POST.get('cgst')
         r_bill.sgst=None if request.POST.get('sgst') == "" else  request.POST.get('sgst')
-        r_bill.shipping_charge=request.POST['shipcharge']
+        r_bill.shipping_charge=request.POST['addcharge']
         r_bill.grand_total=request.POST.get('grand_total')
 
         if len(request.FILES) != 0:
@@ -3271,12 +3278,11 @@ def change_recurring_bills(request,id):
         r_bill.save()          
 
         items = request.POST.getlist("item[]")
-        print(items)
         account = request.POST.getlist("account[]")
         quantity = request.POST.getlist("quantity[]")
         rate = request.POST.getlist("rate[]")
         tax = request.POST.getlist("tax[]")
-        discount = request.POST.getlist('discount[]')
+        discount = request.POST.get("discount[]", 0)
         amount = request.POST.getlist("amount[]")
 
         # billid=recurring_bills.objects.get(id=r_bill.id,user = request.user)
@@ -3285,7 +3291,6 @@ def change_recurring_bills(request,id):
             
             mapped=zip(items,account,quantity,rate,tax,discount,amount)
             mapped=list(mapped)
-            print(mapped)
             
             count = recurring_bills_items.objects.filter(recur_bills=r_bill.id).count()
             
@@ -3296,7 +3301,14 @@ def change_recurring_bills(request,id):
                     pbillss=recurring_bills.objects.get(id=id)
                     company = company_details.objects.get(user = request.user)
                     it = AddItem.objects.get(user = request.user, id = ele[0]).Name
-                    ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+                    it = AddItem.objects.get(user = request.user, id = ele[0]).Name
+                    try:
+                        int(ele[1])
+                        ac = Account.objects.get(user = request.user,id = ele[1]).accountName
+                        
+                    except ValueError:
+                        
+                        ac = ele[1]
                     
                     created = recurring_bills_items.objects.get_or_create(item = it,account = ac,quantity=ele[2],rate=ele[3],
                     tax=ele[4],discount = ele[5],amount=ele[6],recur_bills=r_bill.id,company=company,user = request.user)
@@ -3309,7 +3321,7 @@ def change_recurring_bills(request,id):
                         account = ele[1],quantity=ele[2],rate=ele[3], tax=ele[4],discount=ele[5],amount= ele[6])
  
 
-        return redirect('recurring_bill')
+        return redirect('view_recurring_bills',id)
     return redirect('recurring_bill')
 
 
@@ -3624,7 +3636,7 @@ def vendor_dropdown(request):
     options = {}
     option_objects = vendor_table.objects.filter(user = user)
     for option in option_objects:
-        options[option.id] = option.first_name+ " " + option.last_name
+        options[option.id] = [option.first_name+ " " + option.last_name,option.first_name+ " " + option.last_name+" "+ str(option.id)]
 
     return JsonResponse(options)
 
@@ -3654,7 +3666,7 @@ def pay_dropdown(request):
     options = {}
     option_objects = payment_terms.objects.filter(user = user)
     for option in option_objects:
-        options[option.id] = option.Terms
+        options[option.id] = [option.Terms,option.Days]
 
     return JsonResponse(options)
 
@@ -3683,7 +3695,7 @@ def unit_dropdown(request):
     options = {}
     option_objects = Unit.objects.all()
     for option in option_objects:
-        options[option.id] = option.unit
+        options[option.id] = [option.unit,option.id]
 
     return JsonResponse(options)
 
@@ -3738,7 +3750,7 @@ def item_dropdown(request):
     options = {}
     option_objects = AddItem.objects.all()
     for option in option_objects:
-        options[option.id] = option.Name
+        options[option.id] = [option.Name,option.id]
 
     return JsonResponse(options)
 
@@ -3752,7 +3764,7 @@ def recurbills_account(request):
         type=request.POST.get('actype')
         name=request.POST['acname']
         u = User.objects.get(id = request.user.id)
-
+        
         acnt=Account(accountType=type,accountName=name,user = u)
 
         acnt.save()
@@ -3767,7 +3779,7 @@ def account_dropdown(request):
     options = {}
     option_objects = Account.objects.filter(user = user)
     for option in option_objects:
-        options[option.id] = option.accountName
+        options[option.id] = [option.accountName,option.id]
 
     return JsonResponse(options)
 
@@ -3914,7 +3926,6 @@ def recurbill_email(request,id):
     if template:
         prntonly_content = str(template)
 
-    # print(prntonly_content)
     with tempfile.NamedTemporaryFile(suffix='.html', delete=False) as temp_file:
         temp_file.write(prntonly_content.encode('utf-8'))
 
@@ -3932,3 +3943,423 @@ def recurbill_email(request,id):
     email.send()
      
     return HttpResponse(status=200)
+
+#####################expense##############################################################
+    
+def expensepage(request):
+    expenses = ExpenseE.objects.filter(user=request.user)
+    context = {
+        'expenses': expenses,
+       }
+    return render(request,'expense.html',context)
+
+def save_expense(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+           
+            date = request.POST.get('date')
+            select = request.POST['select']
+            expense_account = Account.objects.get(id=select)
+            amount = request.POST.get('amount')
+            currency = request.POST.get('currency')
+            expense_type = request.POST.get('expense_type')
+            paid = request.POST.get('paid')
+            # vendor = request.POST.get('vendor')
+            notes = request.POST.get('notes')
+            if request.POST.get('expense_type') == 'goods':
+                hsn_code = request.POST.get('sac')
+                sac = request.POST.get('hsn_code')
+            else:
+                hsn_code = request.POST.get('hsn_code')
+                sac = request.POST.get('sac')
+            # attachment_file = request.FILES.get('attachment')
+            gst_treatment = request.POST.get('gst_treatment')
+            destination_of_supply = request.POST.get('destination_of_supply')
+            reverse_charge = request.POST.get('reverse_charge',False)
+            tax = request.POST.get('tax')
+            invoice = request.POST.get('invoice')
+            # c = request.POST['c_name']
+            c = request.POST.get('customer')
+            customer = addcustomer.objects.get(customer_name=c)
+           
+        
+            v= request.POST.get('vendor')
+            vendor=vendor_table.objects.get(vendor_display_name=v)
+
+            # customer = addcustomer.objects.get(customer_id=c)
+            taxamt = request.POST.get('taxamt',False)
+            # reporting_tags=request.post.get('retag')
+            image = request.FILES.get('image')
+            # if 'image' in request.FILES:
+            #     image = request.FILES['image']  # Set the uploaded image
+            # else:
+            #     image = None  
+
+
+            expense = Expense.objects.create(
+                user=request.user,
+                date=date,
+                image=image,
+                expense_account=expense_account,
+                amount=amount,
+                currency=currency,
+                taxamt=taxamt,
+                sac=sac,
+                expense_type=expense_type,
+                paid=paid,
+                # reporting_tags=reporting_tags,
+                notes=notes,
+                hsn_code=hsn_code,
+                gst_treatment=gst_treatment,
+                destination_of_supply=destination_of_supply,
+                reverse_charge=reverse_charge,
+                tax=tax,
+                invoice=invoice,
+                customer_name= customer,
+                vendor=vendor
+                # attachment_file=attachment_file
+            )
+
+            expense.save()
+
+            return redirect('expensepage')
+        else:
+            # Display the save_expense form
+            c = addcustomerE.objects.all()
+            v=vendor_table.objects.all()
+            accounts = AccountE.objects.all()
+            account_types = set(AccountE.objects.values_list('type', flat=True))
+           
+          
+            return render(request, 'addexpense.html', {'vendor':v,'customer': c, 'accounts': accounts, 'account_types': account_types,
+            })
+   
+def upload_documents(request, expense_id):
+    if request.method == 'POST':
+        user_id = request.user.id
+        user = User.objects.get(id=user_id)
+        expense = ExpenseE.objects.get(id=expense_id)
+        attachment_file = request.FILES.get('attachment')
+
+        doc_data = AttachE.objects.create(user=user, expense=expense, attachment=attachment_file)
+        doc_data.save()
+
+        return redirect("expense_details", pk=expense.pk)
+
+def add_accountE(request):
+    user = User.objects.get(id=request.user.id)
+
+    accounts = AccountE.objects.all()
+    account_types = set(AccountE.objects.values_list('type', flat=True))
+    if request.method == 'POST':
+        type = request.POST.get('type')
+        name = request.POST.get('name')
+        code = request.POST.get('code')
+        pname = request.POST.get('pname')
+        description=request.POST.get('description')
+        new_account = AccountE(user=user,type=type,name=name,code=code,pname=pname,description=description)
+        account_dropdownE(request)
+        new_account.save()
+        # accounts = Account.objects.all()
+    return HttpResponse('Account saved successfully')
+    return render(request, 'addexpense.html', {
+        'accounts': accounts,
+        'account_types': account_types,
+    })
+
+def account_dropdownE(request):
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    account_objects = AccountE.objects.filter(user=user)
+    for account in account_objects:
+        # options[account.id] = account.name
+        options[account.id] = {
+            'name': account.name,
+            'type': account.type
+        }
+
+    return JsonResponse(options)      
+       
+
+
+def expense_details(request, pk):
+    user = request.user
+    expense=ExpenseE.objects.all()
+    expense_account=ExpenseE.objects.get(id=pk)
+    context = {
+        'expenses': expense,
+        'expense': expense_account,
+    }
+    return render(request, 'expenseview.html', context)
+
+
+def add_custmr(request):
+    if request.user.is_authenticated:
+        if request.method=='POST':
+            form_data = request.POST.dict()
+            type=request.POST.get('type')
+            txtFullName=request.POST['txtFullName']
+            cpname=request.POST['cpname']
+           
+            email=request.POST.get('myEmail')
+            wphone=request.POST.get('wphone')
+            mobile=request.POST.get('mobile')
+            skname=request.POST.get('skname')
+            desg=request.POST.get('desg')      
+            dept=request.POST.get('dept')
+            wbsite=request.POST.get('wbsite')
+
+            gstt=request.POST.get('gstt')
+            posply=request.POST.get('posply')
+            tax1=request.POST.get('tax1')
+            crncy=request.POST.get('crncy')
+            obal=request.POST.get('obal')
+            obal = int(obal) if obal and obal.strip() else 0 
+
+          
+            # select=request.POST.get('pterms')
+            # pterms=payment_terms.objects.get(id=select)
+            # pterms=request.POST.get('pterms')
+            select = request.POST.get('pterms')
+            
+            try:
+                pterms = payment_terms.objects.get(id=select)
+            except payment_terms.DoesNotExist:
+                pterms = None
+
+            plst=request.POST.get('plst')
+            plang=request.POST.get('plang')
+            fbk=request.POST.get('fbk')
+            twtr=request.POST.get('twtr')
+        
+            atn=request.POST.get('atn')
+            ctry=request.POST.get('ctry')
+            
+            addrs=request.POST.get('addrs')
+            addrs1=request.POST.get('addrs1')
+            bct=request.POST.get('bct')
+            bst=request.POST.get('bst')
+            bzip=request.POST.get('bzip')
+            bpon=request.POST.get('bpon')
+            bfx=request.POST.get('bfx')
+
+            sal=request.POST.get('sal')
+            ftname=request.POST.get('ftname')
+            ltname=request.POST.get('ltname')
+            mail=request.POST.get('mail')
+            bworkpn=request.POST.get('bworkpn')
+            bmobile=request.POST.get('bmobile')
+
+            bskype=request.POST.get('bskype')
+            bdesg=request.POST.get('bdesg')
+            bdept=request.POST.get('bdept')
+            u = User.objects.get(id = request.user.id)
+
+          
+            ctmr=addcustomerE(customer_name=txtFullName,customerType=type,
+                        companyName=cpname,customerEmail=email,customerWorkPhone=wphone,
+                         customerMobile=mobile,skype=skname,designation=desg,department=dept,
+                           website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
+                             currency=crncy,OpeningBalance=obal, 
+                                PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
+                                 Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,PaymentTerms=pterms,
+                                  city=bct,state=bst,zipcode=bzip,phone1=bpon,
+                                   fax=bfx,CPsalutation=sal,Firstname=ftname,
+                                    Lastname=ltname,CPemail=mail,CPphone=bworkpn,
+                                    CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
+                                     CPdepartment=bdept,user=u )
+            ctmr.save()  
+            return HttpResponse('Account saved successfully')
+            # return redirect('save_expense')
+        return render(request, 'addcustomere.html')
+
+
+
+
+def payment_term(request):
+    if request.method=='POST':
+        term=request.POST.get('term')
+        day=request.POST.get('day')
+        ptr=payment_termsE(Terms=term,Days=day)
+        ptr.save()
+        return redirect("add_custmr")
+
+@login_required(login_url='login')
+def add_vendor(request):
+    user = User.objects.get(id=request.user.id)
+    if request.method == "POST":
+        vendor_data = vendor_tableE()
+        vendor_data.salutation = request.POST.get('salutation')
+        vendor_data.first_name = request.POST.get('first_name')
+        vendor_data.last_name = request.POST.get('last_name')
+        vendor_data.company_name = request.POST.get('company_name')
+        vendor_data.vendor_display_name = request.POST.get('v_display_name')
+        vendor_data.vendor_email = request.POST.get('vendor_email')
+        vendor_data.vendor_wphone = request.POST.get('w_phone')
+        vendor_data.vendor_mphone = request.POST.get('m_phone')
+        vendor_data.skype_number = request.POST.get('skype_number')
+        vendor_data.designation = request.POST.get('designation')
+        vendor_data.department = request.POST.get('department')
+        vendor_data.website = request.POST.get('website')
+        vendor_data.gst_treatment = request.POST.get('gst')
+
+        x = request.POST.get('gst')
+        if x == "Unregistered Business-not Registered under GST":
+            vendor_data.pan_number = request.POST.get('pan_number')
+            vendor_data.gst_number = None
+        else:
+            vendor_data.gst_number = request.POST.get('gst_number')
+            vendor_data.pan_number = request.POST.get('pan_number')
+
+        vendor_data.source_supply = request.POST.get('source_supply')
+        vendor_data.currency = request.POST.get('currency')
+        vendor_data.opening_bal = request.POST.get('opening_bal')
+        vendor_data.payment_terms = request.POST.get('payment_terms')
+
+        user_id=request.user.id
+        udata=User.objects.get(id=user_id)
+        vendor_data.user=udata
+        vendor_data.battention=request.POST.get('battention')
+        vendor_data.bcountry=request.POST.get('bcountry')
+        vendor_data.baddress=request.POST.get('baddress')
+        vendor_data.bcity=request.POST.get('bcity')
+        vendor_data.bstate=request.POST.get('bstate')
+        vendor_data.bzip=request.POST.get('bzip')
+        vendor_data.bphone=request.POST.get('bphone')
+        vendor_data.bfax=request.POST.get('bfax')
+
+        vendor_data.sattention=request.POST.get('sattention')
+        vendor_data.scountry=request.POST.get('scountry')
+        vendor_data.saddress=request.POST.get('saddress')
+        vendor_data.scity=request.POST.get('scity')
+        vendor_data.sstate=request.POST.get('sstate')
+        vendor_data.szip=request.POST.get('szip')
+        vendor_data.sphone=request.POST.get('sphone')
+        vendor_data.sfax=request.POST.get('sfax')
+        vendor_data.save()
+        print("vendor_data:", vendor_data)
+# .......................................................adding to remaks table.....................
+        vdata=vendor_tableE.objects.get(id=vendor_data.id)
+        vendor=vdata
+        rdata=remarks_tableE()
+        rdata.remarks=request.POST.get('remark')
+        rdata.user=udata
+        rdata.vendor=vdata
+        rdata.save()
+        print("rdata:", rdata)
+
+#  ...........................adding multiple rows of table to model  ........................................................       
+        salutation =request.POST.getlist('salutation[]')
+        first_name =request.POST.getlist('first_name[]')
+        last_name =request.POST.getlist('last_name[]')
+        email =request.POST.getlist('email[]')
+        work_phone =request.POST.getlist('wphone[]')
+        mobile =request.POST.getlist('mobile[]')
+        skype_number =request.POST.getlist('skype[]')
+        designation =request.POST.getlist('designation[]')
+        department =request.POST.getlist('department[]') 
+        vdata=vendor_tableE.objects.get(id=vendor_data.id)
+        vendor=vdata
+       
+
+        if len(salutation)==len(first_name)==len(last_name)==len(email)==len(work_phone)==len(mobile)==len(skype_number)==len(designation)==len(department):
+            mapped2=zip(salutation,first_name,last_name,email,work_phone,mobile,skype_number,designation,department)
+            mapped2=list(mapped2)
+            print(mapped2)
+            for ele in mapped2:
+                created = contact_person_tableE.objects.get_or_create(salutation=ele[0],first_name=ele[1],last_name=ele[2],email=ele[3],
+                         work_phone=ele[4],mobile=ele[5],skype_number=ele[6],designation=ele[7],department=ele[8],user=udata,vendor=vendor)
+        response_data = {
+            'success': True
+        }
+        # return JsonResponse(response_data)
+
+        return redirect('save_expense')
+    return render(request, 'addvendor.html')
+
+def edit_expense(request,expense_id):
+    if request.user.is_authenticated:
+        expense = ExpenseE.objects.get(id=expense_id)
+
+        if request.method == 'POST':
+            date = request.POST.get('date')
+            select = request.POST['select']
+            expense_account = Account.objects.get(id=select)
+            amount = request.POST.get('amount')
+            currency = request.POST.get('currency')
+            expense_type = request.POST.get('expense_type')
+            paid = request.POST.get('paid')
+            notes = request.POST.get('notes')
+            if request.POST.get('expense_type') == 'goods':
+                hsn_code = request.POST.get('sac')
+                sac = request.POST.get('hsn_code')
+            else:
+                hsn_code = request.POST.get('hsn_code')
+                sac = request.POST.get('sac')
+            gst_treatment = request.POST.get('gst_treatment')
+            destination_of_supply = request.POST.get('destination_of_supply')
+            reverse_charge = request.POST.get('reverse_charge', False)
+            tax = request.POST.get('tax')
+            invoice = request.POST.get('invoice')
+            c = request.POST.get('customer')
+            customer = addcustomer.objects.get(customer_name=c)
+            v = request.POST.get('vendor')
+            vendor = vendor_table.objects.get(vendor_display_name=v)
+            reporting_tags = request.POST.get('reporting_tags')
+            taxamt = request.POST.get('taxamt', False)
+            image = request.FILES.get('image')
+            # if 'image' in request.FILES:
+            #     image = request.FILES['image']  # Set the uploaded image
+            # else:
+            #     image = None 
+            expense.date = date
+            expense.expense_account = expense_account
+            expense.amount = amount
+            expense.currency = currency
+            expense.taxamt = taxamt
+            expense.sac = sac
+            expense.expense_type = expense_type
+            expense.paid = paid
+            expense.notes = notes
+            expense.hsn_code = hsn_code
+            expense.gst_treatment = gst_treatment
+            expense.destination_of_supply = destination_of_supply
+            expense.reverse_charge = reverse_charge
+            expense.tax = tax
+            expense.invoice = invoice
+            expense.customer_name = customer
+            expense.reporting_tags = reporting_tags
+            expense.vendor = vendor
+            expense.image=image
+            expense.save()
+
+            return redirect('expense_details',pk=expense.pk)
+        else:
+           
+            c = addcustomerE.objects.all()
+            v = vendor_tableE.objects.all()
+            accounts = AccountE.objects.all()
+            account_types = set(AccountE.objects.values_list('type', flat=True))
+
+            return render(request, 'editexpense.html', {'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
+
+def dele(request,id):
+    items=ExpenseE.objects.filter(id=id)
+    items.delete()
+    
+    return redirect('expensepage')
+def vendor_dropdownE(request):
+    user = User.objects.get(id=request.user.id)
+
+    options = []
+    vendor_objects = vendor_tableE.objects.filter(user=user)
+    for vendor in vendor_objects:
+        vendor_data = {
+            'id': vendor.id,
+            'display_name': vendor.vendor_display_name,
+            'company_name': vendor.company_name
+        }
+        options.append(vendor_data)
+
+    return JsonResponse(options, safe=False)

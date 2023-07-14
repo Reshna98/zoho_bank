@@ -4,8 +4,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.views.static import serve
-from .views import EmailAttachementView, save_data
-
+# from .views import EmailAttachementView, save_data
+from .views import  save_data
 urlpatterns = [
     path('', views.index, name='index'),
     path('register', views.register, name='register'),
@@ -57,7 +57,7 @@ urlpatterns = [
     path('editestimate/<int:est_id>',views.editestimate,name='editestimate'),
     path('updateestimate/<int:pk>',views.updateestimate,name='updateestimate'),
     path('converttoinvoice/<int:est_id>',views.converttoinvoice,name='converttoinvoice'),
-    path('emailattachment', EmailAttachementView.as_view(), name='emailattachment'),
+    # path('emailattachment', EmailAttachementView.as_view(), name='emailattachment'),
     path('add_customer_for_estimate/',views.add_customer_for_estimate,name='add_customer_for_estimate'),
     path('entr_custmr_for_estimate/',views.entr_custmr_for_estimate,name='entr_custmr_for_estimate'),
     path('payment_term_for_estimate/',views.payment_term_for_estimate,name='payment_term_for_estimate'),
@@ -185,7 +185,24 @@ urlpatterns = [
     path('recurbill_comment',views.recurbill_comment,name = "recurbill_comment"),
     path('recurbill_add_file/<id>',views.recurbill_add_file,name = "recurbill_add_file"),
     path('recurbill_email/<id>', views.recurbill_email, name='recurbill_email'),
-    
+   
+    path('expensepage',views.expensepage,name='expensepage'),
+    path('save_expense',views.save_expense,name='save_expense'),
+    path('add_accountE',views.add_accountE,name='add_accountE'),
+    path('add_custmr',views.add_custmr,name='add_custmr'),
+    # path('payment_term',views.payment_term,name='payment_term'),
+    path('expense_details/<int:pk>',views.expense_details,name='expense_details'),
+    path('edit_expense/<int:expense_id>',views.edit_expense,name='edit_expense'),
+    path('add_custmr/', views.add_custmr, name='add_custmr'),
+    path('add_vendor/', views.add_vendor, name='add_vendor'),
+    path('add_vendor', views.add_vendor, name='add_vendor'),
+    path('dele/<int:id>',views.dele,name='dele'),
+    # path('attach/<int:expense_id>',views.attach,name='attach'),
+    path('upload_documents/<int:expense_id>',views.upload_documents,name='upload_documents'),
+    path('account_dropdownE', views.account_dropdownE, name='account_dropdownE'),
+    path('vendor_dropdownE/', views.vendor_dropdownE, name='vendor_dropdownE'),
+    path('save_expense/', views.save_expense, name='save_expense'),
+
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
