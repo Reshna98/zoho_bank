@@ -559,7 +559,7 @@ class ExpenseE(models.Model):
     currency=models.TextField(max_length=255)
     expense_type=models.TextField(max_length=255)
     paid=models.TextField(max_length=255)
-    vendor= models.ForeignKey(vendor_table, on_delete=models.CASCADE)
+    vendor= models.ForeignKey(vendor_tableE, on_delete=models.CASCADE)
     notes=models.TextField(max_length=255)
     hsn_code=models.TextField(max_length=255)
     gst_treatment =models.TextField(max_length=255)

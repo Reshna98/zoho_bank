@@ -4,8 +4,11 @@
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> -->
+<script src="https://kit.fontawesome.com/3b9793c077.js" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
   .col-form-label{ color: white;
 
@@ -243,7 +246,7 @@
   <script>
     function handleSelectChangev(select) {
         if (select.value === "new") {
-            window.location.href = "{% url 'add_vendor' %}";
+            window.location.href = "{% url 'add_vendore' %}";
         }
     }
 //     function handleSelectChangev(select) {
@@ -1420,7 +1423,7 @@ function sample1()
         <div class="col-sm-9">
           <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
           <span id="reporting_tags_label"></span>
-          <a href="#" class="associate-tag-link" onclick="openPopup2()">+ Associate Tag</a>
+          <a href="#" class="associate-tag-link" onclick="openPopup2()" style="text-decoration: none;">+ Associate Tag</a>
         </div>
       </div>
       <!-- <div class="row"> -->
