@@ -4276,7 +4276,7 @@ def add_vendore(request):
         # return JsonResponse(response_data)
 
         return redirect('save_expense')
-    return render(request, 'addvendor.html')
+    return render(request, 'addexpense.html')
 
 def edit_expensee(request,expense_id):
     if request.user.is_authenticated:
