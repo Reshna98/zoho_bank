@@ -15,10 +15,10 @@
 
   }
 
-     .modal{
-      z-index: 60000;
+  .modal{
+      z-index: 9999;
       overflow: scroll;
-    }
+        }
 .popup{
   z-index: 9999;
   height: 30rem;
@@ -518,7 +518,7 @@ $(document).ready(function() {
   </script>
  <div class="modal fade" id="addVendorModal">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px; width: 900px;">
       <div class="modal-header " style="background: rgb(32, 35, 37);">
           <h3 class="m-3 text-uppercase">New Vendor</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -526,7 +526,7 @@ $(document).ready(function() {
           </button>
       </div>
       <div class="modal-body" style="background: rgb(32, 35, 37);">
-        <div class="card p-3 m-3">
+        <div class="card p-3 m-3" style="width: 800px;">
           <form action="{%url 'add_vendore' %}" method="post" class="needs-validation" novalidate autocomplete="off" id="modalVendor">
           {%csrf_token%}
             <div class="row">
