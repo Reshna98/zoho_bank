@@ -4322,86 +4322,139 @@ def vendor_dropdownE(request):
         options[option.id] = [option.first_name + " " + option.last_name, option.first_name + " " + option.last_name + " " + str(option.id)]
 
     return JsonResponse(options)
-
 def add_vendore(request):
-    vendor =vendor_tableE.objects.all()
-    if request.method == 'POST':
-        user = request.user
-        title = request.POST.get('title')
-        first_name = request.POST.get('firstname')
-        last_name = request.POST.get('lastname')
-        comp = request.POST.get('company_name')
-        dispn = request.POST.get('display_name')
-        email = request.POST.get('email')
-        website = request.POST.get('website')
-        w_mobile = request.POST.get('work_mobile')
-        p_mobile = request.POST.get('pers_mobile')
+    
+    company = ExpenseE.objects.get(user = request.user)
+
+    if request.method=='POST':
+
+        title=request.POST.get('title')
+        first_name=request.POST.get('firstname')
+        last_name=request.POST.get('lastname')
+        comp=request.POST.get('company_name')
+        # dispn = request.POST.get('display_name')
+        dispn = f"{title} {first_name} {last_name}"
+        email=request.POST.get('email')
+        website=request.POST.get('website')
+        w_mobile=request.POST.get('work_mobile')
+        p_mobile=request.POST.get('pers_mobile')
         skype = request.POST.get('skype')
         desg = request.POST.get('desg')
         dpt = request.POST.get('dpt')
-        gsttype = request.POST.get('gsttype')
-        gstin = request.POST.get('gstin')
-        panno = request.POST.get('panno')
-        supply = request.POST.get('sourceofsupply')
-        currency = request.POST.get('currency')
-        balance = request.POST.get('openingbalance')
-        payment = request.POST.get('paymentterms')
-        street = request.POST.get('street')
-        city = request.POST.get('city')
-        state = request.POST.get('state')
-        pincode = request.POST.get('pincode')
-        country = request.POST.get('country')
-        fax = request.POST.get('fax')
-        phone = request.POST.get('phone')
-        shipstreet = request.POST.get('shipstreet')
-        shipcity = request.POST.get('shipcity')
-        shipstate = request.POST.get('shipstate')
-        shippincode = request.POST.get('shippincode')
-        shipcountry = request.POST.get('shipcountry')
-        shipfax = request.POST.get('shipfax')
-        shipphone = request.POST.get('shipphone')
+        gsttype=request.POST.get('gsttype')
+        gstin=request.POST.get('gstin')
+        panno=request.POST.get('panno')
+        supply=request.POST.get('sourceofsupply')
+        currency=request.POST.get('currency')
+        balance=request.POST.get('openingbalance')
+        payment=request.POST.get('paymentterms')
+        street=request.POST.get('street')
+        city=request.POST.get('city')
+        state=request.POST.get('state')
+        pincode=request.POST.get('pincode')
+        country=request.POST.get('country')
+        fax=request.POST.get('fax')
+        phone=request.POST.get('phone')
+        shipstreet=request.POST.get('shipstreet')
+        shipcity=request.POST.get('shipcity')
+        shipstate=request.POST.get('shipstate')
+        shippincode=request.POST.get('shippincode')
+        shipcountry=request.POST.get('shipcountry')
+        shipfax=request.POST.get('shipfax')
+        shipphone=request.POST.get('shipphone')
 
-        vndr = vendor_tableE(
-            user=user,
-            salutation=title,
-            first_name=first_name,
-            last_name=last_name,
-            company_name=comp,
-            vendor_display_name=dispn,
-            vendor_email=email,
-            vendor_wphone=w_mobile,
-            vendor_mphone=p_mobile,
-            skype_number=skype,
-            designation=desg,
-            department=dpt,
-            website=website,
-            gst_treatment=gsttype,
-            gst_number=gstin,
-            pan_number=panno,
-            source_supply=supply,
-            currency=currency,
-            opening_bal=balance,
-            payment_terms=payment,
-            baddress=street,
-            bcity=city,
-            bstate=state,
-            bzip=pincode,
-            bcountry=country,
-            bfax=fax,
-            bphone=phone,
-            saddress=shipstreet,
-            scity=shipcity,
-            sstate=shipstate,
-            szip=shippincode,
-            scountry=shipcountry,
-            sfax=shipfax,
-            sphone=shipphone
-        )
+        u = User.objects.get(id = request.user.id)
+
+        vndr = vendor_tableE(salutation=title, first_name=first_name, last_name=last_name,vendor_display_name = dispn, company_name= comp, gst_treatment=gsttype, gst_number=gstin, 
+                    pan_number=panno,vendor_wphone = w_mobile,vendor_mphone = p_mobile, vendor_email=email,skype_number = skype,
+                    source_supply=supply,currency=currency, website=website, designation = desg, department = dpt,
+                    opening_bal=balance,baddress=street, bcity=city, bstate=state, payment_terms=payment,bzip=pincode, 
+                    bcountry=country, saddress=shipstreet, scity=shipcity, sstate=shipstate,szip=shippincode, scountry=shipcountry,
+                    bfax = fax, sfax = shipfax, bphone = phone, sphone = shipphone,user = u)
         vndr.save()
 
-        return HttpResponse({"message": "success"})
-    return render(request, 'addexpense.html', {
-        'vendor': vendor
+        return HttpResponse("success")
+
+# def add_vendore(request):
+#     vendor =vendor_tableE.objects.all()
+#     if request.method == 'POST':
+#         user = request.user
+#         title = request.POST.get('title')
+#         first_name = request.POST.get('firstname')
+#         last_name = request.POST.get('lastname')
+#         comp = request.POST.get('company_name')
+#         # dispn = request.POST.get('display_name')
+#         dispn = f"{title} {first_name} {last_name}"
+#         email = request.POST.get('email')
+#         website = request.POST.get('website')
+#         w_mobile = request.POST.get('work_mobile')
+#         p_mobile = request.POST.get('pers_mobile')
+#         skype = request.POST.get('skype')
+#         desg = request.POST.get('desg')
+#         dpt = request.POST.get('dpt')
+#         gsttype = request.POST.get('gsttype')
+#         gstin = request.POST.get('gstin')
+#         panno = request.POST.get('panno')
+#         supply = request.POST.get('sourceofsupply')
+#         currency = request.POST.get('currency')
+#         balance = request.POST.get('openingbalance')
+#         payment = request.POST.get('paymentterms')
+#         street = request.POST.get('street')
+#         city = request.POST.get('city')
+#         state = request.POST.get('state')
+#         pincode = request.POST.get('pincode')
+#         country = request.POST.get('country')
+#         fax = request.POST.get('fax')
+#         phone = request.POST.get('phone')
+#         shipstreet = request.POST.get('shipstreet')
+#         shipcity = request.POST.get('shipcity')
+#         shipstate = request.POST.get('shipstate')
+#         shippincode = request.POST.get('shippincode')
+#         shipcountry = request.POST.get('shipcountry')
+#         shipfax = request.POST.get('shipfax')
+#         shipphone = request.POST.get('shipphone')
+
+#         vndr = vendor_tableE(
+#             user=user,
+#             salutation=title,
+#             first_name=first_name,
+#             last_name=last_name,
+#             company_name=comp,
+#             vendor_display_name=dispn,
+#             vendor_email=email,
+#             vendor_wphone=w_mobile,
+#             vendor_mphone=p_mobile,
+#             skype_number=skype,
+#             designation=desg,
+#             department=dpt,
+#             website=website,
+#             gst_treatment=gsttype,
+#             gst_number=gstin,
+#             pan_number=panno,
+#             source_supply=supply,
+#             currency=currency,
+#             opening_bal=balance,
+#             payment_terms=payment,
+#             baddress=street,
+#             bcity=city,
+#             bstate=state,
+#             bzip=pincode,
+#             bcountry=country,
+#             bfax=fax,
+#             bphone=phone,
+#             saddress=shipstreet,
+#             scity=shipcity,
+#             sstate=shipstate,
+#             szip=shippincode,
+#             scountry=shipcountry,
+#             sfax=shipfax,
+#             sphone=shipphone
+#         )
+#         vndr.save()
+
+#         return HttpResponse({"message": "success"})
+#     return render(request, 'addexpense.html', {
+#         'vendor': vendor
         
-    })
+#     })
 

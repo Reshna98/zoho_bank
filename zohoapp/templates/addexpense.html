@@ -511,16 +511,14 @@ $(document).ready(function() {
   </div>
 </form>
 </section>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-<script>
-  $('.select2').select2();
-  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
  <div class="modal fade" id="addVendorModal">
   <div class="modal-dialog modal-xl">
-    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px; width: 900px;">
+    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px; width: 890px;">
       <div class="modal-header " style="background: rgb(32, 35, 37);">
-          <h3 class="m-3 text-uppercase">New Vendor</h3>
+          <h3 class="m-3 text-uppercase text-white">New Vendor</h3>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
           </button>
@@ -553,7 +551,7 @@ $(document).ready(function() {
             <div class="row">
               <div class="col-md-3 mt-2">
                 <label for="lname">Last name</label>
-                <label id="vdisplayname" name = "vdisplayname" hidden></label>
+                <label id="vdisplayname" name ="display_name" hidden></label>
               </div>
               <div class="col-md-6 mt-2">
                 <input type="text" class="form-control text-dark bg-light" id="lname" name="lastname">
@@ -574,7 +572,7 @@ $(document).ready(function() {
                 <label for="email">Email</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="email" class="form-control text-dark bg-light" id="vemail" name="vemail" placeholder="example@gmail.com">    
+                <input type="email" class="form-control text-dark bg-light" id="vemail" name="email" placeholder="example@gmail.com">    
               </div>              
             </div>
 
@@ -583,10 +581,10 @@ $(document).ready(function() {
                 <label for="email">Vendor Phone</label>
               </div>
               <div class="col-md-3 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="vw_mobile" placeholder="Work Number" maxlength="10" name="vw_mobile">
+                <input type="text" class="form-control text-dark bg-light" id="vw_mobile" placeholder="Work Number" maxlength="10" name="work_mobile">
               </div>        
               <div class="col-md-3 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="vp_mobile" placeholder="Personal Number" maxlength="10" name="vp_mobile">
+                <input type="text" class="form-control text-dark bg-light" id="vp_mobile" placeholder="Personal Number" maxlength="10" name="pers_mobile">
               </div>          
             </div>
 
@@ -608,7 +606,7 @@ $(document).ready(function() {
                 <label for="vskype">Skype name/Number</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="vskype" name="vskype">
+                <input type="text" class="form-control text-dark bg-light" id="vskype" name="skype">
               </div>       
             </div>
 
@@ -617,7 +615,7 @@ $(document).ready(function() {
                 <label for="v_desg">Designation</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_desg" name="v_desg">
+                <input type="text" class="form-control text-dark bg-light" id="v_desg" name="desg">
               </div>       
             </div>
 
@@ -626,7 +624,7 @@ $(document).ready(function() {
                 <label for="v_dpt">Department</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_dpt" name="v_dpt">
+                <input type="text" class="form-control text-dark bg-light" id="v_dpt" name="dpt">
               </div>       
             </div>
 
@@ -635,7 +633,7 @@ $(document).ready(function() {
                 <label for="v_gsttype" style="color:rgb(190, 88, 88);">GST Treatment *</label>
               </div>
               <div class="col-md-6 mt-2">
-                <select class="form-control text-dark bg-light" id="v_gsttype" name="v_gsttype" required>
+                <select class="form-control text-dark bg-light" id="v_gsttype" name="gsttype" required>
                   <option selected disabled value="">Choose..</option>
                   <option value="Registered Business - Regular">Registered Business - Regular <span><i>(Business that is registered under gst)</i></span></option>
                   <option value="Registered Business - Composition">Registered Business - Composition (Business that is registered under composition scheme in gst)</option>
@@ -654,7 +652,7 @@ $(document).ready(function() {
                 <label id="glbl" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_gstin" name="v_gstin" placeholder="29APPCK7465F1Z1">
+                <input type="text" class="form-control text-dark bg-light" id="v_gstin" name="gstin" placeholder="29APPCK7465F1Z1">
                 <label id="gst_label"></label>
               </div>       
             </div>
@@ -664,7 +662,7 @@ $(document).ready(function() {
                 <label for="v_pan">PAN Number</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_pan" name="v_pan" placeholder="APPCK7465F">
+                <input type="text" class="form-control text-dark bg-light" id="v_pan" name="pan" placeholder="APPCK7465F">
                 <label id="pan_label"></label>
               </div>       
             </div>
@@ -674,7 +672,7 @@ $(document).ready(function() {
                 <label for="" style="color: rgb(190, 88, 88);">Source of Supply *</label>
               </div>
               <div class="col-md-6 mt-2">
-                <select class="form-control text-dark bg-light" id="v_srcsupply" name="v_sourceofsupply">
+                <select class="form-control text-dark bg-light" id="v_srcsupply" name="sourceofsupply">
                   <option value="Nill"></option>
                   <option value="[AN] Andaman and Nicobar Islads">[AN] Andaman and Nicobar Islads</option>
                   <option value="[AD] Andhra Predhesh">[AD] Andhra Predhesh</option>
@@ -723,7 +721,7 @@ $(document).ready(function() {
                 <label for="v_curn">Currency </label>
               </div>
               <div class="col-md-3 mt-2">
-                <select class="form-control text-dark bg-light" id="v_curn" name="v_curn" required>
+                <select class="form-control text-dark bg-light" id="v_curn" name="currency" required>
                   <option selected disabled value="">Choose..</option>
                   <option value="INR">INR</option>
                 </select>
@@ -735,7 +733,7 @@ $(document).ready(function() {
                 <label for="v_open">Opening Balance</label>
               </div>
               <div class="col-md-6 mt-2">
-                <input type="text" class="form-control text-dark bg-light" id="v_open" name="v_open">
+                <input type="text" class="form-control text-dark bg-light" id="v_open" name="openingbalance">
               </div>       
             </div>
 
@@ -745,7 +743,7 @@ $(document).ready(function() {
               </div>
               <div class="col-md-6 mt-2">
                 <div class="d-flex">
-                  <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
+                  <select class="form-control text-dark bg-light" id="v_terms" name="paymentterms" required>
                     <option selected value="15">NET 15</option>
                     <option value="30">NET 30</option>
                     <option value="45">NET 45</option>
@@ -785,7 +783,7 @@ $(document).ready(function() {
                 <label for="vstreet">Street</label>
               </div>
               <div class="col-md-4">
-                <textarea class="form-control street text-dark bg-light" id="vstreet" name="vstreet"></textarea>
+                <textarea class="form-control street text-dark bg-light" id="vstreet" name="shipstreet"></textarea>
               </div>
               <div class="col-md-1"></div>
 
@@ -793,7 +791,7 @@ $(document).ready(function() {
                 <label for="vsstreet">Street</label>
               </div>
               <div class="col-md-4 ">
-                <textarea class="form-control street text-dark bg-light" id="vsstreet" name="vsstreet"></textarea>
+                <textarea class="form-control street text-dark bg-light" id="vsstreet" name="street"></textarea>
               </div>
               <div class="col-md-1"></div>
 
@@ -804,7 +802,7 @@ $(document).ready(function() {
                 <label for="vcity">City</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vcity" name="vcity" placeholder="City">  
+                <input type="text" class="form-control text-dark bg-light" id="vcity" name="shipcity" placeholder="City">  
               </div>
               <div class="col-md-1">
               </div>
@@ -812,7 +810,7 @@ $(document).ready(function() {
                 <label for="vscity">City</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vscity" name="vscity" placeholder="City">  
+                <input type="text" class="form-control text-dark bg-light" id="vscity" name="city" placeholder="City">  
               </div>
               <div class="col-md-1">
               </div>
@@ -823,7 +821,7 @@ $(document).ready(function() {
                 <label for="vstate">State</label>
               </div>
               <div class="col-md-4">
-                <select type="text" class="form-control text-dark bg-light" id="vstate" name="vstate">
+                <select type="text" class="form-control text-dark bg-light" id="vstate" name="state">
                   <option value="" selected>Choose</option>
                   <option value="None Of This">None Of This</option>
                   <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -873,7 +871,7 @@ $(document).ready(function() {
                 <label for="vsstate">State</label>
               </div>
               <div class="col-md-4 ">
-                <select type="text" class="form-control text-dark bg-light" id="vsstate" name="vsstate">
+                <select type="text" class="form-control text-dark bg-light" id="vsstate" name="shipstate">
                   <option value="" selected>Choose</option>
                   <option value="None Of This">None Of This</option>
                   <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -927,7 +925,7 @@ $(document).ready(function() {
                 <label for="vcountry">Country</label>
               </div>
               <div class="col-md-4 ">
-                <input type="text" class="form-control text-dark bg-light" id="vcountry" name="vcountry" placeholder="Country">  
+                <input type="text" class="form-control text-dark bg-light" id="vcountry" name="country" placeholder="Country">  
               </div>
               <div class="col-md-1"></div>
 
@@ -935,7 +933,7 @@ $(document).ready(function() {
                 <label for="vscountry">Country</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="vscountry" placeholder="Country">
+                <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="shipcountry" placeholder="Country">
               </div>
               <div class="col-md-1 "></div>
 
@@ -947,7 +945,7 @@ $(document).ready(function() {
                 <label for="vpincode">Pincode</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
+                <input type="text" class="form-control text-dark bg-light" id="vpincode" name="pincode" maxlength="6" placeholder="PIN Code"> 
               </div>
               <div class="col-md-1"></div>
 
@@ -955,7 +953,7 @@ $(document).ready(function() {
                 <label for="vspincode">Pincode</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6"  placeholder="PIN Code">  
+                <input type="text" class="form-control text-dark bg-light" id="vspincode" name="shippincode" maxlength="6"  placeholder="PIN Code">  
               </div>
               <div class="col-md-1"></div>
 
@@ -967,7 +965,7 @@ $(document).ready(function() {
                 <label for="vphone">Phone</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vphone" name="vphone"  placeholder="Phone"> 
+                <input type="text" class="form-control text-dark bg-light" id="vphone" name="phone"  placeholder="Phone"> 
               </div>
               <div class="col-md-1"></div>
 
@@ -975,7 +973,7 @@ $(document).ready(function() {
                 <label for="vsphone">Phone</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vsphone" name="vsphone"  placeholder="Phone">  
+                <input type="text" class="form-control text-dark bg-light" id="vsphone" name="shipphone"  placeholder="Phone">  
               </div>
               <div class="col-md-1"></div>
 
@@ -987,7 +985,7 @@ $(document).ready(function() {
                 <label for="vfax">Fax</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vfax" name="vfax"  placeholder="FAX"> 
+                <input type="text" class="form-control text-dark bg-light" id="vfax" name="fax"  placeholder="FAX"> 
               </div>
               <div class="col-md-1"></div>
 
@@ -995,7 +993,7 @@ $(document).ready(function() {
                 <label for="vsfax">Fax</label>
               </div>
               <div class="col-md-4">
-                <input type="text" class="form-control text-dark bg-light" id="vsfax" name="vsfax"  placeholder="FAX">  
+                <input type="text" class="form-control text-dark bg-light" id="vsfax" name="shipfax"  placeholder="FAX">  
               </div>
               <div class="col-md-1"></div>
 
@@ -1017,9 +1015,11 @@ $(document).ready(function() {
                   </button> 
 
                   <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                    data-dismiss="modal" aria-label="Close">
+                    data-dismiss="modal" aria-label="Close"onclick="closeModal()">
                       <span aria-hidden="true">Cancel</span>
-                  </button>
+                  </button> 
+                 
+              
                 </div>
               </div>
               <div class="col-md-4"></div>
@@ -1035,9 +1035,21 @@ $(document).ready(function() {
 
 
 <script>
+  function closeModal() {
+    // Use the remove() method to close the modal
+    $("#addVendorModal").remove();
+  }
+
+  $(document).ready(function() {
+    // You can also add a click event handler using jQuery
+    $(".close[data-dismiss='modal']").on("click", function() {
+      closeModal();
+    });
+  });
 $(document).ready(function() {
     $("#fname, #lname").change(function() {
       $("#vdisplayname").text($("#title").val() +" " + $("#fname").val() + " " + $("#lname").val());
+  
     });
   });
   $(document).on("click","#vendorSave",function(){
@@ -1088,8 +1100,9 @@ $(document).ready(function() {
     
       success: function(response) {
         document.getElementById("modalVendor").reset();
+        closeModal();
         reloadVendor();
-        window.location.replace("{% url 'save_expense' %}");
+      
       },
   });        
 });
@@ -1117,6 +1130,27 @@ function reloadVendor() {
   });
 }
 
+function addressSame(){
+    var chkbtn = document.getElementById('vokay');
+    if (chkbtn.checked == true) {
+      document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
+      document.getElementById('vscity').value = document.getElementById('vcity').value;
+      document.getElementById('vspincode').value = document.getElementById('vpincode').value;
+      document.getElementById('vscountry').value = document.getElementById('vcountry').value;
+      document.getElementById('vsstate').value = document.getElementById('vstate').value;
+      document.getElementById('vsphone').value = document.getElementById('vphone').value;
+      document.getElementById('vsfax').value = document.getElementById('vfax').value;
+    } 
+    else {
+      document.getElementById('vsstreet').value = '';
+      document.getElementById('vscity').value = '';
+      document.getElementById('vsstate').value = '';
+      document.getElementById('vspincode').value = '';
+      document.getElementById('vscountry').value = '';
+      document.getElementById('vsphone').value = '';
+      document.getElementById('vsfax').value = '';
+    }
+  }
 
 
 </script>
