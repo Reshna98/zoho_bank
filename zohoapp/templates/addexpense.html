@@ -1936,15 +1936,15 @@ function addressSame(){
     },
     success: function(response) {
       document.getElementById("customerForm").reset();
-      console.log("AJAX request successful");
+      // console.log("AJAX request successful");
       redirectToSaveExpense(); // Redirect to the save expense page
     },
-    error: function(xhr, status, error) {
-      console.log("AJAX request failed");
-      console.log("Error:", error);
+    // error: function(xhr, status, error) {
+    //   console.log("AJAX request failed");
+    //   console.log("Error:", error);
     }
   });
-});
+// });
 
 function redirectToSaveExpense() {
   console.log("Redirecting to save_expense page");
