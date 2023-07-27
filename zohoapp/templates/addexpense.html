@@ -1245,7 +1245,7 @@ function addressSame(){
           <div class="fixed-top  " style="top: 7rem; margin-left: 20rem;">
             <div class="" style="margin-top:1rem;color:white;">
               <h1></h1>
-              <div style="height: 450px; overflow-y: scroll;">
+              <div style="height: 500px; overflow-y: scroll;">
                 <form action="{% url 'add_custmr' %}" method="POST" enctype="multipart/form-data" id="add-customer-form"
                   style="color: azure ; font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;font-size:22px;width: 500px;">
                   {% csrf_token %}
@@ -1700,7 +1700,7 @@ function addressSame(){
                   </div>
           
           
-                  <form action="{% url 'payment_term' %}" method="post">
+                  <form action="{% url 'payment_term' %}" method="post" id="payform">
                     {% csrf_token %}
                     <div class="col-sm-10 form-inline">
                       <label for="name">Term Name</label> &nbsp;&nbsp;&nbsp;
@@ -1711,13 +1711,13 @@ function addressSame(){
                       <input type="number" id="term" name="day"><br>
                     </div><br>
                     <div class="col-sm-10 form-inline">
-                      <input type="submit" class="mr-3 btn btn-success" value="Save" id="submit-btn">&nbsp;&nbsp;&nbsp;
+                      <input type="submit" class="mr-3 btn btn-success" value="Save" id="submit-btn" id="paysub">&nbsp;&nbsp;&nbsp;
                       <input type="reset" value="Cancel"></button>
                     </div><br>
                   </form>
                 </div>
           
-              
+               
           
           
                 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -1845,6 +1845,26 @@ function addressSame(){
                 function closepop() {
                   popu.classList.remove("open-popup-1");
                 }
+  $(document).on("click", "#paysub", function(e) {
+    e.preventDefault(); // Prevent the default form submission
+
+    $.ajax({
+      type: "POST",
+      url: "{% url 'add_custmr' %}",
+      data: {
+        term: $("#termk").val(),
+        days: $("#term").val(),
+       
+        description: $("#description").val(),
+        csrfmiddlewaretoken: "{{ csrf_token }}"
+      },
+      success: function(response) {
+        document.getElementById("payform").reset();
+        closepop(); 
+      },
+    });
+  });
+
   $(document).ready(function() {
     $("#cfname, #clname").change(function() {
       $("#cdisplayname").text($("#title").val() +" " + $("#cfname").val() + " " + $("#clname").val());
