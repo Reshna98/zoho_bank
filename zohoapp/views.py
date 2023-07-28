@@ -4177,7 +4177,7 @@ def add_custmr(request):
 
 
 
-def payment_term(request):
+def payment_terme(request):
     if request.method=='POST':
         term=request.POST.get('term')
         day=request.POST.get('day')
