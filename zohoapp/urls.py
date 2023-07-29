@@ -191,6 +191,7 @@ urlpatterns = [
     path('add_accountE',views.add_accountE,name='add_accountE'),
     path('add_custmr',views.add_custmr,name='add_custmr'),
     path('payment_terme',views.payment_terme,name='payment_terme'),
+    path('pay_dropdowne',views.pay_dropdowne,name = 'pay_dropdowne'),
     path('expense_details/<int:pk>',views.expense_details,name='expense_details'),
     path('edit_expensee/<int:expense_id>',views.edit_expensee,name='edit_expensee'),
     path('add_custmr/', views.add_custmr, name='add_custmr'),

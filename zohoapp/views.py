@@ -4177,13 +4177,41 @@ def add_custmr(request):
 
 
 
+# def payment_terme(request):
+#     if request.method=='POST':
+#         term=request.POST.get('term')
+#         day=request.POST.get('day')
+#         ptr=payment_termsE(Terms=term,Days=day)
+#         ptr.save()
+#         return redirect("add_custmr")
+
 def payment_terme(request):
+    
+    company = company_details.objects.get(user = request.user)
+
     if request.method=='POST':
-        term=request.POST.get('term')
-        day=request.POST.get('day')
-        ptr=payment_termsE(Terms=term,Days=day)
-        ptr.save()
-        return redirect("add_custmr")
+
+        name=request.POST.get('name')
+        days=request.POST.get('days')
+        
+        u = User.objects.get(id = request.user.id)
+
+        pay = payment_terms(Terms=name, Days=days, user = u)
+        pay.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def pay_dropdowne(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = payment_terms.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = [option.Terms,option.Days]
+
+    return JsonResponse(options)
 
 # def add_vendore(request):
 #     user = User.objects.get(id=request.user.id)
