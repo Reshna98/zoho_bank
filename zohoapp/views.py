@@ -4048,7 +4048,6 @@ def upload_documents(request, expense_id):
 
 def add_accountE(request):
     user = User.objects.get(id=request.user.id)
-
     accounts = AccountE.objects.all()
     account_types = set(AccountE.objects.values_list('type', flat=True))
     if request.method == 'POST':
@@ -4097,7 +4096,7 @@ def expense_details(request, pk):
 def add_custmr(request):
     if request.user.is_authenticated:
         if request.method=='POST':
-            form_data = request.POST.dict()
+            # form_data = request.POST.dict()
             type=request.POST.get('type')
             txtFullName=request.POST['txtFullName']
             cpname=request.POST['cpname']
@@ -4120,13 +4119,13 @@ def add_custmr(request):
           
             # select=request.POST.get('pterms')
             # pterms=payment_terms.objects.get(id=select)
-            # pterms=request.POST.get('pterms')
-            select = request.POST.get('pterms')
+            pterms=request.POST.get('pterms')
+            # select = request.POST.get('pterms')
             
-            try:
-                pterms = payment_termsE.objects.get(id=select)
-            except payment_terms.DoesNotExist:
-                pterms = None
+            # try:
+            #     pterms = payment_termsE.objects.get(id=select)
+            # except payment_terms.DoesNotExist:
+            #     pterms = None
 
             plst=request.POST.get('plst')
             plang=request.POST.get('plang')
@@ -4172,7 +4171,7 @@ def add_custmr(request):
             ctmr.save()  
             return HttpResponse('Account saved successfully')
             # return redirect('save_expense')
-        return render(request, 'addcustomere.html')
+        # return render(request, 'addcustomere.html')
 
 
 
@@ -4187,7 +4186,7 @@ def add_custmr(request):
 
 def payment_terme(request):
     
-    company = company_details.objects.get(user = request.user)
+    company = ExpenseE.objects.get(user = request.user)
 
     if request.method=='POST':
 
@@ -4347,49 +4346,52 @@ def vendor_dropdownE(request):
     options = {}
     option_objects = vendor_tableE.objects.filter(user=user)
     for option in option_objects:
-        options[option.id] = [option.first_name + " " + option.last_name, option.first_name + " " + option.last_name + " " + str(option.id)]
-
+        # options[option.id] = [option.first_name + " " + option.last_name, option.first_name + " " + option.last_name + " " + str(option.id)]
+        display_name = f"{option.salutation} {option.first_name} {option.last_name}"
+        options[option.id] = [display_name, display_name + " " + str(option.id)]
     return JsonResponse(options)
+
+    
 def add_vendore(request):
     
-    company = ExpenseE.objects.get(user = request.user)
-
+    # company = ExpenseE.objects.get(user = request.user)
+    user = User.objects.get(id=request.user.id)
     if request.method=='POST':
 
         title=request.POST.get('title')
         first_name=request.POST.get('firstname')
         last_name=request.POST.get('lastname')
         comp=request.POST.get('company_name')
-        # dispn = request.POST.get('display_name')
-        dispn = f"{title} {first_name} {last_name}"
-        email=request.POST.get('email')
-        website=request.POST.get('website')
-        w_mobile=request.POST.get('work_mobile')
-        p_mobile=request.POST.get('pers_mobile')
-        skype = request.POST.get('skype')
-        desg = request.POST.get('desg')
-        dpt = request.POST.get('dpt')
-        gsttype=request.POST.get('gsttype')
-        gstin=request.POST.get('gstin')
-        panno=request.POST.get('panno')
-        supply=request.POST.get('sourceofsupply')
-        currency=request.POST.get('currency')
-        balance=request.POST.get('openingbalance')
-        payment=request.POST.get('paymentterms')
-        street=request.POST.get('street')
-        city=request.POST.get('city')
-        state=request.POST.get('state')
-        pincode=request.POST.get('pincode')
-        country=request.POST.get('country')
-        fax=request.POST.get('fax')
-        phone=request.POST.get('phone')
-        shipstreet=request.POST.get('shipstreet')
-        shipcity=request.POST.get('shipcity')
-        shipstate=request.POST.get('shipstate')
-        shippincode=request.POST.get('shippincode')
-        shipcountry=request.POST.get('shipcountry')
-        shipfax=request.POST.get('shipfax')
-        shipphone=request.POST.get('shipphone')
+        dispn = request.POST.get('display_name')
+        # dispn = f"{title} {first_name} {last_name}"
+        email=request.POST.get('email',None)
+        website=request.POST.get('website',None)
+        w_mobile=request.POST.get('work_mobile',None)
+        p_mobile=request.POST.get('pers_mobile',None)
+        skype = request.POST.get('skype',None)
+        desg = request.POST.get('desg',None)
+        dpt = request.POST.get('dpt',None)
+        gsttype=request.POST.get('gsttype',None)
+        gstin=request.POST.get('gstin',None)
+        panno=request.POST.get('panno',None)
+        supply=request.POST.get('sourceofsupply',None)
+        currency=request.POST.get('currency',None)
+        balance=request.POST.get('openingbalance',None)
+        payment=request.POST.get('paymentterms',None)
+        street=request.POST.get('street',None)
+        city=request.POST.get('city',None)
+        state=request.POST.get('state',None)
+        pincode=request.POST.get('pincode',None)
+        country=request.POST.get('country',None)
+        fax=request.POST.get('fax',None)
+        phone=request.POST.get('phone',None)
+        shipstreet=request.POST.get('shipstreet',None)
+        shipcity=request.POST.get('shipcity',None)
+        shipstate=request.POST.get('shipstate',None)
+        shippincode=request.POST.get('shippincode',None)
+        shipcountry=request.POST.get('shipcountry',None)
+        shipfax=request.POST.get('shipfax',None)
+        shipphone=request.POST.get('shipphone',None)
 
         u = User.objects.get(id = request.user.id)
 
@@ -4399,6 +4401,7 @@ def add_vendore(request):
                     opening_bal=balance,baddress=street, bcity=city, bstate=state, payment_terms=payment,bzip=pincode, 
                     bcountry=country, saddress=shipstreet, scity=shipcity, sstate=shipstate,szip=shippincode, scountry=shipcountry,
                     bfax = fax, sfax = shipfax, bphone = phone, sphone = shipphone,user = u)
+        vendor_dropdownE(request)
         vndr.save()
 
         return HttpResponse("success")
