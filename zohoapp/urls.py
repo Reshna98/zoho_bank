@@ -190,8 +190,8 @@ urlpatterns = [
     path('save_expense',views.save_expense,name='save_expense'),
     path('add_accountE',views.add_accountE,name='add_accountE'),
     path('add_custmr',views.add_custmr,name='add_custmr'),
-    path('payment_terme',views.payment_terme,name='payment_terme'),
-    path('pay_dropdowne',views.pay_dropdowne,name = 'pay_dropdowne'),
+    # path('payment_terme',views.payment_terme,name='payment_terme'),
+    # path('pay_dropdowne',views.pay_dropdowne,name = 'pay_dropdowne'),
     path('expense_details/<int:pk>',views.expense_details,name='expense_details'),
     path('edit_expensee/<int:expense_id>',views.edit_expensee,name='edit_expensee'),
     path('add_custmr/', views.add_custmr, name='add_custmr'),
@@ -202,6 +202,7 @@ urlpatterns = [
     path('upload_documents/<int:expense_id>',views.upload_documents,name='upload_documents'),
     path('account_dropdownE', views.account_dropdownE, name='account_dropdownE'),
     path('vendor_dropdownE/', views.vendor_dropdownE, name='vendor_dropdownE'),
+    path('customer_dropdownE/', views.customer_dropdownE, name='customer_dropdownE'),
     path('save_expense/', views.save_expense, name='save_expense'),
 
 

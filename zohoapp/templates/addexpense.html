@@ -1060,6 +1060,7 @@ $(document).ready(function() {
 });
 function addressSame(){
     var chkbtn = document.getElementById('vokay');
+    var chkbtn2 = document.getElementById('csokay');
     if (chkbtn.checked == true) {
       document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
       document.getElementById('vscity').value = document.getElementById('vcity').value;
@@ -1078,10 +1079,32 @@ function addressSame(){
       document.getElementById('vsphone').value = '';
       document.getElementById('vsfax').value = '';
     }
+
+  if (chkbtn2.checked == true) {
+      document.getElementById('csstreet1').value = document.getElementById('cstreet1').value;
+      document.getElementById('csstreet2').value = document.getElementById('cstreet2').value;
+      document.getElementById('cscity').value = document.getElementById('ccity').value;
+      document.getElementById('cspincode').value = document.getElementById('cpincode').value;
+      document.getElementById('cscountry').value = document.getElementById('ccountry').value;
+      document.getElementById('csstate').value = document.getElementById('cstate').value;
+      document.getElementById('csphone').value = document.getElementById('cphone').value;
+      document.getElementById('csfax').value = document.getElementById('cfax').value;
+    } 
+    else {
+      document.getElementById('csstreet1').value = '';
+      document.getElementById('csstreet2').value = '';
+      document.getElementById('cscity').value = '';
+      document.getElementById('csstate').value = '';
+      document.getElementById('cspincode').value = '';
+      document.getElementById('cscountry').value = '';
+      document.getElementById('csphone').value = '';
+      document.getElementById('csfax').value = '';
+    }
+  
   }
+  
 
-
-  var enteredDisplayName; // Global variable to store the entered display name
+  var enteredDisplayName; 
 
 
 
@@ -1377,7 +1400,7 @@ $(document).ready(function() {
 
 
     <hr>
-    <center><h4 class="text-uppercase mb-3"><b>Other Details</b></h4></center>
+    <center><h4 class="text-uppercase mb-3 text-white"><b>Other Details</b></h4></center>
     <div class="row mt-5">
       <div class="col-md-3 mt-2">
         <label for="facebook">Facebook</label>
@@ -1449,6 +1472,8 @@ $(document).ready(function() {
       </div>       
     </div>
 
+
+
     <div class="row mt-2">
       <div class="col-md-3 mt-2">
         <label for="" style="color: rgb(190, 88, 88);">Place of Supply *</label>
@@ -1505,11 +1530,11 @@ $(document).ready(function() {
       <div class="col-md-6 mt-2">
         <div class="d-flex">
           <div class="radio_opt mx-5 mt-2">
-            <input type="radio" id="tax" name="radioCust1" value="Taxable" >
+            <input type="radio" id="custtax1" name="radioCust1" value="Taxable" >
             <label for="option1">Taxable</label>
           </div>
           <div class="radio_opt mx-4 mt-2">
-            <input type="radio" id="taxe" name="radioCust1" value="Tax-exempt" >
+            <input type="radio" id="custtax2" name="radioCust1" value="Tax-exempt" >
             <label for="option2">Tax-exempt</label>
           </div>
         </div>
@@ -1539,11 +1564,11 @@ $(document).ready(function() {
 
     <div class="row mt-2">
       <div class="col-md-3 mt-2">
-        <label for="v_terms">Payment Terms</label>
+        <label for="c_terms">Payment Terms</label>
       </div>
       <div class="col-md-6 mt-2">
         <div class="d-flex">
-          <select class="form-control text-dark bg-light" id="v_terms" name="v_terms" required>
+          <select class="form-control text-dark bg-light" id="c_terms" name="c_terms" required>
             <option selected value="15">NET 15</option>
             <option value="30">NET 30</option>
             <option value="45">NET 45</option>
@@ -1574,25 +1599,43 @@ $(document).ready(function() {
     <div class="row mt-2 m-0 p-0 mb-2">
       <div class="col-md-9"> </div>
       <div class="col-md-3 text-right  m-0 p-0">
-        <input type="checkbox" onclick="addressSameC()" id="Cus" name="Cus">
-        <label for="vokay" style="color: #909091;">Same As Billing Address</label>
+        <input type="checkbox" onclick="addressSame()" id="csokay" name="csokay">
+        <label for="csokay" style="color: #909091;">Same As Billing Address</label>
       </div>
     </div>
 
     <div class="row mt-5">
       <div class="col-md-1">
-        <label for="vstreet">Street</label>
+        <label for="cstreet1">Address 1</label>
       </div>
       <div class="col-md-4">
-        <textarea class="form-control street text-dark bg-light" id="vstreet" name="vstreet"></textarea>
+        <textarea class="form-control street text-dark bg-light" id="cstreet1" name="cstreet1"></textarea>
       </div>
       <div class="col-md-1"></div>
 
       <div class="col-md-1">
-        <label for="vsstreet">Street</label>
+        <label for="csstreet1">Address 1</label>
       </div>
       <div class="col-md-4 ">
-        <textarea class="form-control street text-dark bg-light" id="vsstreet" name="vsstreet"></textarea>
+        <textarea class="form-control street text-dark bg-light" id="csstreet1" name="csstreet1"></textarea>
+      </div>
+      <div class="col-md-1"></div>
+
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-1">
+        <label for="cstreet2">Address 2</label>
+      </div>
+      <div class="col-md-4">
+        <textarea class="form-control street text-dark bg-light" id="cstreet2" name="cstreet2"></textarea>
+      </div>
+      <div class="col-md-1"></div>
+
+      <div class="col-md-1">
+        <label for="csstreet2">Address 2</label>
+      </div>
+      <div class="col-md-4 ">
+        <textarea class="form-control street text-dark bg-light" id="csstreet2" name="csstreet2"></textarea>
       </div>
       <div class="col-md-1"></div>
 
@@ -1600,18 +1643,18 @@ $(document).ready(function() {
 
     <div class="row mt-2">
       <div class="col-md-1">
-        <label for="vcity">City</label>
+        <label for="ccity">City</label>
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control text-dark bg-light" id="vcity" name="vcity" placeholder="City">  
+        <input type="text" class="form-control text-dark bg-light" id="ccity" name="ccity" placeholder="City">  
       </div>
       <div class="col-md-1">
       </div>
       <div class="col-md-1">
-        <label for="vscity">City</label>
+        <label for="cscity">City</label>
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control text-dark bg-light" id="vscity" name="vscity" placeholder="City">  
+        <input type="text" class="form-control text-dark bg-light" id="cscity" name="cscity" placeholder="City">  
       </div>
       <div class="col-md-1">
       </div>
@@ -1619,10 +1662,10 @@ $(document).ready(function() {
 
     <div class="row mt-2">
       <div class="col-md-1">
-        <label for="vstate">State</label>
+        <label for="cstate">State</label>
       </div>
       <div class="col-md-4">
-        <select type="text" class="form-control text-dark bg-light" id="vstate" name="vstate">
+        <select type="text" class="form-control text-dark bg-light" id="cstate" name="cstate">
           <option value="" selected>Choose</option>
           <option value="None Of This">None Of This</option>
           <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads</option>
@@ -1668,10 +1711,10 @@ $(document).ready(function() {
       <div class="col-md-1"></div>
 
       <div class="col-md-1">
-        <label for="vsstate">State</label>
+        <label for="csstate">State</label>
       </div>
       <div class="col-md-4 ">
-        <select type="text" class="form-control text-dark bg-light" id="vsstate" name="vsstate">
+        <select type="text" class="form-control text-dark bg-light" id="csstate" name="csstate">
           <option value="" selected>Choose</option>
           <option value="None Of This">None Of This</option>
           <option value="Andaman and Nicobar Islads">Andaman and Nicobar Islads
@@ -1722,18 +1765,18 @@ $(document).ready(function() {
 
     <div class="row mt-2">
       <div class="col-md-1">
-        <label for="vcountry">Country</label>
+        <label for="ccountry">Country</label>
       </div>
       <div class="col-md-4 ">
-        <input type="text" class="form-control text-dark bg-light" id="vcountry" name="vcountry" placeholder="Country">  
+        <input type="text" class="form-control text-dark bg-light" id="ccountry" name="ccountry" placeholder="Country">  
       </div>
       <div class="col-md-1"></div>
 
       <div class="col-md-1">
-        <label for="vscountry">Country</label>
+        <label for="cscountry">Country</label>
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control text-dark bg-light" id="vscountry"  name="vscountry" placeholder="Country">
+        <input type="text" class="form-control text-dark bg-light" id="cscountry"  name="cscountry" placeholder="Country">
       </div>
       <div class="col-md-1 "></div>
 
@@ -1742,18 +1785,18 @@ $(document).ready(function() {
     <div class="row mt-2">
 
       <div class="col-md-1">
-        <label for="vpincode">Pincode</label>
+        <label for="cpincode">Pincode</label>
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control text-dark bg-light" id="vpincode" name="vpincode" maxlength="6" placeholder="PIN Code"> 
+        <input type="text" class="form-control text-dark bg-light" id="cpincode" name="cpincode" maxlength="6" placeholder="PIN Code"> 
       </div>
       <div class="col-md-1"></div>
 
       <div class="col-md-1">
-        <label for="vspincode">Pincode</label>
+        <label for="cspincode">Pincode</label>
       </div>
       <div class="col-md-4">
-        <input type="text" class="form-control text-dark bg-light" id="vspincode" name="vspincode" maxlength="6" placeholder="PIN Code">  
+        <input type="text" class="form-control text-dark bg-light" id="cspincode" name="cspincode" maxlength="6" placeholder="PIN Code">  
       </div>
       <div class="col-md-1"></div>
 
@@ -1762,7 +1805,7 @@ $(document).ready(function() {
     <div class="row mt-2">
 
       <div class="col-md-1">
-        <label for="vphone">Phone</label>
+        <label for="cphone">Phone</label>
       </div>
       <div class="col-md-4">
         <input type="text" class="form-control text-dark bg-light" id="cphone" name="cphone" placeholder="Phone"> 
@@ -1808,11 +1851,12 @@ $(document).ready(function() {
     </div>
 
 
-    <button style="width: 5rem; height: 2rem; color: black;" class="btn btn-success" type="button" id="save_customer">Submit</button>
-    <button style="width: 5rem; height: 2rem; color: black;" class="btn btn-secondary" type="button" onclick="closepopup2()">Cancel</button>
+    <button style="width: 5rem; height: 2rem; color: black;" class="btn btn-success mt-3 mb-3" type="button" id="customerSave">Submit</button>
+    <button style="width: 5rem; height: 2rem; color: black;" class="btn btn-secondary mt-3 mb-3" type="button" onclick="closepopup2()">Cancel</button>
   </form>
 </div>
 <script>
+  
 function openpopup2(select) {
   if (select.value === "new") {
     popup2.classList.add("open-popup2");
@@ -1824,72 +1868,80 @@ function closepopup2() {
 }
 
 $(document).ready(function() {
-  $("#fname, #lname").change(function() {
-    $("#vdisplayname").text($("#title").val() + " " + $("#fname").val() + " " + $("#lname").val());
-  });
-});
-function addressSameC(){
-    var chkbtn = document.getElementById('Cus');
-    if (chkbtn.checked == true) {
-      document.getElementById('vsstreet').value = document.getElementById('vstreet').value;
-      document.getElementById('vscity').value = document.getElementById('vcity').value;
-      document.getElementById('cspincode').value = document.getElementById('vpincode').value;
-      document.getElementById('cscountry').value = document.getElementById('vcountry').value;
-      document.getElementById('csstate').value = document.getElementById('vstate').value;
-      document.getElementById('csphone').value = document.getElementById('vphone').value;
-      document.getElementById('csfax').value = document.getElementById('cfax').value;
-    } 
-    else {
-      document.getElementById('vsstreet').value = '';
-      document.getElementById('vscity').value = '';
-      document.getElementById('vsstate').value = '';
-      document.getElementById('vspincode').value = '';
-      document.getElementById('vscountry').value = '';
-      document.getElementById('vsphone').value = '';
-      document.getElementById('vsfax').value = '';
-    }
-}
-
-
-  var enteredDisplayName; // Global variable to store the entered display name
-
-  $(document).on("click", "#save_customer", function(e) {
-    e.preventDefault(); // Prevent the default form submission
-
-    $.ajax({
-      type: "POST",
-      url: "{% url 'add_vendore' %}",
-      data: {
-        title: $("#title").val(),
-        firstname: $("#fname").val(),
-        lastname: $("#lname").val(),
-        company_name: $("#vcompany").val(),
-        display_name: $('#vdisplayname').text(),
-        email : $("#vemail").val(),
-        website :$("#wsite").val(),
-        work_mobile :$("#vw_mobile").val(),
-        pers_mobile :$("#vp_mobile").val(),
-        skype :$("#vskype").val(),
-        desg :$("#v_desg").val(),
-        dpt :$("#v_dpt").val(),
-        csrfmiddlewaretoken: "{{ csrf_token }}"
-      },
-      success: function(response) {
-        document.getElementById("customerForm").reset();
-        enteredDisplayName = $('#vdisplayname').text();
-        reloadVendor();
-        closepopup1(); 
-      },
-      error: function(xhr, status, error) {
-        console.error(xhr.responseText);
-        // Handle AJAX error here if needed
-      },
+    $("#cfname, #clname").change(function() {
+      $("#cdisplayname").text($("#ctitle").val() +" " + $("#cfname").val() + " " + $("#clname").val());
     });
   });
 
-function reloadVendor() {
+var enteredCName=""
+
+$(document).on("click", "#customerSave", function(e) {
+  e.preventDefault(); 
+  enteredCName = $('#cdisplayname').text(); 
+if ($('input[name="radioCust"]:checked').val() == 'Business'){
+
+custType = $('#business').val();
+}
+else{
+custType = $('#individual').val();
+}
+
+if ($('input[name="radioCust1"]:checked').val() == 'Taxable'){
+cust_tax = $('#custtax1').val();
+}
+else{
+  cust_tax = $('#custtax2').val();
+}
+$.ajax({
+    
+    type : 'POST',
+    url:"{% url 'add_custmr' %}",
+
+    data:{
+        customer_type : custType,
+        // display_name : $('#cdisplayname').text(),
+        display_name : enteredCName,
+        company_name : $('#ccompany').val(),
+        email : $("#cemail").val(),
+        work_mobile :$("#cw_mobile").val(),
+        pers_mobile :$("#cp_mobile").val(),
+        facebook :$("#facebook").val(),
+        twitter :$("#twitter").val(),
+        website :$("#website").val(),
+        skype :$("#cskype").val(),
+        desg :$("#c_desg").val(),
+        dpt :$("#c_dpt").val(),
+        gsttype :$("#c_gsttype").val(),
+        placeofsupply :$("#placesupply").val(),
+        tax_preference :cust_tax,
+        currency : $("#c_curn").val(),
+        openingbalance : $("#c_open").val(),
+        paymentterms : $("#c_terms").val(),
+        street1 : $("#cstreet1").val(),
+        street2 : $("#cstreet2").val(),
+        city : $("#ccity").val(),
+        state : $("#cstate").val(),
+        pincode : $("#cpincode").val(),
+        fax : $("#cfax").val(),
+        phone : $("#cphone").val(),
+        country : $("ccountry").val(),
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+        
+      },
+    
+      success: function(response) {
+        document.getElementById("customerForm").reset();
+        // enteredCName = $('#cdisplayname').text();
+        closepopup2();
+        reloadCustomer();
+      },
+  });        
+});
+
+var enteredCName; 
+function reloadCustomer() {
   $.ajax({
-    url: "{% url 'add_custmr' %}",
+    url: "{% url 'customer_dropdownE' %}",
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
@@ -1897,25 +1949,27 @@ function reloadVendor() {
     success: function(data) {
       var dropdown = $('#customer');
       dropdown.empty();
-      dropdown.append('<option value="">-- Select vendor --</option>');
+      dropdown.append('<option value="">-- Select customer --</option>');
       $.each(data, function(key, value) {
         dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+      
       });
 
       // Check if there's an entered display name and select it in the dropdown
-      if (CName) {
+      if (enteredCName) {
         dropdown.find('option').filter(function() {
-          return $(this).text() === CName;
+          return $(this).text() === enteredCName;
         }).prop('selected', true);
       }
       
-      dropdown.append('<option value="new" style="color: blue;">+New Customer</option>');
+      dropdown.append('<option value="new" style="color: blue;">+New customer</option>');
     },
     error: function(xhr, status, error) {
       console.error(xhr.responseText);
     }
   });
 }
+
 </script>
 
 {%endblock%}
