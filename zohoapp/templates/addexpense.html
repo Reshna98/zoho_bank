@@ -1171,7 +1171,9 @@ function reloadVendor() {
     }
   });
 }
-
+$(document).ready(function() {
+      reloadVendor();
+    });
 </script>
 <!-- account -->
 
@@ -1969,7 +1971,9 @@ function reloadCustomer() {
     }
   });
 }
-
+$(document).ready(function() {
+  reloadCustomer();
+    });
 </script>
 
 {%endblock%}

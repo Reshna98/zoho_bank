@@ -448,12 +448,11 @@ class AccountE(models.Model):
     code=models.CharField(max_length=255)
     type=models.CharField(max_length=255)
     description=models.TextField(blank=True)
-class payment_termsE(models.Model):
-    Terms=models.CharField(max_length=100,null=True,blank=True)
-    Days=models.IntegerField(null=True,blank=True)  
+
     
 class addcustomerE(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    # user=models.ForeignKey(User,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     customer_name= models.CharField(max_length=100,null=True,blank=True)
     customerType= models.CharField(max_length=100,null=True,blank=True)
     companyName= models.CharField(max_length=100,null=True,blank=True)
@@ -496,7 +495,8 @@ class addcustomerE(models.Model):
     CPdepartment=models.CharField(max_length=100,null=True,blank=True)
 
 class vendor_tableE(models.Model):
-    user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     salutation=models.CharField(max_length=25,null=True,blank=True)
     first_name=models.CharField(max_length=50,null=True,blank=True)
     last_name=models.CharField(max_length=50,null=True,blank=True)
@@ -532,23 +532,7 @@ class vendor_tableE(models.Model):
     szip=models.CharField(max_length=100,default='',null=True,blank=True)
     sphone=models.CharField(max_length=100,default='',null=True,blank=True)
     sfax=models.CharField(max_length=100,default='',null=True,blank=True)
-# class contact_person_tableE(models.Model):
-#     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-#     vendor=models.ForeignKey(vendor_tableE,on_delete=models.CASCADE,null=True)
-#     salutation=models.CharField(max_length=25)
-#     first_name=models.CharField(max_length=50)
-#     last_name=models.CharField(max_length=50)
-#     email=models.CharField(max_length=200)
-#     work_phone=models.CharField(max_length=50)
-#     mobile=models.CharField(max_length=50)
-#     skype_number=models.CharField(max_length=50)
-#     designation=models.CharField(max_length=50)
-#     department=models.CharField(max_length=50)
 
-# class remarks_tableE(models.Model):
-#     user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
-#     vendor=models.ForeignKey(vendor_tableE,on_delete=models.CASCADE,null=True)
-#     remarks=models.CharField(max_length=500)
 
 class ExpenseE(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

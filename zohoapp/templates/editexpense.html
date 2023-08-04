@@ -156,7 +156,8 @@
               {% for account in accounts %}
               {% if account.type == account_type %}
               {% if account.id == expense.expense_account.id %}
-              <option value="{{ account.id }}" selected>{{ account.name }}</option>
+              <option value="{{ account.id }}">{{ account.name }}</option>
+              <!-- <option value="{{ account.id }}" {% if expense.expense_account.id == account.id %}selected{% endif %}>{{ account.name }}</option> -->
               {% else %}
               <option value="{{ account.id }}">{{ account.name }}</option>
               {% endif %}
@@ -320,16 +321,7 @@ window.addEventListener("DOMContentLoaded", setDefaultSelection);
         </select>
       </div>
     </div>
-    
 
-
-<script>
-function handleSelectChangev(select) {
-    if (select.value === "new") {
-        window.location.href = "{% url 'add_vendor' %}";
-    }
-}
-</script>
     
 <div class="form-group row">
   <label for="gst_treatment" class="col-sm-3 col-form-label  text-white">GST Treatment</label>
@@ -542,12 +534,20 @@ function handleSelectChangev(select) {
         </div>
       </div>
 
-<div class="form-group row">
+<!-- <div class="form-group row">
   <label for="reporting_tags" class="col-sm-3 col-form-label  text-white">Reporting Tags:</label>
   <div class="col-sm-9">
     <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
     <span id="reporting_tags_label"></span>
-    <a href="#" class="associate-tag-link" onclick="openPopup2()" style="text-decoration: none;">+ Associate Tag</a>
+    <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
+  </div>
+</div> -->
+<div class="form-group row">
+  <label for="reporting_tags" class="col-sm-3 col-form-label">Reporting Tags:</label>
+  <div class="col-sm-9">
+    <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
+    <span id="reporting_tags_label"></span>
+    <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
   </div>
 </div>
       <!-- <div class="row"> -->
@@ -696,7 +696,30 @@ imageInput.addEventListener('change', function() {
 </section>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<div class="popup" id="popup3">
+  <div style="margin-top: 4rem;" class="display-flex">
+    <h4 class="text-white">Associate tag</h4>
+    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closePopup3()">X</h6>
+  </div>
+ 
+  
+  <p style="color: white;">
+    Create/Update reporting_tags under settings
+  </p>
+  
+</div>
 
+<script>
+  let popup3 = document.getElementById("popup3");
+
+  function openPopup3() {
+    popup3.classList.add("open-popup-3");
+  }
+
+  function closePopup3() {
+    popup3.classList.remove("open-popup-3");
+  }
+</script>
 <!-- account -->
 <div class="popup" id="popup">
   <div style="margin-top: 4rem;" class="display-flex">
@@ -1372,7 +1395,7 @@ $(document).ready(function() {
     });
   });
 
-
+selectedCustomerName="{{expense.customer_name.customer_name}}"
 var enteredCName="";
 $(document).on("click", "#customerSave", function(e) {
   e.preventDefault();  
@@ -1451,7 +1474,12 @@ function reloadCustomer() {
       $.each(data, function(key, value) {
         dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
       });
-
+      if (selectedCustomerName) {
+      dropdown.find('option').filter(function() {
+      return $(this).val() === selectedCustomerName;
+    }).prop('selected', true);
+  }
+     
       // Check if there's an entered display name and select it in the dropdown
       if (enteredCName) {
         dropdown.find('option').filter(function() {
@@ -1466,7 +1494,9 @@ function reloadCustomer() {
     }
   });
 }
-
+$(document).ready(function() {
+  reloadCustomer();
+    });
 </script>
 
 <!-- vendor -->
@@ -2024,7 +2054,7 @@ function addressSame(){
   
 
   var enteredDisplayName; 
-
+  var selectedVendorDisplayName = "{{ expense.vendor.vendor_display_name }}"; // Get the vendor display name from the expense object
 
 
   $(document).on("click", "#save_vendor", function(e) {
@@ -2075,7 +2105,12 @@ function reloadVendor() {
       $.each(data, function(key, value) {
         dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
       });
-
+      
+      if (selectedVendorDisplayName) {
+        dropdown.find('option').filter(function() {
+      return $(this).val() === selectedVendorDisplayName;
+    }).prop('selected', true);
+  }
       // Check if there's an entered display name and select it in the dropdown
       if (enteredDisplayName) {
         dropdown.find('option').filter(function() {
@@ -2090,6 +2125,8 @@ function reloadVendor() {
     }
   });
 }
-
+$(document).ready(function() {
+  reloadVendor();
+    });
 </script>
 {%endblock%}

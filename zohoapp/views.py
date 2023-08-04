@@ -4084,7 +4084,7 @@ def account_dropdownE(request):
 
 def expense_details(request, pk):
     user = request.user
-    expense=ExpenseE.objects.all()
+    expense = ExpenseE.objects.filter(user=user)
     expense_account=ExpenseE.objects.get(id=pk)
     context = {
         'expenses': expense,
@@ -4093,89 +4093,9 @@ def expense_details(request, pk):
     return render(request, 'expenseview.html', context)
 
 
-# def add_custmr(request):
-#     if request.user.is_authenticated:
-#         if request.method=='POST':
-#             # form_data = request.POST.dict()
-#             type=request.POST.get('type')
-#             txtFullName=request.POST.get('txtFullName')
-#             cpname=request.POST.get('cpname')
-           
-#             email=request.POST.get('myEmail')
-#             wphone=request.POST.get('wphone')
-#             mobile=request.POST.get('mobile')
-#             skname=request.POST.get('skname')
-#             desg=request.POST.get('desg')      
-#             dept=request.POST.get('dept')
-#             wbsite=request.POST.get('wbsite')
-
-#             gstt=request.POST.get('gstt')
-#             posply=request.POST.get('posply')
-#             tax1=request.POST.get('tax1')
-#             crncy=request.POST.get('crncy')
-#             obal=request.POST.get('obal')
-#             obal = int(obal) if obal and obal.strip() else 0 
-
-          
-#             # select=request.POST.get('pterms')
-#             # pterms=payment_terms.objects.get(id=select)
-#             pterms=request.POST.get('pterms')
-#             # select = request.POST.get('pterms')
-            
-#             # try:
-#             #     pterms = payment_termsE.objects.get(id=select)
-#             # except payment_terms.DoesNotExist:
-#             #     pterms = None
-
-#             plst=request.POST.get('plst')
-#             plang=request.POST.get('plang')
-#             fbk=request.POST.get('fbk')
-#             twtr=request.POST.get('twtr')
-        
-#             atn=request.POST.get('atn')
-#             ctry=request.POST.get('ctry')
-            
-#             addrs=request.POST.get('addrs')
-#             addrs1=request.POST.get('addrs1')
-#             bct=request.POST.get('bct')
-#             bst=request.POST.get('bst')
-#             bzip=request.POST.get('bzip')
-#             bpon=request.POST.get('bpon')
-#             bfx=request.POST.get('bfx')
-
-#             sal=request.POST.get('sal')
-#             ftname=request.POST.get('ftname')
-#             ltname=request.POST.get('ltname')
-#             mail=request.POST.get('mail')
-#             bworkpn=request.POST.get('bworkpn')
-#             bmobile=request.POST.get('bmobile')
-
-#             bskype=request.POST.get('bskype')
-#             bdesg=request.POST.get('bdesg')
-#             bdept=request.POST.get('bdept')
-#             u = User.objects.get(id = request.user.id)
-
-          
-#             ctmr=addcustomerE(customer_name=txtFullName,customerType=type,
-#                         companyName=cpname,customerEmail=email,customerWorkPhone=wphone,
-#                          customerMobile=mobile,skype=skname,designation=desg,department=dept,
-#                            website=wbsite,GSTTreatment=gstt,placeofsupply=posply, Taxpreference=tax1,
-#                              currency=crncy,OpeningBalance=obal, 
-#                                 PriceList=plst,PortalLanguage=plang,Facebook=fbk,Twitter=twtr,
-#                                  Attention=atn,country=ctry,Address1=addrs,Address2=addrs1,PaymentTerms=pterms,
-#                                   city=bct,state=bst,zipcode=bzip,phone1=bpon,
-#                                    fax=bfx,CPsalutation=sal,Firstname=ftname,
-#                                     Lastname=ltname,CPemail=mail,CPphone=bworkpn,
-#                                     CPmobile= bmobile,CPskype=bskype,CPdesignation=bdesg,
-#                                      CPdepartment=bdept,user=u )
-#             ctmr.save()  
-#             return HttpResponse('Account saved successfully')
-
-
 def add_custmr(request):
     
     # company = ExpenseE.objects.get(user = request.user)
-
     if request.method=='POST':
 
         # title=request.POST.get('title')
@@ -4361,9 +4281,8 @@ def add_vendore(request):
         shipcountry=request.POST.get('shipcountry',None)
         shipfax=request.POST.get('shipfax',None)
         shipphone=request.POST.get('shipphone',None)
-
+        
         u = User.objects.get(id = request.user.id)
-
         vndr = vendor_tableE(salutation=title, first_name=first_name, last_name=last_name,vendor_display_name = dispn, company_name= comp, gst_treatment=gsttype, gst_number=gstin, 
                     pan_number=panno,vendor_wphone = w_mobile,vendor_mphone = p_mobile, vendor_email=email,skype_number = skype,
                     source_supply=supply,currency=currency, website=website, designation = desg, department = dpt,
@@ -4396,3 +4315,7 @@ def vendor_dropdownE(request):
         display_name = f"{option.salutation} {option.first_name} {option.last_name}"
         options[option.id] = [display_name, display_name]
     return JsonResponse(options)
+
+
+
+    
