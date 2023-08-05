@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
-{% block content %}
 {% load static %}
-{% load tz %}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+{% block content %}
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/3b9793c077.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
   #customerForm label {
@@ -15,7 +18,7 @@
       z-index: 9999;
       overflow: scroll;
         }
-/* .popup{
+.popup{
   z-index: 9999;
   height: 30rem;
   width: 40rem;
@@ -32,24 +35,7 @@
   visibility: hidden;
   transform: translate(-50%,-50%)scale(0.1);
 
-} */
-.popup {
-  z-index: 9999;
-  height: 30rem;
-  width: 40rem;
-  background-color: rgb(228, 248, 248);
-  border-radius: 1rem;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  padding: 0 5rem 5rem;
-  color: black;
-  visibility: hidden;
-  transform: scale(0.1);
 }
-
 
 .open-popup{
   top: 60%;
@@ -100,663 +86,625 @@
 .form-group{
   width: 40%;
 }
-/* input[type=text],
- select,
-textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      resize: vertical;
-    }
-    
+ /* .popup{  z-index: 9999;
+  height: 30rem;
+  width: 40rem;
+  background-color: rgb(228, 248, 248);
+  border-radius: 1rem;
+  position: absolute;
+  top: -15%;
+  left: 40%;
+  transform: translate(-50%,-50%)scale(0.1);
+  text-align: center;
+  padding: 0 5rem 5 rem;
+  color: black;
+  top: 50%;
+  visibility: hidden;
+  transform: translate(-50%,-50%)scale(0.1);
+
+}
+
+.open-popup{
+  top: 60%;
+  visibility: visible;
+  transform: translate(-50%,-50%)scale(1);
+  transition: transform 0.4s ,top 0.4s;
+  border: 1px solid #fdae03;
+}
+.open-popup-1{
+  top: 50%;
+  visibility: visible;
+  transform: translate(-50%,-50%)scale(1);
+  transition: transform 0.4s ,top 0.4s;
+  height: 200px;
+  border: 1px solid #fdae03;
+}
+
+
+.popup{
+  background-color: black;
   
-    #accountForm input[type=text] {
-      width:50% ;
-      padding: 10px;
-      resize: none;
-    } 
-    #accountForm textarea {
-    
-      border-radius: 4px;
-      resize: vertical;
-    } */
-    .row:after {
-      content: "";
-      display: table;
-      clear: both;
-    }
-    
-    @media screen and (max-width: 600px) {
-      .col-25, .col-75, input[type=submit] {
-        width: 100%;
-        margin-top: 0;
-      }
-      input[type=text], select, textarea {
-      width: 100%;
+}
 
-    }
-    }
-
-    .dropdown input,
-    .dropdown button {
-      display: none;
-      position: absolute;
-      top: 100%;
-      left: 0;
-    }
-
-    .dropdown.open input,
-    .dropdown.open button {
-      display: block;
-    }
-
-    .row a{
-      color: rgb(218, 164, 48);
-      font-size: 12px;
-    }
-
-    .table th a{
-      color:rgb(218, 164, 48);
-      font-size: 11px;
-      margin-left: 100px;
-    }
+.form-group{
+  width: 40%;
+} */
 
 
-    ::-webkit-scrollbar {
-      width: 5px; 
-    }
 
-    ::-webkit-scrollbar-track {
-      background: #f1f1f1; 
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: #888; 
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: #555; 
-    }
-
-    .item{
-      height: auto;
-    }
-    </style>
-
-
-<div class="container-fulid containerprof">
+</style>
+<!-- <div class="contaziner-fulid containerprof">
 
   <div class="card radius-15 p-3">
     <div class="card-body">
         <div class="card-title">
-          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; Edit Expense</h2>
+          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; New Expense</h2>
         </div>
     </div>
   </div>
 
   <div class="card radius-15 p-5">
-    <!-- <div style="height: 400px; width:1100px;padding-left: 10%;overflow-y: scroll;"> -->
-    <form action="{% url 'save_expense' %}" method="post" enctype="multipart/form-data"id="myForm">
-      {% csrf_token %}
-      <div class="form-group row">
-        <label for="date" class="col-sm-3 col-form-label  text-white">Date</label>
-        <div class="col-sm-9">
-          <input type="date" class="form-control" id="date" name="date" value="{{ expense.date|date:'Y-m-d' }}">
-        </div>
-      </div>
-      
-      <div class="form-group row">
-        <label class="col-sm-3 col-form-label  text-white">Expense Account</label>
-        <div class="col-sm-9">
-            <select class="form-control form-select" id="select" name="select" onchange="openpopup(this);" required>
-                <option value="">-- Select Expense Account --</option>
-                {% for account_type in account_types %}
-                <option value="" disabled class="btn btn-dark text-white"><b>{{ account_type }}</b></option>
-                {% for account in accounts %}
-                {% if account.type == account_type %}
-                {% if account.id == expense.expense_account.id %}
-                <option value="{{ account.id }}">{{ account.name }}</option>
-                <!-- <option value="{{ account.id }}" {% if expense.expense_account.id == account.id %}selected{% endif %}>{{ account.name }}</option> -->
-                {% else %}
-                <option value="{{ account.id }}">{{ account.name }}</option>
-                {% endif %}
-                {% endif %}
-                {% endfor %}
-                {% endfor %}
-                <option value="new" style="color: blue;">New Account</option>
-            </select>
-        </div>
-    </div>
-  
-    
-    
-    
-    
-    
-    
-    
-      
+  <div style="height: 400px; width:1100px; overflow-y: scroll;padding-left: 10%;"> -->
+  <h1 style="color: white;">Edit Expense</h1>
+  <form method="POST" action="{% url 'edit_expensee' expense.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
     <div class="form-group row">
-      <label class="col-sm-3 col-form-label  text-white">Expense Type</label>
-      <div class="col-sm-9" style="color: white;">
-        <input type="radio" name="expense_type" value="goods" onclick="toggleSelects()">Goods
-        <input type="radio" name="expense_type" value="service" onclick="toggleSelects()">Service
-      </div>
-    </div>
-  
-    <div class="form-group row" id="hsn_div" style="display: none;">
-      <label id="hsn_label" for="hsn_code" class="col-sm-3 col-form-label  text-white">HSN</label>
+      <label for="date" class="col-sm-3 col-form-label  text-white">Date</label>
       <div class="col-sm-9">
-        <input type="text" id="hsn_code" name="hsn_code" class="form-control"  value="{{expense.hsn_code}}">
+        <input type="date" class="form-control text-dark" id="date" name="date" value="{{ expense.date|date:'Y-m-d' }}">
       </div>
     </div>
-    <div class="form-group row" id="sac_div" style="display:flex;">
-      <label id="sac_label" for="sac" class="col-sm-3 col-form-label  text-white">SAC</label>
+    
+    <div class="form-group row">
+      <label class="col-sm-3 col-form-label  text-white">Expense Account</label>
       <div class="col-sm-9">
-        <input type="text" id="sac" name="sac" class="form-control "  value="{{expense.sac}}">
+          <select class="form-control form-select text-dark" id="select" name="select" onchange="openpopup(this);" required>
+              <option value="">-- Select Expense Account --</option>
+              {% for account_type in account_types %}
+              <option value="" disabled class="btn btn-dark text-white"><b>{{ account_type }}</b></option>
+              {% for account in accounts %}
+              {% if account.type == account_type %}
+              {% if account.id == expense.expense_account.id %}
+              <option value="{{ account.id }}">{{ account.name }}</option>
+              <!-- <option value="{{ account.id }}" {% if expense.expense_account.id == account.id %}selected{% endif %}>{{ account.name }}</option> -->
+              {% else %}
+              <option value="{{ account.id }}">{{ account.name }}</option>
+              {% endif %}
+              {% endif %}
+              {% endfor %}
+              {% endfor %}
+              <option value="new" style="color: blue;">New Account</option>
+          </select>
       </div>
+  </div>
+
+  
+  
+  
+  
+  
+  
+  
+    
+  <div class="form-group row">
+    <label class="col-sm-3 col-form-label  text-white">Expense Type</label>
+    <div class="col-sm-9" style="color: white;">
+      <input type="radio" name="expense_type" value="goods" onclick="toggleSelects()">Goods
+      <input type="radio" name="expense_type" value="service" onclick="toggleSelects()">Service
     </div>
-    <script>
-    function toggleSelects() {
-      var radio = document.querySelector('input[name="expense_type"]:checked');
-      var select1_div = document.getElementById("hsn_div");
-      var select2_div = document.getElementById("sac_div");
-      var select1_label = document.getElementById("hsn_label");
-      var select2_label = document.getElementById("sac_label");
-  
-      if (radio.value === "goods") {
-        select1_div.style.display = "flex";
-        select2_div.style.display = "none";
-        select1_label.setAttribute("for", "sac");
-        select2_label.setAttribute("for", "hsn_code");
-        document.getElementById("hsn_code").name = "sac";
-        document.getElementById("sac").name = "hsn_code";
-      } else {
-        select1_div.style.display = "none";
-        select2_div.style.display = "flex";
-        select1_label.setAttribute("for", "hsn_code");
-        select2_label.setAttribute("for", "sac");
-        document.getElementById("hsn_code").name = "hsn_code";
-        document.getElementById("sac").name = "sac";
-      }
+  </div>
+
+  <div class="form-group row" id="hsn_div" style="display: none;">
+    <label id="hsn_label" for="hsn_code" class="col-sm-3 col-form-label  text-white">HSN</label>
+    <div class="col-sm-9">
+      <input type="text" id="hsn_code" name="hsn_code" class="form-control text-dark"  value="{{expense.hsn_code}}">
+    </div>
+  </div>
+  <div class="form-group row" id="sac_div" style="display:flex;">
+    <label id="sac_label" for="sac" class="col-sm-3 col-form-label  text-white">SAC</label>
+    <div class="col-sm-9">
+      <input type="text" id="sac" name="sac" class="form-control text-dark"  value="{{expense.sac}}">
+    </div>
+  </div>
+  <script>
+  function toggleSelects() {
+    var radio = document.querySelector('input[name="expense_type"]:checked');
+    var select1_div = document.getElementById("hsn_div");
+    var select2_div = document.getElementById("sac_div");
+    var select1_label = document.getElementById("hsn_label");
+    var select2_label = document.getElementById("sac_label");
+
+    if (radio.value === "goods") {
+      select1_div.style.display = "flex";
+      select2_div.style.display = "none";
+      select1_label.setAttribute("for", "sac");
+      select2_label.setAttribute("for", "hsn_code");
+      document.getElementById("hsn_code").name = "sac";
+      document.getElementById("sac").name = "hsn_code";
+    } else {
+      select1_div.style.display = "none";
+      select2_div.style.display = "flex";
+      select1_label.setAttribute("for", "hsn_code");
+      select2_label.setAttribute("for", "sac");
+      document.getElementById("hsn_code").name = "hsn_code";
+      document.getElementById("sac").name = "sac";
     }
-  
-    function setDefaultSelection() {
-      var radio = document.querySelector('input[name="expense_type"][value="service"]');
-      radio.checked = true;
-      toggleSelects();
-    }
-  
-    window.addEventListener('load', setDefaultSelection);
-    function setDefaultSelection() {
-    var expenseType = "{{ expense.expense_type }}"; // Get the expense type from the expense object
-  
-    var radio = document.querySelector('input[name="expense_type"][value="' + expenseType + '"]');
+  }
+
+  function setDefaultSelection() {
+    var radio = document.querySelector('input[name="expense_type"][value="service"]');
     radio.checked = true;
     toggleSelects();
   }
-  
-  // Call the setDefaultSelection function when the page loads
-  window.addEventListener("DOMContentLoaded", setDefaultSelection);
-    </script>
-    <div class="form-group row">
-      <label for="notes" class="col-sm-3 col-form-label  text-white">Notes</label>
-      <div class="col-sm-9">
-        <textarea class="form-control" id="notes" name="notes" rows="3">{{ expense.notes }}</textarea>
-      </div>
+
+  window.addEventListener('load', setDefaultSelection);
+  function setDefaultSelection() {
+  var expenseType = "{{ expense.expense_type }}"; // Get the expense type from the expense object
+
+  var radio = document.querySelector('input[name="expense_type"][value="' + expenseType + '"]');
+  radio.checked = true;
+  toggleSelects();
+}
+
+// Call the setDefaultSelection function when the page loads
+window.addEventListener("DOMContentLoaded", setDefaultSelection);
+  </script>
+  <div class="form-group row">
+    <label for="notes" class="col-sm-3 col-form-label  text-white">Notes</label>
+    <div class="col-sm-9">
+      <textarea class="form-control text-dark" id="notes" name="notes" rows="3">{{ expense.notes }}</textarea>
     </div>
-    <div class="form-group row">
-      <label for="amount" class="col-sm-3 col-form-label  text-white">Amount</label>
-      <div class="col-sm-9">
-        <div class="input-group">
-          <div class="input-group-append">
-            <select class="form-control text-white" id="currency" name="currency" style="background-color: #888;">
-            <option value="INR" {% if expense.currency == 'INR' %}selected{% endif %}>INR</option>
-            <option value="USD" {% if expense.currency == 'USD' %}selected{% endif %}>USD</option>
-            <option value="EUR" {% if expense.currency == 'EUR' %}selected{% endif %}>EUR</option>
-            <option value="GBP" {% if expense.currency == 'GBP' %}selected{% endif %}>GBP</option>
-            <option value="JPY" {% if expense.currency == 'JPY' %}selected{% endif %}>JPY</option>
-            <option value="AUD" {% if expense.currency == 'AUD' %}selected{% endif %}>AUD</option>
-            <option value="CAD" {% if expense.currency == 'CAD' %}selected{% endif %}>CAD</option>
-            <option value="CHF" {% if expense.currency == 'CHF' %}selected{% endif %}>CHF</option>
-            <option value="CNY" {% if expense.currency == 'CNY' %}selected{% endif %}>CNY</option>
-            <option value="HKD" {% if expense.currency == 'HKD' %}selected{% endif %}>HKD</option>
-            </select>
-          </div>
-          <input type="number" class="form-control" id="amount" name="amount" value="{{expense.amount}}">
+  </div>
+  <div class="form-group row">
+    <label for="amount" class="col-sm-3 col-form-label  text-white">Amount</label>
+    <div class="col-sm-9">
+      <div class="input-group">
+        <div class="input-group-append">
+          <select class="form-control text-dark" id="currency" name="currency">
+          <option value="INR" {% if expense.currency == 'INR' %}selected{% endif %}>INR</option>
+          <option value="USD" {% if expense.currency == 'USD' %}selected{% endif %}>USD</option>
+          <option value="EUR" {% if expense.currency == 'EUR' %}selected{% endif %}>EUR</option>
+          <option value="GBP" {% if expense.currency == 'GBP' %}selected{% endif %}>GBP</option>
+          <option value="JPY" {% if expense.currency == 'JPY' %}selected{% endif %}>JPY</option>
+          <option value="AUD" {% if expense.currency == 'AUD' %}selected{% endif %}>AUD</option>
+          <option value="CAD" {% if expense.currency == 'CAD' %}selected{% endif %}>CAD</option>
+          <option value="CHF" {% if expense.currency == 'CHF' %}selected{% endif %}>CHF</option>
+          <option value="CNY" {% if expense.currency == 'CNY' %}selected{% endif %}>CNY</option>
+          <option value="HKD" {% if expense.currency == 'HKD' %}selected{% endif %}>HKD</option>
+          </select>
         </div>
+        <input type="number" class="form-control text-dark" id="amount" name="amount" value="{{expense.amount}}">
       </div>
     </div>
+  </div>
+  
+  <div class="form-group row">
+    <label for="paid" class="col-sm-3 col-form-label  text-white">Paid Through</label>
+    <div class="col-sm-9">
+      <select class="form-control text-dark" id="paid" name="paid">
+        <option value="">-- Paid Through --</option>
+        <optgroup label="Bank">
+          <option value="credit card" {% if expense.paid == 'credit card' %}selected{% endif %}>Credit Card</option>
+          <option value="debit card" {% if expense.paid == 'debit card' %}selected{% endif %}>Debit Card</option>
+          <option value="netbanking" {% if expense.paid == 'netbanking' %}selected{% endif %}>Net Banking</option>
+        </optgroup>
+        <optgroup label="Cash">
+          <option value="Petty Cash" {% if expense.paid == 'Petty Cash' %}selected{% endif %}>Petty Cash</option>
+          <option value="Undeposited Funds" {% if expense.paid == 'Undeposited Funds' %}selected{% endif %}>Undeposited Funds</option>
+        </optgroup>
+        <optgroup label="Other current asset">
+          <option value="Advance tax" {% if expense.paid == 'Advance tax' %}selected{% endif %}>Advance tax</option>
+          <option value="Employee Advance" {% if expense.paid == 'Employee Advance' %}selected{% endif %}>Employee Advance</option>
+          <option value="Prepaid Expenses" {% if expense.paid == 'Prepaid Expenses' %}selected{% endif %}>Prepaid Expenses</option>
+        </optgroup>
+        <optgroup label="Payment clearing account">
+          <option value="Strip Clearing Acccount" {% if expense.paid == 'Strip Clearing Acccount' %}selected{% endif %}>Strip Clearing Acccount</option>
+        </optgroup>
+      </select>
+    </div>
+  </div>
     
+    <!-- <div class="form-group row">
+      <label for="vendor" class="col-sm-2 col-form-label">Vendor</label>
+      <div class="col-sm-10">
+        <select class="form-control select2" id="vendor" name="vendor">
+          <option value="">-- Select a vendor --</option>
+          <option value="registered Vendor">registered Vendor</option>
+          <option value="overseas Vendor">overseas Vendor</option>
+          <option value="SEZ Vendor">SEZ Vendor</option>
+          <option value="Deemed Export Vendor">Deemed Export Vendor</option>
+          <option value="Unregistered Vendor">Unregistered Vendor</option>
+          <option value="Composition Reg Vendor">Composition Reg Vendor</option>
+        </select>
+      </div>
+    </div> -->
     <div class="form-group row">
-      <label for="paid" class="col-sm-3 col-form-label  text-white">Paid Through</label>
+      <label for="vendor" class="col-sm-3 col-form-label  text-white">Vendor</label>
       <div class="col-sm-9">
-        <select class="form-control" id="paid" name="paid">
-          <option value="">-- Paid Through --</option>
-          <optgroup label="Bank">
-            <option value="credit card" {% if expense.paid == 'credit card' %}selected{% endif %}>Credit Card</option>
-            <option value="debit card" {% if expense.paid == 'debit card' %}selected{% endif %}>Debit Card</option>
-            <option value="netbanking" {% if expense.paid == 'netbanking' %}selected{% endif %}>Net Banking</option>
+        <select class="form-control text-dark" id="vendor" name="vendor" onchange="openpopup1(this);">
+          <option value="">-- Select a vendor --</option>
+          {% for v in vendor %}
+            <option value="{{ v.vendor_display_name }}" {% if expense.vendor.vendor_display_name == v.vendor_display_name %}selected{% endif %}>{{ v.vendor_display_name }}</option>
+          {% endfor %}
+          <option value="new">+New vendor</option>
+        </select>
+      </div>
+    </div>
+
+    
+<div class="form-group row">
+  <label for="gst_treatment" class="col-sm-3 col-form-label  text-white">GST Treatment</label>
+  <div class="col-sm-9">
+    <select class="form-control text-dark" id="gst_treatment" name="gst_treatment">
+      <option value="">-- Select GST Treatment --</option>
+      <option value="Registered business- Regular Bussiness that is registered under gst"
+        {% if expense.gst_treatment == 'Registered business- Regular Bussiness that is registered under gst' %} selected {% endif %}>
+        Registered business- Regular Bussiness that is registered under gst</option>
+      <option value="Registered business-Composition Bussiness that is registered under the composition scheme in gst"
+        {% if expense.gst_treatment == 'Registered business-Composition Bussiness that is registered under the composition scheme in gst' %} selected {% endif %}>
+        Registered business-Composition Bussiness that is registered under the composition scheme in gst</option>
+      <option value="Unregistered Business- Business that has not been registered under gst "
+        {% if expense.gst_treatment == 'Unregistered Business- Business that has not been registered under gst' %} selected {% endif %}>
+        Unregistered Business- Business that has not been registered under gst</option>
+      <option value="Consumer- a customer who is a regular consumer"
+        {% if expense.gst_treatment == 'Consumer- a customer who is a regular consumer' %} selected {% endif %}>
+        Consumer- a customer who is a regular consumer</option>
+      <option value="Overseas- Persons with whom you do import or export of supplies outside india "
+        {% if expense.gst_treatment == 'Overseas- Persons with whom you do import or export of supplies outside india' %} selected {% endif %}>
+        Overseas- Persons with whom you do import or export of supplies outside india</option>
+      <option value="Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer"
+        {% if expense.gst_treatment == 'Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer' %} selected {% endif %}>
+        Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer</option>
+      <option value="Notified list of goods manufactured and supplied within india classified as deemed export"
+        {% if expense.gst_treatment == 'Notified list of goods manufactured and supplied within india classified as deemed export' %} selected {% endif %}>
+        Notified list of goods manufactured and supplied within india classified as deemed export</option>
+    </select>
+  </div>
+</div>
+
+    
+   <div class="form-group row">
+  <label for="destination_of_supply" class="col-sm-3 col-form-label text-white">Destination of Supply</label>
+  <div class="col-sm-9">
+    <select class="form-control text-dark" id="destination_of_supply" name="destination_of_supply">
+      <option value="">-- Select Destination State --</option>
+      <option value="AN" {% if expense.destination_of_supply == "AN" %} selected {% endif %}>
+        Andaman and Nicobar Islands (AN)
+      </option>
+      <option value="AP" {% if expense.destination_of_supply == "AP" %} selected {% endif %}>
+        Andhra Pradesh (AP)
+      </option>
+      <option value="AR" {% if expense.destination_of_supply == "AR" %} selected {% endif %}>
+        Arunachal Pradesh (AR)
+      </option>
+      <option value="AS" {% if expense.destination_of_supply == "AS" %} selected {% endif %}>
+        Assam (AS)
+      </option>
+      <option value="BR" {% if expense.destination_of_supply == "BR" %} selected {% endif %}>
+        Bihar (BR)
+      </option>
+      <option value="CH" {% if expense.destination_of_supply == "CH" %} selected {% endif %}>
+        Chandigarh (CH)
+      </option>
+      <option value="CT" {% if expense.destination_of_supply == "CT" %} selected {% endif %}>
+        Chhattisgarh (CT)
+      </option>
+      <option value="DN" {% if expense.destination_of_supply == "DN" %} selected {% endif %}>
+        Dadra and Nagar Haveli and Daman and Diu (DN)
+      </option>
+      <option value="DL" {% if expense.destination_of_supply == "DL" %} selected {% endif %}>
+        Delhi (DL)
+      </option>
+      <option value="GA" {% if expense.destination_of_supply == "GA" %} selected {% endif %}>
+        Goa (GA)
+      </option>
+      <option value="GJ" {% if expense.destination_of_supply == "GJ" %} selected {% endif %}>
+        Gujarat (GJ)
+      </option>
+      <option value="HR" {% if expense.destination_of_supply == "HR" %} selected {% endif %}>
+        Haryana (HR)
+      </option>
+      <option value="HP" {% if expense.destination_of_supply == "HP" %} selected {% endif %}>
+        Himachal Pradesh (HP)
+      </option>
+      <option value="JK" {% if expense.destination_of_supply == "JK" %} selected {% endif %}>
+        Jammu and Kashmir (JK)
+      </option>
+      <option value="JH" {% if expense.destination_of_supply == "JH" %} selected {% endif %}>
+        Jharkhand (JH)
+      </option>
+      <option value="KA" {% if expense.destination_of_supply == "KA" %} selected {% endif %}>
+        Karnataka (KA)
+      </option>
+      <option value="KL" {% if expense.destination_of_supply == "KL" %} selected {% endif %}>
+        Kerala (KL)
+      </option>
+      <option value="LD" {% if expense.destination_of_supply == "LD" %} selected {% endif %}>
+        Lakshadweep (LD)
+      </option>
+      <option value="MP" {% if expense.destination_of_supply == "MP" %} selected {% endif %}>
+        Madhya Pradesh (MP)
+      </option>
+      <option value="MH" {% if expense.destination_of_supply == "MH" %} selected {% endif %}>
+        Maharashtra (MH)
+      </option>
+      <option value="MN" {% if expense.destination_of_supply == "MN" %} selected {% endif %}>
+        Manipur (MN)
+      </option>
+      <option value="ML" {% if expense.destination_of_supply == "ML" %} selected {% endif %}>
+        Meghalaya (ML)
+      </option>
+      <option value="MZ" {% if expense.destination_of_supply == "MZ" %} selected {% endif %}>
+        Mizoram (MZ)
+      </option>
+      <option value="NL" {% if expense.destination_of_supply == "NL" %} selected {% endif %}>
+        Nagaland (NL)
+      </option>
+      <option value="OR" {% if expense.destination_of_supply == "OR" %} selected {% endif %}>
+        Odisha (OR)
+      </option>
+      <option value="PY" {% if expense.destination_of_supply == "PY" %} selected {% endif %}>
+        Puducherry (PY)
+      </option>
+      <option value="PB" {% if expense.destination_of_supply == "PB" %} selected {% endif %}>
+        Punjab (PB)
+      </option>
+      <option value="RJ" {% if expense.destination_of_supply == "RJ" %} selected {% endif %}>
+        Rajasthan (RJ)
+      </option>
+      <option value="SK" {% if expense.destination_of_supply == "SK" %} selected {% endif %}>
+        Sikkim (SK)
+      </option>
+      <option value="TN" {% if expense.destination_of_supply == "TN" %} selected {% endif %}>
+        Tamil Nadu (TN)
+      </option>
+      <option value="TG" {% if expense.destination_of_supply == "TG" %} selected {% endif %}>
+        Telangana (TG)
+      </option>
+      <option value="TR" {% if expense.destination_of_supply == "TR" %} selected {% endif %}>
+        Tripura (TR)
+      </option>
+      <option value="UP" {% if expense.destination_of_supply == "UP" %} selected {% endif %}>
+        Uttar Pradesh (UP)
+      </option>
+      <option value="UK" {% if expense.destination_of_supply == "UK" %} selected {% endif %}>
+        Uttarakhand (UK)
+      </option>
+      <option value="WB" {% if expense.destination_of_supply == "WB" %} selected {% endif %}>
+        West Bengal (WB)
+      </option>
+    </select>
+  </div>
+</div>
+   
+   
+<div class="form-group row">
+  <label class="col-sm-3 col-form-label  text-white">Reverse Charge:</label>
+  <div class="col-sm-9">
+    <div class="form-check">
+      <input type="checkbox" name="reverse_charge" id="reverse_charge" value="1" {% if expense.reverse_charge == '1' %}checked="checked"{% endif %}>
+
+      <label class="form-check-label" for="reverse_charge">
+        This transaction is applicable for reverse charge
+      </label>
+    </div>
+  </div>
+</div>
+
+
+
+
+    <div class="form-group row">
+      <label for="invoice" class="col-sm-3 col-form-label  text-white">Invoice</label>
+      <div class="col-sm-9">
+        <input type="text" class="form-control text-dark" id="invoice" name="invoice" value="{{expense.invoice}}">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="tax" class="col-sm-3 col-form-label text-white">Tax</label>
+      <div class="col-sm-9">
+        <select class="form-control select2 text-dark" id="tax" name="tax">
+          <option value="">-- Select Expense Tax --</option>
+          <option value="">Non-Taxable</option>
+          <optgroup label="Taxes">
+            <option value="IGST0[0%]" {% if expense.tax == 'IGST0[0%]' %}selected{% endif %}>IGST0[0%]</option>
+            <option value="IGST5[5%]" {% if expense.tax == 'IGST5[5%]' %}selected{% endif %}>IGST5[5%]</option>
+            <option value="IGST12[12%]" {% if expense.tax == 'IGST12[12%]' %}selected{% endif %}>IGST12[12%]</option>
+            <option value="IGST18[18%]" {% if expense.tax == 'IGST18[18%]' %}selected{% endif %}>IGST18[18%]</option>
+            <option value="IGST28[28%]" {% if expense.tax == 'IGST28[28%]' %}selected{% endif %}>IGST28[28%]</option>
           </optgroup>
-          <optgroup label="Cash">
-            <option value="Petty Cash" {% if expense.paid == 'Petty Cash' %}selected{% endif %}>Petty Cash</option>
-            <option value="Undeposited Funds" {% if expense.paid == 'Undeposited Funds' %}selected{% endif %}>Undeposited Funds</option>
-          </optgroup>
-          <optgroup label="Other current asset">
-            <option value="Advance tax" {% if expense.paid == 'Advance tax' %}selected{% endif %}>Advance tax</option>
-            <option value="Employee Advance" {% if expense.paid == 'Employee Advance' %}selected{% endif %}>Employee Advance</option>
-            <option value="Prepaid Expenses" {% if expense.paid == 'Prepaid Expenses' %}selected{% endif %}>Prepaid Expenses</option>
-          </optgroup>
-          <optgroup label="Payment clearing account">
-            <option value="Strip Clearing Acccount" {% if expense.paid == 'Strip Clearing Acccount' %}selected{% endif %}>Strip Clearing Acccount</option>
+          <optgroup label="Tax Group">
+            <option value="GST0[0%]" {% if expense.tax == 'GST0[0%]' %}selected{% endif %}>GST0[0%]</option>
+            <option value="GST5[5%]" {% if expense.tax == 'GST5[5%]' %}selected{% endif %}>GST5[5%]</option>
+            <option value="GST12[12%]" {% if expense.tax == 'GST12[12%]' %}selected{% endif %}>GST12[12%]</option>
+            <option value="GST18[18%]" {% if expense.tax == 'GST18[18%]' %}selected{% endif %}>GST18[18%]</option>
+            <option value="GST28[28%]" {% if expense.tax == 'GST28[28%]' %}selected{% endif %}>GST28[28%]</option>
           </optgroup>
         </select>
       </div>
     </div>
-      
-      <!-- <div class="form-group row">
-        <label for="vendor" class="col-sm-2 col-form-label">Vendor</label>
-        <div class="col-sm-10">
-          <select class="form-control select2" id="vendor" name="vendor">
-            <option value="">-- Select a vendor --</option>
-            <option value="registered Vendor">registered Vendor</option>
-            <option value="overseas Vendor">overseas Vendor</option>
-            <option value="SEZ Vendor">SEZ Vendor</option>
-            <option value="Deemed Export Vendor">Deemed Export Vendor</option>
-            <option value="Unregistered Vendor">Unregistered Vendor</option>
-            <option value="Composition Reg Vendor">Composition Reg Vendor</option>
-          </select>
-        </div>
-      </div> -->
-      <div class="form-group row">
-        <label for="vendor" class="col-sm-3 col-form-label  text-white">Vendor</label>
-        <div class="col-sm-9">
-          <select class="form-control" id="vendor" name="vendor" onchange="openpopup1(this);">
-            <option value="">-- Select a vendor --</option>
-            {% for v in vendor %}
-              <option value="{{ v.vendor_display_name }}" {% if expense.vendor.vendor_display_name == v.vendor_display_name %}selected{% endif %}>{{ v.vendor_display_name }}</option>
-            {% endfor %}
-            <option value="new">+New vendor</option>
-          </select>
-        </div>
-      </div>
-  
-      
-  <div class="form-group row">
-    <label for="gst_treatment" class="col-sm-3 col-form-label  text-white">GST Treatment</label>
-    <div class="col-sm-9">
-      <select class="form-control" id="gst_treatment" name="gst_treatment">
-        <option value="">-- Select GST Treatment --</option>
-        <option value="Registered business- Regular Bussiness that is registered under gst"
-          {% if expense.gst_treatment == 'Registered business- Regular Bussiness that is registered under gst' %} selected {% endif %}>
-          Registered business- Regular Bussiness that is registered under gst</option>
-        <option value="Registered business-Composition Bussiness that is registered under the composition scheme in gst"
-          {% if expense.gst_treatment == 'Registered business-Composition Bussiness that is registered under the composition scheme in gst' %} selected {% endif %}>
-          Registered business-Composition Bussiness that is registered under the composition scheme in gst</option>
-        <option value="Unregistered Business- Business that has not been registered under gst "
-          {% if expense.gst_treatment == 'Unregistered Business- Business that has not been registered under gst' %} selected {% endif %}>
-          Unregistered Business- Business that has not been registered under gst</option>
-        <option value="Consumer- a customer who is a regular consumer"
-          {% if expense.gst_treatment == 'Consumer- a customer who is a regular consumer' %} selected {% endif %}>
-          Consumer- a customer who is a regular consumer</option>
-        <option value="Overseas- Persons with whom you do import or export of supplies outside india "
-          {% if expense.gst_treatment == 'Overseas- Persons with whom you do import or export of supplies outside india' %} selected {% endif %}>
-          Overseas- Persons with whom you do import or export of supplies outside india</option>
-        <option value="Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer"
-          {% if expense.gst_treatment == 'Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer' %} selected {% endif %}>
-          Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer</option>
-        <option value="Notified list of goods manufactured and supplied within india classified as deemed export"
-          {% if expense.gst_treatment == 'Notified list of goods manufactured and supplied within india classified as deemed export' %} selected {% endif %}>
-          Notified list of goods manufactured and supplied within india classified as deemed export</option>
-      </select>
-    </div>
-  </div>
-  
-      
-     <div class="form-group row">
-    <label for="destination_of_supply" class="col-sm-3 col-form-label text-white">Destination of Supply</label>
-    <div class="col-sm-9">
-      <select class="form-control" id="destination_of_supply" name="destination_of_supply">
-        <option value="">-- Select Destination State --</option>
-        <option value="AN" {% if expense.destination_of_supply == "AN" %} selected {% endif %}>
-          Andaman and Nicobar Islands (AN)
-        </option>
-        <option value="AP" {% if expense.destination_of_supply == "AP" %} selected {% endif %}>
-          Andhra Pradesh (AP)
-        </option>
-        <option value="AR" {% if expense.destination_of_supply == "AR" %} selected {% endif %}>
-          Arunachal Pradesh (AR)
-        </option>
-        <option value="AS" {% if expense.destination_of_supply == "AS" %} selected {% endif %}>
-          Assam (AS)
-        </option>
-        <option value="BR" {% if expense.destination_of_supply == "BR" %} selected {% endif %}>
-          Bihar (BR)
-        </option>
-        <option value="CH" {% if expense.destination_of_supply == "CH" %} selected {% endif %}>
-          Chandigarh (CH)
-        </option>
-        <option value="CT" {% if expense.destination_of_supply == "CT" %} selected {% endif %}>
-          Chhattisgarh (CT)
-        </option>
-        <option value="DN" {% if expense.destination_of_supply == "DN" %} selected {% endif %}>
-          Dadra and Nagar Haveli and Daman and Diu (DN)
-        </option>
-        <option value="DL" {% if expense.destination_of_supply == "DL" %} selected {% endif %}>
-          Delhi (DL)
-        </option>
-        <option value="GA" {% if expense.destination_of_supply == "GA" %} selected {% endif %}>
-          Goa (GA)
-        </option>
-        <option value="GJ" {% if expense.destination_of_supply == "GJ" %} selected {% endif %}>
-          Gujarat (GJ)
-        </option>
-        <option value="HR" {% if expense.destination_of_supply == "HR" %} selected {% endif %}>
-          Haryana (HR)
-        </option>
-        <option value="HP" {% if expense.destination_of_supply == "HP" %} selected {% endif %}>
-          Himachal Pradesh (HP)
-        </option>
-        <option value="JK" {% if expense.destination_of_supply == "JK" %} selected {% endif %}>
-          Jammu and Kashmir (JK)
-        </option>
-        <option value="JH" {% if expense.destination_of_supply == "JH" %} selected {% endif %}>
-          Jharkhand (JH)
-        </option>
-        <option value="KA" {% if expense.destination_of_supply == "KA" %} selected {% endif %}>
-          Karnataka (KA)
-        </option>
-        <option value="KL" {% if expense.destination_of_supply == "KL" %} selected {% endif %}>
-          Kerala (KL)
-        </option>
-        <option value="LD" {% if expense.destination_of_supply == "LD" %} selected {% endif %}>
-          Lakshadweep (LD)
-        </option>
-        <option value="MP" {% if expense.destination_of_supply == "MP" %} selected {% endif %}>
-          Madhya Pradesh (MP)
-        </option>
-        <option value="MH" {% if expense.destination_of_supply == "MH" %} selected {% endif %}>
-          Maharashtra (MH)
-        </option>
-        <option value="MN" {% if expense.destination_of_supply == "MN" %} selected {% endif %}>
-          Manipur (MN)
-        </option>
-        <option value="ML" {% if expense.destination_of_supply == "ML" %} selected {% endif %}>
-          Meghalaya (ML)
-        </option>
-        <option value="MZ" {% if expense.destination_of_supply == "MZ" %} selected {% endif %}>
-          Mizoram (MZ)
-        </option>
-        <option value="NL" {% if expense.destination_of_supply == "NL" %} selected {% endif %}>
-          Nagaland (NL)
-        </option>
-        <option value="OR" {% if expense.destination_of_supply == "OR" %} selected {% endif %}>
-          Odisha (OR)
-        </option>
-        <option value="PY" {% if expense.destination_of_supply == "PY" %} selected {% endif %}>
-          Puducherry (PY)
-        </option>
-        <option value="PB" {% if expense.destination_of_supply == "PB" %} selected {% endif %}>
-          Punjab (PB)
-        </option>
-        <option value="RJ" {% if expense.destination_of_supply == "RJ" %} selected {% endif %}>
-          Rajasthan (RJ)
-        </option>
-        <option value="SK" {% if expense.destination_of_supply == "SK" %} selected {% endif %}>
-          Sikkim (SK)
-        </option>
-        <option value="TN" {% if expense.destination_of_supply == "TN" %} selected {% endif %}>
-          Tamil Nadu (TN)
-        </option>
-        <option value="TG" {% if expense.destination_of_supply == "TG" %} selected {% endif %}>
-          Telangana (TG)
-        </option>
-        <option value="TR" {% if expense.destination_of_supply == "TR" %} selected {% endif %}>
-          Tripura (TR)
-        </option>
-        <option value="UP" {% if expense.destination_of_supply == "UP" %} selected {% endif %}>
-          Uttar Pradesh (UP)
-        </option>
-        <option value="UK" {% if expense.destination_of_supply == "UK" %} selected {% endif %}>
-          Uttarakhand (UK)
-        </option>
-        <option value="WB" {% if expense.destination_of_supply == "WB" %} selected {% endif %}>
-          West Bengal (WB)
-        </option>
-      </select>
-    </div>
-  </div>
-     
-     
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label  text-white">Reverse Charge:</label>
-    <div class="col-sm-9">
-      <div class="form-check">
-        <input type="checkbox" name="reverse_charge" id="reverse_charge" value="1" {% if expense.reverse_charge == '1' %}checked="checked"{% endif %}>
-  
-        <label class="form-check-label" for="reverse_charge">
-          This transaction is applicable for reverse charge
-        </label>
-      </div>
-    </div>
-  </div>
-  
-  
-  
-  
-      <div class="form-group row">
-        <label for="invoice" class="col-sm-3 col-form-label  text-white">Invoice</label>
-        <div class="col-sm-9">
-          <input type="text text-white" class="form-control" id="invoice" name="invoice" value="{{expense.invoice}}">
-        </div>
-      </div>
-      <div class="form-group row">
-        <label for="tax" class="col-sm-3 col-form-label text-white">Tax</label>
-        <div class="col-sm-9">
-          <select class="form-control" id="tax" name="tax">
-            <option value="">-- Select Expense Tax --</option>
-            <option value="">Non-Taxable</option>
-            <optgroup label="Taxes">
-              <option value="IGST0[0%]" {% if expense.tax == 'IGST0[0%]' %}selected{% endif %}>IGST0[0%]</option>
-              <option value="IGST5[5%]" {% if expense.tax == 'IGST5[5%]' %}selected{% endif %}>IGST5[5%]</option>
-              <option value="IGST12[12%]" {% if expense.tax == 'IGST12[12%]' %}selected{% endif %}>IGST12[12%]</option>
-              <option value="IGST18[18%]" {% if expense.tax == 'IGST18[18%]' %}selected{% endif %}>IGST18[18%]</option>
-              <option value="IGST28[28%]" {% if expense.tax == 'IGST28[28%]' %}selected{% endif %}>IGST28[28%]</option>
-            </optgroup>
-            <optgroup label="Tax Group">
-              <option value="GST0[0%]" {% if expense.tax == 'GST0[0%]' %}selected{% endif %}>GST0[0%]</option>
-              <option value="GST5[5%]" {% if expense.tax == 'GST5[5%]' %}selected{% endif %}>GST5[5%]</option>
-              <option value="GST12[12%]" {% if expense.tax == 'GST12[12%]' %}selected{% endif %}>GST12[12%]</option>
-              <option value="GST18[18%]" {% if expense.tax == 'GST18[18%]' %}selected{% endif %}>GST18[18%]</option>
-              <option value="GST28[28%]" {% if expense.tax == 'GST28[28%]' %}selected{% endif %}>GST28[28%]</option>
-            </optgroup>
-          </select>
-        </div>
-      </div>
-      
-     
-          
+    
+   
         
-         <div class="form-group row">
-          <label for="customer" class="col-sm-3 col-form-label  text-white">Customer</label>
-          <div class="col-sm-9">
-            <select class="form-control" id="customer" name="customer"onchange="openpopup2(this);">
-              <option value="">-- Select a customer --</option>
-              {% for cust in customer %}
-              <option value="{{ cust.customer_name }}" {% if expense.customer_name.customer_name == cust.customer_name %}selected{% endif %}>{{ cust.customer_name }}</option>
-              {% endfor %}
-            
-             
-          <option value="new">+New Customer</option>
-            
-            </select>
-          </div>
+      
+       <div class="form-group row">
+        <label for="customer" class="col-sm-3 col-form-label  text-white">Customer</label>
+        <div class="col-sm-9">
+          <select class="form-control text-dark" id="customer" name="customer"onchange="openpopup2(this);">
+            <option value="">-- Select a customer --</option>
+            {% for cust in customer %}
+            <option value="{{ cust.customer_name }}" {% if expense.customer_name.customer_name == cust.customer_name %}selected{% endif %}>{{ cust.customer_name }}</option>
+            {% endfor %}
+          
+           
+        <option value="new">+New Customer</option>
+          
+          </select>
         </div>
-  
-  <!-- <div class="form-group row">
-    <label for="reporting_tags" class="col-sm-3 col-form-label  text-white">Reporting Tags:</label>
-    <div class="col-sm-9">
-      <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
-      <span id="reporting_tags_label"></span>
-      <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
-    </div>
-  </div> -->
-  <div class="form-group row">
-    <label for="reporting_tags" class="col-sm-3 col-form-label">Reporting Tags:</label>
-    <div class="col-sm-9">
-      <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
-      <span id="reporting_tags_label"></span>
-      <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
-    </div>
+      </div>
+
+<!-- <div class="form-group row">
+  <label for="reporting_tags" class="col-sm-3 col-form-label  text-white">Reporting Tags:</label>
+  <div class="col-sm-9">
+    <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
+    <span id="reporting_tags_label"></span>
+    <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
   </div>
-        <!-- <div class="row"> -->
-          <div class="col-sm-9">
-            <!-- Image Box -->
-            <div id="attached-image-box" style="width: 150px; height: 150px; border: 1px dotted #ffffff; margin-bottom: 10px; position: relative; overflow: hidden;">
-              <img id="attached-image" style="max-width: 100%; max-height: 100%; object-fit: cover;">
-              <div id="image-footer" style="position: absolute; bottom: 0; width: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 5px; display: none;">
-                <i id="delete-icon" class="fas fa-times-circle text-danger" style="cursor: pointer; display: none;"></i>
-              </div>
+</div> -->
+<div class="form-group row">
+  <label for="reporting_tags" class="col-sm-3 col-form-label">Reporting Tags:</label>
+  <div class="col-sm-9">
+    <input type="hidden" class="form-control" id="reporting_tags" name="reporting_tags">
+    <span id="reporting_tags_label"></span>
+    <a href="#" class="associate-tag-link" onclick="openPopup3()" style="text-decoration: none;">+ Associate Tag</a>
+  </div>
+</div>
+      <!-- <div class="row"> -->
+        <div class="col-sm-9">
+          <!-- Image Box -->
+          <div id="attached-image-box" style="width: 150px; height: 150px; border: 1px dotted #ffffff; margin-bottom: 10px; position: relative; overflow: hidden;">
+            <img id="attached-image" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+            <div id="image-footer" style="position: absolute; bottom: 0; width: 100%; background-color: rgba(0, 0, 0, 0.5); padding: 5px; display: none;">
+              <i id="delete-icon" class="fas fa-times-circle text-danger" style="cursor: pointer; display: none;"></i>
             </div>
           </div>
-         <!-- </div> -->
-      
-        <!-- <div class="row"> -->
-          <div class="col-sm-12">
-            <!-- Attach Button -->
-            <button type="button" id="attach-button" class="btn btn-secondary btn-sm" style="width: 15.5%;">
-              <i class="fas fa-paperclip"></i> Attach Receipt
-            </button>
-          </div>
-          <div class="col-sm-9 text-right">
-            <!-- Delete Button -->
-            <button type="button" id="delete-button" class="btn btn-danger btn-sm" style="display: none;">
-              <i class="fas fa-trash"></i> Delete
-            </button>
-          </div>
-        <!-- </div> -->
-  <!--     
-        <div class="row"> -->
-          <div class="col-sm-6">
-            <input type="file" name="image" id="image" style="display: none;">
-          </div>
-        <!-- </div> -->
-   
-  <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
-  <script>
-  
-  const attachedImageBox = document.getElementById('attached-image-box');
-  const attachedImage = document.getElementById('attached-image');
-  const imageFooter = document.getElementById('image-footer');
-  const deleteIcon = document.getElementById('delete-icon');
-  const attachButton = document.getElementById('attach-button');
-  const deleteButton = document.getElementById('delete-button');
-  const imageInput = document.getElementById('image');
-  const imageActions = document.getElementById('image-actions');
-  
-  
-  // Function to display the attached image
-  function displayAttachedImage() {
-    const imageURL = '{{ expense.image.url }}'; // Replace with the actual image URL from the backend
-    attachedImage.src = imageURL; // Display the attached image
-    imageFooter.style.display = 'block'; // Show the image footer
-    deleteIcon.style.display = 'inline'; // Show the delete icon
-  }
-  
-  // Check if an image is already attached
-  if ('{{ expense.image.url }}') {
-    displayAttachedImage();
-  }
-  
-  // Attach button click event listener
-  attachButton.addEventListener('click', function() {
-    imageInput.click(); // Open file dialog
-  });
-  
-  // Image input change event listener
-  imageInput.addEventListener('change', function() {
-    if (imageInput.files && imageInput.files[0]) {
-      const reader = new FileReader();
-  
-      reader.onload = function(e) {
-        const imageURL = e.target.result;
-        attachedImage.src = imageURL; // Display the selected image
-        imageFooter.style.display = 'block'; // Show the image footer
-        deleteIcon.style.display = 'inline'; // Show the delete icon
-      };
-  
-      reader.readAsDataURL(imageInput.files[0]);
-    }
-  });
-  
-  //Delete image footer button click event listener
-        deleteIcon.addEventListener('click', function() {
-          attachedImage.src = ''; // Reset the image source
-          imageInput.value = ''; // Clear the selected file
-          imageFooter.style.display = 'none'; // Hide the image footer
-          deleteIcon.style.display = 'none'; // Hide the delete icon
-        });
-  </script>
-  
-  <!-- // Function to display the attached image
-  // function displayAttachedImage() {
-  //   {% if expense.image %}
-  //     const imageURL = '{{ expense.image.url }}'; // Replace with the actual image URL from the backend
-  //     attachedImage.src = imageURL; // Display the attached image
-  //     imageFooter.style.display = 'block'; // Show the image footer
-  //     deleteIcon.style.display = 'inline'; // Show the delete icon
-  //   {% else %}
-  //     // Handle the case when no image is present
-  //     attachedImage.src = ''; // Set an empty source
-  //     imageFooter.style.display = 'none'; // Hide the image footer
-  //     deleteIcon.style.display = 'none'; // Hide the delete icon
-  //   {% endif %}
-  // }
-  
-  
-  // // Attach button click event listener
-  // attachButton.addEventListener('click', function() {
-  //   imageInput.click(); // Open file dialog
-  // });
-  
-  // // Image input change event listener
-  // imageInput.addEventListener('change', function() {
-  //   if (imageInput.files && imageInput.files[0]) {
-  //     const reader = new FileReader();
-  
-  //     reader.onload = function(e) {
-  //       const imageURL = e.target.result;
-  //       attachedImage.src = imageURL; // Display the selected image
-  //       imageFooter.style.display = 'block'; // Show the image footer
-  //       deleteIcon.style.display = 'inline'; // Show the delete icon
-  //     };
-  
-  //     reader.readAsDataURL(imageInput.files[0]);
-  //   }
-  // });
-  
-  // // Delete image footer
-  
-  // deleteIcon.addEventListener('click', function() {
-  //         attachedImage.src = ''; // Reset the image source
-  //         imageInput.value = ''; // Clear the selected file
-  //         imageFooter.style.display = 'none'; // Hide the image footer
-  //         deleteIcon.style.display = 'none'; // Hide the delete icon
-  //       }); -->
-  </script>
-      
-  
-  <div class="col-sm-10 offset-sm-2">
-      <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
-  </div>
-  </div>
-    </form>
+        </div>
+       <!-- </div> -->
+    
+      <!-- <div class="row"> -->
+        <div class="col-sm-12">
+          <!-- Attach Button -->
+          <button type="button" id="attach-button" class="btn btn-secondary btn-sm" style="width: 15.5%;">
+            <i class="fas fa-paperclip"></i> Attach Receipt
+          </button>
+        </div>
+        <div class="col-sm-9 text-right">
+          <!-- Delete Button -->
+          <button type="button" id="delete-button" class="btn btn-danger btn-sm" style="display: none;">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      <!-- </div> -->
+<!--     
+      <div class="row"> -->
+        <div class="col-sm-6">
+          <input type="file" name="image" id="image" style="display: none;">
+        </div>
+      <!-- </div> -->
+ 
+<script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+<script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+const attachedImageBox = document.getElementById('attached-image-box');
+const attachedImage = document.getElementById('attached-image');
+const imageFooter = document.getElementById('image-footer');
+const deleteIcon = document.getElementById('delete-icon');
+const attachButton = document.getElementById('attach-button');
+const deleteButton = document.getElementById('delete-button');
+const imageInput = document.getElementById('image');
+const imageActions = document.getElementById('image-actions');
 
+
+// Function to display the attached image
+function displayAttachedImage() {
+  const imageURL = '{{ expense.image.url }}'; // Replace with the actual image URL from the backend
+  attachedImage.src = imageURL; // Display the attached image
+  imageFooter.style.display = 'block'; // Show the image footer
+  deleteIcon.style.display = 'inline'; // Show the delete icon
+}
+
+// Check if an image is already attached
+if ('{{ expense.image.url }}') {
+  displayAttachedImage();
+}
+
+// Attach button click event listener
+attachButton.addEventListener('click', function() {
+  imageInput.click(); // Open file dialog
+});
+
+// Image input change event listener
+imageInput.addEventListener('change', function() {
+  if (imageInput.files && imageInput.files[0]) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      const imageURL = e.target.result;
+      attachedImage.src = imageURL; // Display the selected image
+      imageFooter.style.display = 'block'; // Show the image footer
+      deleteIcon.style.display = 'inline'; // Show the delete icon
+    };
+
+    reader.readAsDataURL(imageInput.files[0]);
+  }
+});
+
+//Delete image footer button click event listener
+      deleteIcon.addEventListener('click', function() {
+        attachedImage.src = ''; // Reset the image source
+        imageInput.value = ''; // Clear the selected file
+        imageFooter.style.display = 'none'; // Hide the image footer
+        deleteIcon.style.display = 'none'; // Hide the delete icon
+      });
+</script>
+
+<!-- // Function to display the attached image
+// function displayAttachedImage() {
+//   {% if expense.image %}
+//     const imageURL = '{{ expense.image.url }}'; // Replace with the actual image URL from the backend
+//     attachedImage.src = imageURL; // Display the attached image
+//     imageFooter.style.display = 'block'; // Show the image footer
+//     deleteIcon.style.display = 'inline'; // Show the delete icon
+//   {% else %}
+//     // Handle the case when no image is present
+//     attachedImage.src = ''; // Set an empty source
+//     imageFooter.style.display = 'none'; // Hide the image footer
+//     deleteIcon.style.display = 'none'; // Hide the delete icon
+//   {% endif %}
+// }
+
+
+// // Attach button click event listener
+// attachButton.addEventListener('click', function() {
+//   imageInput.click(); // Open file dialog
+// });
+
+// // Image input change event listener
+// imageInput.addEventListener('change', function() {
+//   if (imageInput.files && imageInput.files[0]) {
+//     const reader = new FileReader();
+
+//     reader.onload = function(e) {
+//       const imageURL = e.target.result;
+//       attachedImage.src = imageURL; // Display the selected image
+//       imageFooter.style.display = 'block'; // Show the image footer
+//       deleteIcon.style.display = 'inline'; // Show the delete icon
+//     };
+
+//     reader.readAsDataURL(imageInput.files[0]);
+//   }
+// });
+
+// // Delete image footer
+
+// deleteIcon.addEventListener('click', function() {
+//         attachedImage.src = ''; // Reset the image source
+//         imageInput.value = ''; // Clear the selected file
+//         imageFooter.style.display = 'none'; // Hide the image footer
+//         deleteIcon.style.display = 'none'; // Hide the delete icon
+//       }); -->
+</script>
+    
+
+<div class="col-sm-10 offset-sm-2">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</div>
+</div>
+</div>
+</form>
+</section>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <div class="popup" id="popup3">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Associate tag</h4>
@@ -784,8 +732,8 @@ textarea {
 <!-- account -->
 <div class="popup" id="popup">
   <div style="margin-top: 4rem;" class="display-flex">
-    <!-- <h4 class="text-white">Add Account</h4>
-    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6> -->
+    <h4 class="text-white">Add Account</h4>
+    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6>
   </div>
   <form  id="accountForm">
     {% csrf_token %}
@@ -899,7 +847,7 @@ $(document).ready(function() {
 <div class="popup" id="popup2">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Add Customer</h4>
-    <!-- <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup2()">X</h6> -->
+    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup2()">X</h6>
   </div>
   <form id="customerForm">
     {% csrf_token %}
@@ -1565,7 +1513,7 @@ $(document).ready(function() {
 <div class="popup" id="popup1">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Add Vendor</h4>
-    <!-- <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup1()">X</h6> -->
+    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup1()">X</h6>
   </div>
   <form id="vendorForm">
     {% csrf_token %}
@@ -2190,6 +2138,4 @@ $(document).ready(function() {
   reloadVendor();
     });
 </script>
-
 {%endblock%}
-

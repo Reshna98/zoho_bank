@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
-{%load static%}
 {% block content %}
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> -->
-<script src="https://kit.fontawesome.com/3b9793c077.js" crossorigin="anonymous"></script>
+{% load static %}
+{% load tz %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <style>
- #customerForm label {
+  #customerForm label {
       color: white;
     }
 .col-form-label{
@@ -20,7 +15,7 @@
       z-index: 9999;
       overflow: scroll;
         }
-.popup{
+/* .popup{
   z-index: 9999;
   height: 30rem;
   width: 40rem;
@@ -37,8 +32,23 @@
   visibility: hidden;
   transform: translate(-50%,-50%)scale(0.1);
 
+} */
+.popup {
+  z-index: 9999;
+  height: 30rem;
+  width: 40rem;
+  background-color: rgb(228, 248, 248);
+  border-radius: 1rem;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  padding: 0 5rem 5rem;
+  color: black;
+  visibility: hidden;
+  transform: scale(0.1);
 }
-
 .open-popup{
   top: 60%;
   visibility: visible;
@@ -88,30 +98,116 @@
 .form-group{
   width: 40%;
 }
-/* .select2-container .select2-selection--single{
-    height:34px 
-}
-.select2-container--default .select2-selection--single{
-    border: 1px solid #ccc !important; 
-     border-radius: 0px !important; } */
+/* input[type=text],
+ select,
+textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      resize: vertical;
+    }
+    
+  
+    #accountForm input[type=text] {
+      width:50% ;
+      padding: 10px;
+      resize: none;
+    } 
+    #accountForm textarea {
+    
+      border-radius: 4px;
+      resize: vertical;
+    } */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+    
+    @media screen and (max-width: 600px) {
+      .col-25, .col-75, input[type=submit] {
+        width: 100%;
+        margin-top: 0;
+      }
+      input[type=text], select, textarea {
+      width: 100%;
 
-</style>
-<div class="row fixed-top" style="top: 7rem;margin-left: 14rem;">
-  <div class="col-md-10">
-    <form action="{% url 'save_expense' %}" method="post" enctype="multipart/form-data">
+    }
+    }
+
+    .dropdown input,
+    .dropdown button {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+    }
+
+    .dropdown.open input,
+    .dropdown.open button {
+      display: block;
+    }
+
+    .row a{
+      color: rgb(218, 164, 48);
+      font-size: 12px;
+    }
+
+    .table th a{
+      color:rgb(218, 164, 48);
+      font-size: 11px;
+      margin-left: 100px;
+    }
+
+
+    ::-webkit-scrollbar {
+      width: 5px; 
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1; 
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #888; 
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #555; 
+    }
+
+    .item{
+      height: auto;
+    }
+    </style>
+
+
+<div class="container-fulid containerprof">
+
+  <div class="card radius-15 p-3">
+    <div class="card-body">
+        <div class="card-title">
+          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; New Expense</h2>
+        </div>
+    </div>
+  </div>
+
+  <div class="card radius-15 p-5">
+    <form action="{% url 'save_expense' %}" method="post" enctype="multipart/form-data"id="myForm">
       {% csrf_token %}
-      <div style="height: 400px; width:1100px; overflow-y: scroll;padding-left: 10%;">
+      <!-- <div style="height: 400px; width:1100px;padding-left: 10%;overflow-y: scroll;"> -->
         <div class="form-group row">
           <label for="date" class="col-sm-3 col-form-label">Date</label>
           <div class="col-sm-9">
-            <input type="date" class="form-control text-dark" id="date" name="date">
+            <input type="date" class="form-control" id="date" name="date">
           </div>
         </div>
         
         <div class="form-group row">
           <label class="col-sm-3 col-form-label"> Expense Account</label>
           <div class="col-sm-9">
-            <select class="form-control form-select text-dark" id="select" name="select" onchange="openpopup(this);" required>
+            <select class="form-control form-select" id="select" name="select" onchange="openpopup(this);" required>
             
               <option value="">-- Select Expense Account --</option>
               {% for account_type in account_types %}
@@ -144,13 +240,13 @@
       <div class="form-group row" id="hsn_div" style="display: none;">
         <label id="hsn_label" for="hsn_code" class="col-sm-3 col-form-label">HSN</label>
         <div class="col-sm-9">
-          <input type="text" id="hsn_code" name="hsn_code" class="form-control text-dark">
+          <input type="text" id="hsn_code" name="hsn_code" class="form-control ">
         </div>
       </div>
       <div class="form-group row" id="sac_div" style="display:flex;">
         <label id="sac_label" for="sac" class="col-sm-3 col-form-label">SAC</label>
         <div class="col-sm-9">
-          <input type="text" id="sac" name="sac" class="form-control text-dark" >
+          <input type="text" id="sac" name="sac" class="form-control " >
         </div>
       </div>
       
@@ -190,7 +286,7 @@
       <div class="form-group row">
         <label for="notes" class="col-sm-3 col-form-label">Notes</label>
         <div class="col-sm-9">
-          <textarea class="form-control text-dark" id="notes" name="notes" rows="3"></textarea>
+          <textarea class="form-control " id="notes" name="notes" rows="3"></textarea>
         </div>
       </div>
       <div class="form-group row">
@@ -198,7 +294,7 @@
         <div class="col-sm-9">
           <div class="input-group">
             <div class="input-group-append">
-              <select class="form-control text-dark" id="currency" name="currency">
+              <select class="form-control" id="currency" name="currency" style="background-color: #888;">
                 <option value="INR">INR</option>
                 <option value="USD">USD</option>
                 <option value="EUR">EUR</option>
@@ -211,7 +307,7 @@
                 <option value="HKD">HKD</option>
               </select>
             </div>
-            <input type="number" class="form-control text-dark" id="amount" name="amount">
+            <input type="number" class="form-control " id="amount" name="amount">
           </div>
         </div>
       </div>
@@ -219,7 +315,7 @@
         <div class="form-group row">
           <label for="paid" class="col-sm-3 col-form-label">Paid Through</label>
           <div class="col-sm-9">
-            <select class="form-control text-dark" id="paid" name="paid">
+            <select class="form-control" id="paid" name="paid">
               <option value="">-- Select Paid Through --</option>
               <optgroup label="Bank">
                 <option value="credit card">Credit Card</option>
@@ -259,7 +355,7 @@
         <div class="form-group row">
           <label for="vendor" class="col-sm-3 col-form-label">Vendor</label>
           <div class="col-sm-9">
-            <select class="form-control text-dark" id="vendor" name="vendor" onchange="openpopup1(this);">
+            <select class="form-control" id="vendor" name="vendor" onchange="openpopup1(this);">
               <option value="">-- Select a vendor --</option>
               {% for v in vendor %}
               <option value="{{ v.vendor_display_name}}">{{v.vendor_display_name }}</option>
@@ -297,7 +393,7 @@
         <div class="form-group row">
           <label for="gst_treatment" class="col-sm-3 col-form-label">GST Treatment</label>
           <div class="col-sm-9">
-            <select class="form-control text-dark" id="gst_treatment" name="gst_treatment">
+            <select class="form-control" id="gst_treatment" name="gst_treatment">
               <option value="">-- Select GST Treatment --</option>
               <option value="Registered business-
                   Regular Bussiness that is registered under gst">Registered business-
@@ -321,7 +417,7 @@
         <div class="form-group row">
           <label for="destination_of_supply" class="col-sm-3 col-form-label">Destination of Supply</label>
           <div class="col-sm-9">
-            <select class="form-control text-dark" id="destination_of_supply" name="destination_of_supply">
+            <select class="form-control" id="destination_of_supply" name="destination_of_supply">
               <option value="">-- Select Destination State --</option>
               <option value="AN">Andaman and Nicobar Islands (AN)</option>
               <option value="AP">Andhra Pradesh (AP)</option>
@@ -378,13 +474,13 @@
         <div class="form-group row">
           <label for="invoice" class="col-sm-3 col-form-label">Invoice</label>
           <div class="col-sm-9">
-            <input type="text" class="form-control text-dark" id="invoice" name="invoice">
+            <input type="text" class="form-control" id="invoice" name="invoice">
           </div>
         </div>
         <div class="form-group row">
           <label for="tax" class="col-sm-3 col-form-label">Tax</label>
           <div class="col-sm-9">
-            <select class="form-control text-dark" id="tax" name="tax">
+            <select class="form-control" id="tax" name="tax">
               <option value="">-- Select Tax --</option>
               <option value="">Non-Taxable</option>
               <optgroup label="Taxes">
@@ -421,7 +517,7 @@
            <div class="form-group row">
             <label for="customer" class="col-sm-3 col-form-label">Customer</label>
             <div class="col-sm-9">
-              <select class="form-control text-dark" id="customer" name="customer"onchange="openpopup2(this);">
+              <select class="form-control" id="customer" name="customer"onchange="openpopup2(this);">
                 <option value="">-- Select a customer --</option>
                 {% for cust in customer %}
                 <option value="{{ cust.customer_name }}">{{ cust.customer_name }}</option>
@@ -544,18 +640,18 @@
     <div class="col-sm-10 offset-sm-2">
         <button type="submit" class="btn btn-primary">Submit</button>
     </div>
-  </div>
-  </div>
-</form>
-</section>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4"></div>
+      </div>
+    </form>
 
-<!-- Vendor -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <div class="popup" id="popup1">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Add Vendor</h4>
-    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup1()">X</h6>
+    <!-- <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup1()">X</h6> -->
   </div>
   <form id="vendorForm">
     {% csrf_token %}
@@ -1180,7 +1276,7 @@ $(document).ready(function() {
 <div class="popup" id="popup">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Add Account</h4>
-    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6>
+    <!-- <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup()">X</h6> -->
   </div>
   <form  id="accountForm">
     {% csrf_token %}
@@ -1317,7 +1413,7 @@ $(document).ready(function() {
 <div class="popup" id="popup2">
   <div style="margin-top: 4rem;" class="display-flex">
     <h4 class="text-white">Add Customer</h4>
-    <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup2()">X</h6>
+    <!-- <h6 class="float-right text-white" style="margin-right: 1rem; margin-top: -2rem;" onclick="closepopup2()">X</h6> -->
   </div>
   <form id="customerForm">
     {% csrf_token %}
