@@ -3982,7 +3982,6 @@ def save_expense(request):
             c = request.POST.get('customer')
             customer = addcustomerE.objects.get(customer_name=c)
 
-            
             v= request.POST.get('vendor')
             vendor=vendor_tableE.objects.get(vendor_display_name=v)
 
@@ -4025,9 +4024,10 @@ def save_expense(request):
             return redirect('expensepage')
         else:
             # Display the save_expense form
-            c = addcustomerE.objects.all()
-            v=vendor_tableE.objects.all()
-            accounts = AccountE.objects.all()
+            c = addcustomerE.objects.filter(user=request.user)
+            # v=vendor_tableE.objects.all()
+            v = vendor_tableE.objects.filter(user=request.user)
+            accounts = AccountE.objects.filter(user=request.user)
             account_types = set(AccountE.objects.values_list('type', flat=True))
            
           
@@ -4149,6 +4149,7 @@ def add_custmr(request):
         cust.save()
 
         return HttpResponse({"message": "success"})
+        
 def customer_dropdownE(request):
     user = User.objects.get(id=request.user.id)
 
@@ -4156,10 +4157,19 @@ def customer_dropdownE(request):
     option_objects = addcustomerE.objects.filter(user=user)
     for option in option_objects:
         display_name = option.customer_name
-        # options[option.id] = [display_name, f"{display_name} {option.id}"]
         options[option.id] = [display_name, f"{display_name}"]
+        
     return JsonResponse(options)
+# def customer_dropdownE(request):
+#     user = User.objects.get(id=request.user.id)
 
+#     options = {}
+#     option_objects = addcustomerE.objects.filter(user = user)
+#     for option in option_objects:
+#         options[option.id] = [option.customer_name]
+
+
+#     return JsonResponse(options)
         
 def edit_expensee(request,expense_id):
     if request.user.is_authenticated:
@@ -4294,28 +4304,27 @@ def add_vendore(request):
 
         return HttpResponse("success")
 
+# @login_required(login_url='login')
 # def vendor_dropdownE(request):
 #     user = User.objects.get(id=request.user.id)
 
 #     options = {}
-#     option_objects = vendor_tableE.objects.filter(user=user)
+#     option_objects = vendor_tableE.objects.filter(user = user)
 #     for option in option_objects:
-#         # options[option.id] = [option.first_name + " " + option.last_name, option.first_name + " " + option.last_name + " " + str(option.id)]
-#         display_name = f"{option.salutation} {option.first_name} {option.last_name}"
-#         options[option.id] = [display_name, display_name + " " + str(option.id)]
-#         # options[option.id] = display_name
+#         options[option.id] = [option.first_name+ " " + option.last_name,option.first_name+ " " + option.last_name+" "+ str(option.id)]
+
 #     return JsonResponse(options)
 
+@login_required(login_url='login')
 def vendor_dropdownE(request):
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = vendor_tableE.objects.filter(user=user)
+    option_objects = vendor_tableE.objects.filter(user = user)
     for option in option_objects:
-        display_name = f"{option.salutation} {option.first_name} {option.last_name}"
-        options[option.id] = [display_name, display_name]
+        options[option.id] = [option.salutation+" "+option.first_name+" "+ option.last_name]
+
+
     return JsonResponse(options)
-
-
 
     

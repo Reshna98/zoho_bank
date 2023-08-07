@@ -549,6 +549,8 @@ class ExpenseE(models.Model):
     reverse_charge=models.TextField(max_length=255)
     tax=models.TextField(max_length=255)
     invoice=models.TextField(max_length=255)
+    # vendor=models.CharField(max_length=100,default='')
+    # customer_name= models.CharField(max_length=100,default='')
     customer_name = models.ForeignKey(addcustomerE, on_delete=models.CASCADE)
     reporting_tags=models.TextField(max_length=255,null=True, blank=True)
     date = models.DateField()
