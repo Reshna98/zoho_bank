@@ -533,6 +533,11 @@ class vendor_tableE(models.Model):
     sphone=models.CharField(max_length=100,default='',null=True,blank=True)
     sfax=models.CharField(max_length=100,default='',null=True,blank=True)
 
+class payment_termsE(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    Terms=models.CharField(max_length=100,null=True,blank=True)
+    Days=models.IntegerField(null=True,blank=True)    
+
 
 class ExpenseE(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)

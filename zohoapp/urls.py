@@ -204,7 +204,9 @@ urlpatterns = [
     path('vendor_dropdownE/', views.vendor_dropdownE, name='vendor_dropdownE'),
     path('customer_dropdownE/', views.customer_dropdownE, name='customer_dropdownE'),
     path('save_expense/', views.save_expense, name='save_expense'),
-
+    path('expense_pay', views.expense_pay, name='expense_pay'),
+    path('pay_dropdownE', views.pay_dropdownE, name='pay_dropdownE'),
+   
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     

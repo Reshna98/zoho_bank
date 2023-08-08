@@ -4029,9 +4029,9 @@ def save_expense(request):
             v = vendor_tableE.objects.filter(user=request.user)
             accounts = AccountE.objects.filter(user=request.user)
             account_types = set(AccountE.objects.values_list('type', flat=True))
-           
+            p = payment_termsE.objects.filter(user=request.user)
           
-            return render(request, 'addexpense.html', {'vendor':v,'customer': c, 'accounts': accounts, 'account_types': account_types,
+            return render(request, 'addexpense.html', {'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
             })
    
 def upload_documents(request, expense_id):
@@ -4262,7 +4262,6 @@ def add_vendore(request):
         last_name=request.POST.get('lastname')
         comp=request.POST.get('company_name')
         dispn = request.POST.get('display_name')
-        # dispn = f"{title} {first_name} {last_name}"
         email=request.POST.get('email',None)
         website=request.POST.get('website',None)
         w_mobile=request.POST.get('work_mobile',None)
@@ -4299,10 +4298,10 @@ def add_vendore(request):
                     opening_bal=balance,baddress=street, bcity=city, bstate=state, payment_terms=payment,bzip=pincode, 
                     bcountry=country, saddress=shipstreet, scity=shipcity, sstate=shipstate,szip=shippincode, scountry=shipcountry,
                     bfax = fax, sfax = shipfax, bphone = phone, sphone = shipphone,user = u)
-        vendor_dropdownE(request)
         vndr.save()
 
         return HttpResponse("success")
+   
 
 # @login_required(login_url='login')
 # def vendor_dropdownE(request):
@@ -4327,4 +4326,30 @@ def vendor_dropdownE(request):
 
     return JsonResponse(options)
 
+ 
+@login_required(login_url='login')
+def expense_pay(request):
     
+    if request.method=='POST':
+
+        name=request.POST.get('name')
+        days=request.POST.get('days')
+        
+        u = User.objects.get(id = request.user.id)
+
+        pay = payment_termsE(Terms=name, Days=days, user = u)
+        pay.save()
+
+        return HttpResponse({"message": "success"})
+        
+@login_required(login_url='login')
+def pay_dropdownE(request):
+
+    user = User.objects.get(id=request.user.id)
+
+    options = {}
+    option_objects = payment_termsE.objects.filter(user = user)
+    for option in option_objects:
+        options[option.id] = [option.Terms]
+
+    return JsonResponse(options)   
