@@ -441,17 +441,32 @@ class recurring_bills_items (models.Model):
     amount = models.FloatField(null=True,blank=True)
     
 ###############expense
-class AccountE(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name=models.CharField(max_length=255)
-    pname=models.CharField(max_length=255)
-    code=models.CharField(max_length=255)
-    type=models.CharField(max_length=255)
-    description=models.TextField(blank=True)
+# class AccountE(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     name=models.CharField(max_length=255)
+#     pname=models.CharField(max_length=255)
+#     code=models.CharField(max_length=255)
+#     type=models.CharField(max_length=255)
+#     description=models.TextField(blank=True)
 
-    
+
+class  AccountE(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True,blank=True)
+    account_type = models.CharField(max_length=255,null=True,blank=True)
+    account_name = models.CharField(max_length=255,null=True,blank=True)
+    credit_no = models.CharField(max_length=255,null=True,blank=True)
+    sub_account = models.CharField(max_length=255,null=True,blank=True)
+    parent_account = models.CharField(max_length=255,null=True,blank=True)
+    bank_account_no = models.CharField(max_length=255,null=True,blank=True)
+    currency = models.CharField(max_length=255,null=True,blank=True)
+    account_code = models.CharField(max_length=255,null=True,blank=True)
+    description = models.TextField(null=True,blank=True)
+    watchlist = models.CharField(max_length=255,null=True,blank=True)
+    attachment=models.ImageField(upload_to="image/", null=True) 
+    create_status=models.CharField(max_length=255,null=True,blank=True) 
+    status = models.CharField(max_length=255,null=True,blank=True)  
+     
 class addcustomerE(models.Model):
-    # user=models.ForeignKey(User,on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     customer_name= models.CharField(max_length=100,null=True,blank=True)
     customerType= models.CharField(max_length=100,null=True,blank=True)
@@ -496,7 +511,6 @@ class addcustomerE(models.Model):
 
 class vendor_tableE(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # user=models.ForeignKey(User,on_delete=models.CASCADE,null=True)
     salutation=models.CharField(max_length=25,null=True,blank=True)
     first_name=models.CharField(max_length=50,null=True,blank=True)
     last_name=models.CharField(max_length=50,null=True,blank=True)
@@ -541,7 +555,8 @@ class payment_termsE(models.Model):
 
 class ExpenseE(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    expense_account=models.ForeignKey(AccountE,on_delete=models.CASCADE)
+    expense_account=models.CharField(max_length=100,default="")
+    # expense_account=models.ForeignKey(AccountE,on_delete=models.CASCADE)
     amount=models.TextField(max_length=255)
     currency=models.TextField(max_length=255)
     expense_type=models.TextField(max_length=255)
@@ -566,3 +581,4 @@ class AttachE(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default='')
     expense = models.ForeignKey(ExpenseE, on_delete=models.CASCADE, null=True)
     attachment= models.FileField(upload_to='attachment/', blank=True, null=True)
+

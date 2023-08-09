@@ -52,7 +52,7 @@
               <tr onclick="location.href='{% url 'expense_details' expense.id %}'" style="cursor: pointer;">
                 <td>{{ expense.date }}</td>
                 <!-- <td>{{ expense.expense_type }}</td> -->
-                <td>{{ expense.expense_account.name}}</td>
+                <td>{{ expense.expense_account}}</td>
                 <td>{{ expense.vendor.vendor_display_name  }}</td>
                 <td>{{ expense.paid }}</td>
                 <td>{{ expense.customer_name.customer_name }}</td>

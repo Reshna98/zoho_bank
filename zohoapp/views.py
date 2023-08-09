@@ -3958,8 +3958,10 @@ def save_expense(request):
         if request.method == 'POST':
            
             date = request.POST.get('date')
-            select = request.POST['select']
-            expense_account = AccountE.objects.get(id=select)
+            
+            # select = request.POST['select']
+            # expense_account = AccountE.objects.get(account_name=select)
+            expense_account = request.POST.get('expense_account')
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
             expense_type = request.POST.get('expense_type')
@@ -4028,7 +4030,7 @@ def save_expense(request):
             # v=vendor_tableE.objects.all()
             v = vendor_tableE.objects.filter(user=request.user)
             accounts = AccountE.objects.filter(user=request.user)
-            account_types = set(AccountE.objects.values_list('type', flat=True))
+            account_types = set(AccountE.objects.values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
           
             return render(request, 'addexpense.html', {'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
@@ -4048,17 +4050,104 @@ def upload_documents(request, expense_id):
 
 def add_accountE(request):
     user = User.objects.get(id=request.user.id)
-    accounts = AccountE.objects.all()
-    account_types = set(AccountE.objects.values_list('type', flat=True))
-    if request.method == 'POST':
-        type = request.POST.get('type')
-        name = request.POST.get('name')
-        code = request.POST.get('code')
-        pname = request.POST.get('pname')
-        description=request.POST.get('description')
-        new_account = AccountE(user=user,type=type,name=name,code=code,pname=pname,description=description)
-        account_dropdownE(request)
-        new_account.save()
+    accounts = AccountE.objects.filter(user=request.user)
+    account_types = set(AccountE.objects.values_list('account_type', flat=True))
+    if request.method=='POST':
+        a=AccountE()
+        cur_user = request.user
+        user = User.objects.get(id=cur_user.id)
+        a.user = user
+        a.account_type = request.POST.get("account_type",None)
+        a.account_name = request.POST.get("account_name",None)
+        a.account_code = request.POST.get("account_code",None)
+        a.description = request.POST.get("description",None)
+        a.watchlist = request.POST.get("watchlist",None)
+        a.status="active"
+        if a.account_type=="Other Current Assets":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account",None)
+            a.parent_account = request.POST.get("parent_account",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+
+        if a.account_type=="Cash":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account22",None)
+            a.parent_account = request.POST.get("parent_account22",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+
+        if a.account_type=="Fixed Assets":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account33",None)
+            a.parent_account = request.POST.get("parent_account33",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Stock":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account44",None)
+            a.parent_account = request.POST.get("parent_account44",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Other Current Liability":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account55",None)
+            a.parent_account = request.POST.get("parent_account55",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Long Term Liability":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account66",None)
+            a.parent_account = request.POST.get("parent_account66",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Other Liability":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account77",None)
+            a.parent_account = request.POST.get("parent_account77",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Equity":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account88",None)
+            a.parent_account = request.POST.get("parent_account88",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Income":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account99",None)
+            a.parent_account = request.POST.get("parent_account99",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Expense":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account100",None)
+            a.parent_account = request.POST.get("parent_account100",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Cost Of Goods Sold":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account111",None)
+            a.parent_account = request.POST.get("parent_account111",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+        
+        if a.account_type=="Other Expense":
+            a.credit_no = request.POST.get("credit_number",None)
+            a.sub_account = request.POST.get("sub_account222",None)
+            a.parent_account = request.POST.get("parent_account222",None)
+            a.bank_account_no = request.POST.get("account_number",None)
+            a.currency = request.POST.get("currency",None)
+
+        a.save()
         # accounts = Account.objects.all()
     return HttpResponse('Account saved successfully')
     return render(request, 'addexpense.html', {
@@ -4074,8 +4163,8 @@ def account_dropdownE(request):
     for account in account_objects:
         # options[account.id] = account.name
         options[account.id] = {
-            'name': account.name,
-            'type': account.type
+            'account_name': account.account_name,
+            'account_type': account.account_type
         }
 
     return JsonResponse(options)      
@@ -4311,22 +4400,20 @@ def add_vendore(request):
 #     option_objects = vendor_tableE.objects.filter(user = user)
 #     for option in option_objects:
 #         options[option.id] = [option.first_name+ " " + option.last_name,option.first_name+ " " + option.last_name+" "+ str(option.id)]
-
 #     return JsonResponse(options)
 
 @login_required(login_url='login')
+
 def vendor_dropdownE(request):
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = vendor_tableE.objects.filter(user = user)
+    option_objects = vendor_tableE.objects.filter(user=user)
     for option in option_objects:
-        options[option.id] = [option.salutation+" "+option.first_name+" "+ option.last_name]
-
-
+        display_name = f"{option.salutation} {option.first_name} {option.last_name}"
+        options[option.id] = [display_name, display_name]
     return JsonResponse(options)
-
- 
+    
 @login_required(login_url='login')
 def expense_pay(request):
     

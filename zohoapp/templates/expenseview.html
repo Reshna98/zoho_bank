@@ -32,7 +32,7 @@
             {%for expense in expenses%}
              <tr>
     
-               <td ><a class="text-white" href="{% url 'expense_details' expense.id %}" >{{expense.expense_account.name}}</a></td>
+               <td ><a class="text-white" href="{% url 'expense_details' expense.id %}" >{{expense.expense_account}}</a></td>
             
              </tr>
             {%endfor%}
@@ -43,7 +43,7 @@
         <div class="col-md-9" style="margin-left: 25rem;">
           <div class="row" style="position: fixed;">
             <div class="col-md-4" style="position: fixed;"><a class="text-white" style="font-size: 1rem;">
-                <h2>{{expense.expense_account.name}}</h2>
+                <h2 style="font-size: small; margin-left: -2rem">{{expense.expense_account}}</h2>
               </a></div>
             <div class="col-sm-12" style="margin-top: -3rem;margin-left: 10rem;position: fixed;">
               <a
@@ -152,7 +152,7 @@
   <div class="tab-body">
     <div class="activ ">
      <h6 class="mr-5">Expense Account:</h6> <br>
-     <h6 style="margin-top: -3rem; margin-left: 10rem;" id="expense-account">{{expense.expense_account.name}}</h6> <br>
+     <h6 style="margin-top: -3rem; margin-left: 10rem;" id="expense-account">{{expense.expense_account}}</h6> <br>
      <h6 class="mr-5">Expense Type:</h6>
      <h6 style="margin-top: -2rem; margin-left: 10rem;" id="expense-type">{{ expense.expense_type }} {{expense.goods_label}}</h6> <br>
      <h6 class="mr-5">Amount:</h6>
