@@ -4030,7 +4030,8 @@ def save_expense(request):
             # v=vendor_tableE.objects.all()
             v = vendor_tableE.objects.filter(user=request.user)
             accounts = AccountE.objects.filter(user=request.user)
-            account_types = set(AccountE.objects.values_list('account_type', flat=True))
+            # account_types = set(AccountE.objects.values_list('account_type', flat=True))
+            account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
           
             return render(request, 'addexpense.html', {'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
@@ -4049,9 +4050,10 @@ def upload_documents(request, expense_id):
         return redirect("expense_details", pk=expense.pk)
 
 def add_accountE(request):
-    user = User.objects.get(id=request.user.id)
+    # user = User.objects.get(id=request.user.id)
     accounts = AccountE.objects.filter(user=request.user)
-    account_types = set(AccountE.objects.values_list('account_type', flat=True))
+    account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
+    # account_types = set(AccountE.objects.values_list('account_type', flat=True))
     if request.method=='POST':
         a=AccountE()
         cur_user = request.user
@@ -4146,9 +4148,10 @@ def add_accountE(request):
             a.parent_account = request.POST.get("parent_account222",None)
             a.bank_account_no = request.POST.get("account_number",None)
             a.currency = request.POST.get("currency",None)
-
+        # account_dropdownE(request)
         a.save()
-        # accounts = Account.objects.all()
+       
+        
     return HttpResponse('Account saved successfully')
     return render(request, 'addexpense.html', {
         'accounts': accounts,

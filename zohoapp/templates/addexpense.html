@@ -324,7 +324,7 @@ textarea {
             <select class="form-control form-select" id="expense_account" name="expense_account" onchange="openpopup(this);" required>
               
               <option value="">-- Select Expense Account --</option>
-              <optgroup class=""label="Accounts Payable">
+               <optgroup class=""label="Accounts Payable">
                 <option value='Accounts Payable'>Accounts Payable</option>
               </optgroup>
 
@@ -347,7 +347,7 @@ textarea {
                 <option value='TDS Receivable'>TDS Receivable</option>
               </optgroup>
 
-              <optgroup class="" label="Expence">
+              <optgroup class="" label="Expense">
                 <option value='Advertising and Marketing'>Advertising and Marketing</option>
                 <option value='Automobile Expense'>Automobile Expense</option>
                 <option value='Bad Debt'>Bad Debt</option>
@@ -442,7 +442,7 @@ textarea {
                 <option value='Mortgages'>Mortgages</option>
               </optgroup>
 
-              {% for account_type in account_types %}
+               {% for account_type in account_types %}
               <optgroup class="" label= "{{ account_type }}">
               {% for account in accounts %}
               {% if account.account_type == account_type %}
@@ -450,14 +450,13 @@ textarea {
               {% endif %}
               {% endfor %}
               {% endfor %}
-             
+            
             
             </select>
             <a href="" data-toggle="modal" data-target="#create_account">+ Add New Account </a>
           </div>
         </div>
-      
-        
+             
       <div class="form-group row">
         <label class="col-sm-3 col-form-label">Expense Type</label>
         <div class="col-sm-9" style="color: white;">
@@ -638,6 +637,7 @@ textarea {
         <div class="form-group row">
           <label for="gst_treatment" class="col-sm-3 col-form-label">GST Treatment</label>
           <div class="col-sm-9">
+            
             <select class="form-control" id="gst_treatment" name="gst_treatment">
               <option value="">-- Select GST Treatment --</option>
               <option value="Registered business-
@@ -656,6 +656,7 @@ textarea {
               <option value="Notified list of goods manufactured and supplied within india classified as deemed export">Notified
                 list of goods manufactured and supplied within india classified as deemed export</option>
             </select>
+            
           </div>
         </div>
         
@@ -896,7 +897,7 @@ textarea {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- account -->
 
-<form action="{% url 'add_accountE'%}" method="POST" enctype="multipart/form-data">
+<form action=""  enctype="multipart/form-data">
   {% csrf_token%}
   <div class="modal" id="create_account">
     <div class="modal-dialog modal-xl modal-dialog-centered " role="document">
@@ -1537,8 +1538,11 @@ textarea {
         </div>
         <div class="row">
           <div class="col-sm-12">
-            <input class="btn btn-success" type="submit" value="Save" id="account_submit">           
-            <input class="btn btn-light ml-3" type="reset" value="Cancel">
+            <!-- <input class="btn btn-success" type="submit" value="Save" id="account_submit"> -->
+            <button class="btn  btn-success"
+            type="submit" data-dismiss="modal" id="account_submit">Submit
+            </button> 
+            <input class="btn btn-light ml-3" type="reset" value="Reset">
           </div>
         </div> 
       </div>
@@ -2245,11 +2249,197 @@ textarea {
       )
 
     }
-
-
-    
-    
 };
+// // account
+var enteredAccountName = ""; // Define a global variable to store the entered account name
+$(document).on("click","#account_submit",function(){
+$.ajax({
+    type: "POST",
+    url: "{% url 'add_accountE' %}",
+    data: {
+      account_type: $("#soValue1").val(),
+      account_name: $("#account_name").val(),
+      account_code: $("#account_code").val(),
+      watchlist:$("#watchlist").val(),
+      description: $("#description").val(),
+      parent_account:$("#parent_account").val(),
+      credit_no:$("#credit_no").val(),
+      sub_account:$("#sub_account").val(),
+      bank_account_no:$("#account_no").val(),
+      currency:$("#currency").val(),
+
+      csrfmiddlewaretoken: "{{ csrf_token }}"
+    },
+    success: function(response) {
+      // document.getElementById("create_account").reset();
+      enteredAccountName = $("#account_name").val(); // Update the global variable with the entered account name
+      reloadExpenseAccounts(); // No need to pass any parameter here
+    },
+  });
+
+function reloadExpenseAccounts() {
+  $.ajax({
+    url: "{% url 'account_dropdownE' %}",
+    type: "GET",
+    dataType: "json",
+    data: $(this).serialize(),
+    csrfmiddlewaretoken: '{{ csrf_token }}',
+    success: function(data) {
+      var dropdown = $('#expense_account');
+      dropdown.empty();
+      dropdown.append('<option value="">-- Select Expense Account --</option>');
+    
+      dropdown.append(` <optgroup class=""label="Accounts Payable">
+                        <option value='Accounts Payable'>Accounts Payable</option>
+                      </optgroup>
+  
+                      <optgroup class="" label="Accounts Receivable">
+                        <option value='Accounts Receivable'>Accounts Receivable</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Current Asset">
+                        <option value='Advance Tax'>Advance Tax</option>
+                        <option value='Employee Advance'>Employee Advance</option>
+                        <option value='Prepaid Expences'>Prepaid Expences</option>
+                        <option value='GST TCS Receivable'>GST TCS Receivable</option>
+                        <option value='GST TDS Receivable'>GST TDS Receivable</option>
+                        <option value='Input Tax Credits'>Input Tax Credits</option>
+                        <option value='Input CGST'>Input CGST</option>
+                        <option value='Input IGST'>Input IGST</option>
+                        <option value='Input SGST'>Input SGST</option>
+                        <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
+                        <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
+                        <option value='TDS Receivable'>TDS Receivable</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Expense">
+                        <option value='Advertising and Marketing'>Advertising and Marketing</option>
+                        <option value='Automobile Expense'>Automobile Expense</option>
+                        <option value='Bad Debt'>Bad Debt</option>
+                        <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
+                        <option value='Consultant Expense'>Consultant Expense</option>
+                        <option value='Credit Card Expense'>Credit Card Expense</option>
+                        <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
+                        <option value='Janitorial Expences'>Janitorial Expences</option>
+                        <option value='Lodging'>Lodging</option>
+                        <option value='Meals and Entertainment'>Meals and Entertainment</option>
+                        <option value='Office Supplies'>Office Supplies</option>
+                        <option value=0>Other Expenses</option>
+                        <option value='Other Expenses'>Postage</option>
+                        <option value='Printing and Stationery'>Printing and Stationery</option>
+                        <option value='Rent Expense'>Rent Expense</option>
+                        <option value='Repair and Maintenance'>Repair and Maintenance</option>
+                        <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
+                        <option value='Telephone Expense'>Telephone Expense</option>
+                        <option value='Travel Expense'>Travel Expense</option>
+                        <option value='Uncategorized'>Uncategorized</option>
+                        <option value='Contract Assets'>Contract Assets</option>
+                        <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
+                        <option value='Merchandise'>Merchandise</option>
+                        <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
+                        <option value='Transpotaion Expense'>Transpotaion Expense</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Cost of Goods Sold">
+                        <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
+                        <option value='Job Costing'>Job Costing</option>
+                        <option value='Labor'>Labor</option>
+                        <option value='Materials'>Materials</option>
+                        <option value='Subcontractor'>Subcontractor</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Income">
+                        <option value='Discount'>Discount</option>
+                        <option value='General Income'>General Income</option>
+                        <option value='Interest Income'>Interest Income</option>
+                        <option value='Late Fee Income'>Late Fee Income</option>
+                        <option value='Other Charges'>Other Charges</option>
+                        <option value='Sales'>Sales</option>
+                        <option value='Shipping Charge'>Shipping Charge</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Equity">
+                        <option value='Drawings'>Drawings</option>
+                        <option value='Opening Balance Offset'>Opening Balance Offset</option>
+                        <option value="Owner's Equity">Owner's Equity</option>
+                        <option value='Retained Earnings'>Retained Earnings</option>
+                        <option value='Capital Stock'>Capital Stock</option>
+                        <option value='Distributions'>Distributions</option>
+                        <option value='Dividends Paid'>Dividends Paid</option>
+                        <option value='Investments'>Investments</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Current Liability">
+                        <option value='Employee Reimbursements'>Employee Reimbursements</option>
+                        <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
+                        <option value='Tax Payable'>Tax Payable</option>
+                        <option value='Unearned Revenue'>Unearned Revenue</option>
+                        <option value='GST Payable'>GST Payable</option>
+                        <option value='Output CGST'>Output CGST</option>
+                        <option value='Output IGST'>Output IGST</option>
+                        <option value='Output SGST'>Output SGST</option>
+                        <option value='TDS Payable'>TDS Payable</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Expense">
+                        <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Fixed Asset">
+                        <option value='Furniture and Equipment'>Furniture and Equipment</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Stock">
+                        <option value='Inventory Asset'>Inventory Asset</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Cash">
+                        <option value='Petty Cash'>Petty Cash</option>
+                        <option value='Undeposited Funds'>Undeposited Funds</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Liability">
+                        <option value='Tag Adjustments'>Tag Adjustments</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Long Term Liability">
+                        <option value='Construction Loans'>Construction Loans</option>
+                        <option value='Mortgages'>Mortgages</option>
+                      </optgroup>`);
+      
+     
+        $.each(data, function(key, value) {
+        var accountType = value.account_type;
+        // var option = $('<option></option>').attr('value', key).text(value.account_name);
+        var option = $('<option></option>').attr('value', value.account_name).text(value.account_name);
+        var optgroup = dropdown.find('optgroup[label="' + accountType + '"]');
+
+        if (optgroup.length === 0) {
+          optgroup = $('<optgroup></optgroup>').attr('label', accountType);
+          dropdown.append(optgroup);
+        }
+
+        optgroup.append(option);
+      });
+      
+      // Check if there's an entered display name and select it in the dropdown
+      if (enteredAccountName) {
+        dropdown.find('option').filter(function() {
+          return $(this).text() === enteredAccountName;
+        }).prop('selected', true);
+      }
+
+     
+    },
+    error: function(xhr, status, error) {
+      console.error(xhr.responseText);
+    }
+  });
+}
+});
+$(document).ready(function() {
+  reloadExpenseAccounts();
+});
 </script>
 
 <!-- vendor -->
@@ -3656,35 +3846,54 @@ function reloadPayment() {
     }
   });
 }
-// account
+// // account
 var enteredAccountName = ""; // Define a global variable to store the entered account name
-// $(document).on("click","#account_submit",function(){
-  $(document).on("click", "#save_expense", function(e) {
-  e.preventDefault(); // Prevent the default form submission
-  $.ajax({
+$(document).on("click","#account_submit",function(){
+$.ajax({
     type: "POST",
     url: "{% url 'add_accountE' %}",
     data: {
-      account_type: $("#account_type").val(),
+      account_type: $("#soValue1").val(),
       account_name: $("#account_name").val(),
-      account_code: $("#code").val(),
+      account_code: $("#account_code").val(),
       watchlist:$("#watchlist").val(),
       description: $("#description").val(),
       parent_account:$("#parent_account").val(),
+      parent_account:$("#parent_account22").val(),
+      parent_account:$("#parent_account33").val(),
+      parent_account:$("#parent_account44").val(),
+      parent_account:$("#parent_account55").val(),
+      parent_account:$("#parent_account66").val(),
+      parent_account:$("#parent_account77").val(),
+      parent_account:$("#parent_account88").val(),
+      parent_account:$("#parent_account99").val(),
+      parent_account:$("#parent_account100").val(),
+      parent_account:$("#parent_account111").val(),
+      parent_account:$("#parent_account222").val(),
       credit_no:$("#credit_no").val(),
       sub_account:$("#sub_account").val(),
+      sub_account:$("#sub_account22").val(),
+      sub_account:$("#sub_account33").val(),
+      sub_account:$("#sub_account44").val(),
+      sub_account:$("#sub_account55").val(),
+      sub_account:$("#sub_account66").val(),
+      sub_account:$("#sub_account77").val(),
+      sub_account:$("#sub_account88").val(),
+      sub_account:$("#sub_account99").val(),
+      sub_account:$("#sub_account100").val(),
+      sub_account:$("#sub_account111").val(),
+      sub_account:$("#sub_account222").val(),
       bank_account_no:$("#account_no").val(),
       currency:$("#currency").val(),
 
       csrfmiddlewaretoken: "{{ csrf_token }}"
     },
     success: function(response) {
-      document.getElementById("create_account").reset();
+      // document.getElementById("create_account").reset();
       enteredAccountName = $("#account_name").val(); // Update the global variable with the entered account name
       reloadExpenseAccounts(); // No need to pass any parameter here
     },
   });
-
 
 function reloadExpenseAccounts() {
   $.ajax({
@@ -3697,10 +3906,130 @@ function reloadExpenseAccounts() {
       var dropdown = $('#expense_account');
       dropdown.empty();
       dropdown.append('<option value="">-- Select Expense Account --</option>');
+    
+      dropdown.append(` <optgroup class=""label="Accounts Payable">
+                        <option value='Accounts Payable'>Accounts Payable</option>
+                      </optgroup>
+  
+                      <optgroup class="" label="Accounts Receivable">
+                        <option value='Accounts Receivable'>Accounts Receivable</option>
+                      </optgroup>
 
-      $.each(data, function(key, value) {
+                      <optgroup class="" label="Other Current Asset">
+                        <option value='Advance Tax'>Advance Tax</option>
+                        <option value='Employee Advance'>Employee Advance</option>
+                        <option value='Prepaid Expences'>Prepaid Expences</option>
+                        <option value='GST TCS Receivable'>GST TCS Receivable</option>
+                        <option value='GST TDS Receivable'>GST TDS Receivable</option>
+                        <option value='Input Tax Credits'>Input Tax Credits</option>
+                        <option value='Input CGST'>Input CGST</option>
+                        <option value='Input IGST'>Input IGST</option>
+                        <option value='Input SGST'>Input SGST</option>
+                        <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
+                        <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
+                        <option value='TDS Receivable'>TDS Receivable</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Expense">
+                        <option value='Advertising and Marketing'>Advertising and Marketing</option>
+                        <option value='Automobile Expense'>Automobile Expense</option>
+                        <option value='Bad Debt'>Bad Debt</option>
+                        <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
+                        <option value='Consultant Expense'>Consultant Expense</option>
+                        <option value='Credit Card Expense'>Credit Card Expense</option>
+                        <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
+                        <option value='Janitorial Expences'>Janitorial Expences</option>
+                        <option value='Lodging'>Lodging</option>
+                        <option value='Meals and Entertainment'>Meals and Entertainment</option>
+                        <option value='Office Supplies'>Office Supplies</option>
+                        <option value=0>Other Expenses</option>
+                        <option value='Other Expenses'>Postage</option>
+                        <option value='Printing and Stationery'>Printing and Stationery</option>
+                        <option value='Rent Expense'>Rent Expense</option>
+                        <option value='Repair and Maintenance'>Repair and Maintenance</option>
+                        <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
+                        <option value='Telephone Expense'>Telephone Expense</option>
+                        <option value='Travel Expense'>Travel Expense</option>
+                        <option value='Uncategorized'>Uncategorized</option>
+                        <option value='Contract Assets'>Contract Assets</option>
+                        <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
+                        <option value='Merchandise'>Merchandise</option>
+                        <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
+                        <option value='Transpotaion Expense'>Transpotaion Expense</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Cost of Goods Sold">
+                        <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
+                        <option value='Job Costing'>Job Costing</option>
+                        <option value='Labor'>Labor</option>
+                        <option value='Materials'>Materials</option>
+                        <option value='Subcontractor'>Subcontractor</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Income">
+                        <option value='Discount'>Discount</option>
+                        <option value='General Income'>General Income</option>
+                        <option value='Interest Income'>Interest Income</option>
+                        <option value='Late Fee Income'>Late Fee Income</option>
+                        <option value='Other Charges'>Other Charges</option>
+                        <option value='Sales'>Sales</option>
+                        <option value='Shipping Charge'>Shipping Charge</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Equity">
+                        <option value='Drawings'>Drawings</option>
+                        <option value='Opening Balance Offset'>Opening Balance Offset</option>
+                        <option value="Owner's Equity">Owner's Equity</option>
+                        <option value='Retained Earnings'>Retained Earnings</option>
+                        <option value='Capital Stock'>Capital Stock</option>
+                        <option value='Distributions'>Distributions</option>
+                        <option value='Dividends Paid'>Dividends Paid</option>
+                        <option value='Investments'>Investments</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Current Liability">
+                        <option value='Employee Reimbursements'>Employee Reimbursements</option>
+                        <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
+                        <option value='Tax Payable'>Tax Payable</option>
+                        <option value='Unearned Revenue'>Unearned Revenue</option>
+                        <option value='GST Payable'>GST Payable</option>
+                        <option value='Output CGST'>Output CGST</option>
+                        <option value='Output IGST'>Output IGST</option>
+                        <option value='Output SGST'>Output SGST</option>
+                        <option value='TDS Payable'>TDS Payable</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Expense">
+                        <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Fixed Asset">
+                        <option value='Furniture and Equipment'>Furniture and Equipment</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Stock">
+                        <option value='Inventory Asset'>Inventory Asset</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Cash">
+                        <option value='Petty Cash'>Petty Cash</option>
+                        <option value='Undeposited Funds'>Undeposited Funds</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Other Liability">
+                        <option value='Tag Adjustments'>Tag Adjustments</option>
+                      </optgroup>
+
+                      <optgroup class="" label="Long Term Liability">
+                        <option value='Construction Loans'>Construction Loans</option>
+                        <option value='Mortgages'>Mortgages</option>
+                      </optgroup>`);
+      
+     
+        $.each(data, function(key, value) {
         var accountType = value.account_type;
-        var option = $('<option></option>').attr('value', key).text(value.account_name);
+        // var option = $('<option></option>').attr('value', key).text(value.account_name);
+        var option = $('<option></option>').attr('value', value.account_name).text(value.account_name);
         var optgroup = dropdown.find('optgroup[label="' + accountType + '"]');
 
         if (optgroup.length === 0) {
@@ -3726,7 +4055,274 @@ function reloadExpenseAccounts() {
   });
 }
 });
-// Call the reloadExpenseAccounts function after the page loads
+
+// var enteredAccountName = ""; // Define a global variable to store the entered account name
+
+// // $(document).on("click", "#account_submit", function (e) {
+// //   e.preventDefault(); // Prevent the default form submission
+// $(document).on("click","#account_submit",function(){
+//   var data = {
+//         account_type: $("#account_type").val(),
+//         account_name: $("#account_name").val(),
+//         account_code: $("#code").val(),
+//         watchlist:$("#watchlist").val(),
+//         description: $("#description").val(),
+//         parent_account:$("#parent_account").val(),
+//         credit_no:$("#credit_no").val(),
+//         sub_account:$("#sub_account").val(),
+//         bank_account_no:$("#account_no").val(),
+//         currency:$("#currency").val(),
+//         csrfmiddlewaretoken: "{{ csrf_token }}",
+//   };
+
+//   // Add conditions based on account_type
+//   if (data.account_type === "Other Current Assets") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account").val();
+//     data.parent_account = $("#parent_account").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Cash") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account22").val();
+//     data.parent_account = $("#parent_account22").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Fixed Assets") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account33").val();
+//     data.parent_account = $("#parent_account33").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Stock") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account44").val();
+//     data.parent_account = $("#parent_account44").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Other Current Liability") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account55").val();
+//     data.parent_account = $("#parent_account55").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Long Term Liability") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account66").val();
+//     data.parent_account = $("#parent_account66").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Other Liability") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account77").val();
+//     data.parent_account = $("#parent_account77").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Equity") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account88").val();
+//     data.parent_account = $("#parent_account88").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Income") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account99").val();
+//     data.parent_account = $("#parent_account99").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Expense") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account100").val();
+//     data.parent_account = $("#parent_account100").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   }else if (data.account_type === "Cost Of Goods Sold") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account111").val();
+//     data.parent_account = $("#parent_account111").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   } else if (data.account_type === "Other Expense") {
+//     data.credit_no = $("#credit_no").val();
+//     data.sub_account = $("#sub_account222").val();
+//     data.parent_account = $("#parent_account222").val();
+//     data.account_number = $("#account_no").val();
+//     data.currency = $("#currency").val();
+//   }
+ 
+//   $.ajax({
+//     type: "POST",
+//     url: "{% url 'add_accountE' %}",
+//     data: data,
+//     success: function (response) {
+//       document.getElementById("create_account").reset();
+//       enteredAccountName = data.account_name; // Update the global variable with the entered account name
+//       reloadExpenseAccounts(); // No need to pass any parameter here
+//     },
+//     error: function (xhr, status, error) {
+//       console.error(xhr.responseText);
+//     },
+//   });
+// });
+
+
+
+// function reloadExpenseAccounts() {
+// console.log("Function called"); // Add this line
+//   $.ajax({
+//     url: "{% url 'account_dropdownE' %}",
+//     type: "GET",
+//     dataType: "json",
+//     data: $(this).serialize(), // Assuming this line is not necessary, you can remove it
+//     csrfmiddlewaretoken: '{{ csrf_token }}',
+//     success: function (data) {
+//       var dropdown = $('#expense_account');
+//       dropdown.empty();
+//       dropdown.append('<option value="">-- Select Expense Account --</option>');
+//             dropdown.append(` <optgroup class=""label="Accounts Payable">
+//                         <option value='Accounts Payable'>Accounts Payable</option>
+//                       </optgroup>
+  
+//                       <optgroup class="" label="Accounts Receivable">
+//                         <option value='Accounts Receivable'>Accounts Receivable</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Other Current Asset">
+//                         <option value='Advance Tax'>Advance Tax</option>
+//                         <option value='Employee Advance'>Employee Advance</option>
+//                         <option value='Prepaid Expences'>Prepaid Expences</option>
+//                         <option value='GST TCS Receivable'>GST TCS Receivable</option>
+//                         <option value='GST TDS Receivable'>GST TDS Receivable</option>
+//                         <option value='Input Tax Credits'>Input Tax Credits</option>
+//                         <option value='Input CGST'>Input CGST</option>
+//                         <option value='Input IGST'>Input IGST</option>
+//                         <option value='Input SGST'>Input SGST</option>
+//                         <option value='Reverse Charge Input Tax but not Due'>Reverse Charge Input Tax but not Due</option>
+//                         <option value='Sales to Customers(Cash)'>Sales to Customers(Cash)</option>
+//                         <option value='TDS Receivable'>TDS Receivable</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Expence">
+//                         <option value='Advertising and Marketing'>Advertising and Marketing</option>
+//                         <option value='Automobile Expense'>Automobile Expense</option>
+//                         <option value='Bad Debt'>Bad Debt</option>
+//                         <option value='Bank Fees and Charges'>Bank Fees and Charges</option>
+//                         <option value='Consultant Expense'>Consultant Expense</option>
+//                         <option value='Credit Card Expense'>Credit Card Expense</option>
+//                         <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
+//                         <option value='Janitorial Expences'>Janitorial Expences</option>
+//                         <option value='Lodging'>Lodging</option>
+//                         <option value='Meals and Entertainment'>Meals and Entertainment</option>
+//                         <option value='Office Supplies'>Office Supplies</option>
+//                         <option value=0>Other Expenses</option>
+//                         <option value='Other Expenses'>Postage</option>
+//                         <option value='Printing and Stationery'>Printing and Stationery</option>
+//                         <option value='Rent Expense'>Rent Expense</option>
+//                         <option value='Repair and Maintenance'>Repair and Maintenance</option>
+//                         <option value='Salaries and Employee Wages'>Salaries and Employee Wages</option>
+//                         <option value='Telephone Expense'>Telephone Expense</option>
+//                         <option value='Travel Expense'>Travel Expense</option>
+//                         <option value='Uncategorized'>Uncategorized</option>
+//                         <option value='Contract Assets'>Contract Assets</option>
+//                         <option value='Depreciation and Amortisation'>Depreciation and Amortisation</option>
+//                         <option value='Merchandise'>Merchandise</option>
+//                         <option value='Raw Materials and Consumables'>Raw Materials and Consumables</option>
+//                         <option value='Transpotaion Expense'>Transpotaion Expense</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Cost of Goods Sold">
+//                         <option value='Cost of Goods Sold'>Cost of Goods Sold</option>
+//                         <option value='Job Costing'>Job Costing</option>
+//                         <option value='Labor'>Labor</option>
+//                         <option value='Materials'>Materials</option>
+//                         <option value='Subcontractor'>Subcontractor</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Income">
+//                         <option value='Discount'>Discount</option>
+//                         <option value='General Income'>General Income</option>
+//                         <option value='Interest Income'>Interest Income</option>
+//                         <option value='Late Fee Income'>Late Fee Income</option>
+//                         <option value='Other Charges'>Other Charges</option>
+//                         <option value='Sales'>Sales</option>
+//                         <option value='Shipping Charge'>Shipping Charge</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Equity">
+//                         <option value='Drawings'>Drawings</option>
+//                         <option value='Opening Balance Offset'>Opening Balance Offset</option>
+//                         <option value="Owner's Equity">Owner's Equity</option>
+//                         <option value='Retained Earnings'>Retained Earnings</option>
+//                         <option value='Capital Stock'>Capital Stock</option>
+//                         <option value='Distributions'>Distributions</option>
+//                         <option value='Dividends Paid'>Dividends Paid</option>
+//                         <option value='Investments'>Investments</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Other Current Liability">
+//                         <option value='Employee Reimbursements'>Employee Reimbursements</option>
+//                         <option value='Opening Balance Adjustments'>Opening Balance Adjustments</option>
+//                         <option value='Tax Payable'>Tax Payable</option>
+//                         <option value='Unearned Revenue'>Unearned Revenue</option>
+//                         <option value='GST Payable'>GST Payable</option>
+//                         <option value='Output CGST'>Output CGST</option>
+//                         <option value='Output IGST'>Output IGST</option>
+//                         <option value='Output SGST'>Output SGST</option>
+//                         <option value='TDS Payable'>TDS Payable</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Other Expense">
+//                         <option value='Exchange Gain or Loss'>Exchange Gain or Loss</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Fixed Asset">
+//                         <option value='Furniture and Equipment'>Furniture and Equipment</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Stock">
+//                         <option value='Inventory Asset'>Inventory Asset</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Cash">
+//                         <option value='Petty Cash'>Petty Cash</option>
+//                         <option value='Undeposited Funds'>Undeposited Funds</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Other Liability">
+//                         <option value='Tag Adjustments'>Tag Adjustments</option>
+//                       </optgroup>
+
+//                       <optgroup class="" label="Long Term Liability">
+//                         <option value='Construction Loans'>Construction Loans</option>
+//                         <option value='Mortgages'>Mortgages</option>
+//                       </optgroup>`);
+
+//       $.each(data, function (key, value) {
+//         var accountType = value.account_type;
+//         var option = $('<option></option>').attr('value', key).text(value.account_name);
+//         var optgroup = dropdown.find('optgroup[label="' + accountType + '"]');
+
+//         if (optgroup.length === 0) {
+//           optgroup = $('<optgroup></optgroup>').attr('label', accountType);
+//           dropdown.append(optgroup);
+//         }
+
+//         optgroup.append(option);
+//       });
+
+//       // Check if there's an entered display name and select it in the dropdown
+//       if (enteredAccountName) {
+//         dropdown.find('option').filter(function () {
+//           return $(this).text() === enteredAccountName;
+//         }).prop('selected', true);
+//       }
+//     },
+//     error: function (xhr, status, error) {
+//       console.error(xhr.responseText);
+//     },
+//   });
+// }
+
 
 </script>
 <!-- <div class="popup" id="popup1">
