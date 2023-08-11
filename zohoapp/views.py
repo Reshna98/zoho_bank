@@ -4442,4 +4442,28 @@ def pay_dropdownE(request):
     for option in option_objects:
         options[option.id] = [option.Terms]
 
-    return JsonResponse(options)   
+    return JsonResponse(options)  
+
+# def get_vendor_gst_treatment(request):
+#     v_user = request.user
+#     user = User.objects.get(id=v_user.id)
+  
+#     vendor = request.GET.get('vendor')
+#     vendor = vendor_tableE.objects.get(vendor_display_name=vendor, user=user)
+#     gst_treatment = vendor.gst_treatment
+   
+#     return JsonResponse({'gst_treatment':gst_treatment})
+def get_vendor_gst_treatment(request):
+    v_user = request.user
+    user = User.objects.get(id=v_user.id)
+
+    vendor_name = request.GET.get('vendor')  # Make sure the parameter name matches what you're sending
+    try:
+        vendor = vendor_tableE.objects.get(vendor_display_name=vendor_name, user=user)
+        gst_treatment = vendor.gst_treatment
+    except vendor_tableE.DoesNotExist:
+        gst_treatment = None
+
+    print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}")
+
+    return JsonResponse({'gst_treatment': gst_treatment})

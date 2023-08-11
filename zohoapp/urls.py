@@ -206,6 +206,7 @@ urlpatterns = [
     path('save_expense/', views.save_expense, name='save_expense'),
     path('expense_pay', views.expense_pay, name='expense_pay'),
     path('pay_dropdownE', views.pay_dropdownE, name='pay_dropdownE'),
+    path('get_vendor_gst_treatment', views.get_vendor_gst_treatment, name='get_vendor_gst_treatment'),
    
 
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
