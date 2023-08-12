@@ -3398,6 +3398,7 @@ textarea {
     });
   });
 
+
 var enteredVName = "";
 $(document).on("click","#vendorSave",function(){
   $.ajax({
@@ -3447,6 +3448,8 @@ $(document).on("click","#vendorSave",function(){
         document.getElementById("modalVendor").reset();
         enteredVName = $('#vdisplayname').text();
         reloadVendor();
+        fetchVendorGSTTreatment();
+        
       },
   });        
 });
@@ -3471,14 +3474,74 @@ function reloadVendor() {
         dropdown.find('option').filter(function() {
           return $(this).text() === enteredVName;
         }).prop('selected', true);
-        fetchVendorGSTTreatment();
+        
       }
+      //used for call 
+      $(document).ready(function() {
+        function fetchVendorGSTTreatment() {
+            var selectedVendor = $("#vendor").val();
+            console.log("Selected Vendor:", selectedVendor);
+            $.ajax({
+                type: "GET",
+                url: "{% url 'get_vendor_gst_treatment' %}", 
+                data: {
+                    vendor: selectedVendor
+                },
+               
+                success: function (response) {
+                    var gstTreatment = response.gst_treatment;
+                    $("#gst_treatment").val(gstTreatment);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+       
+        fetchVendorGSTTreatment();
+        $("#vendor").change(function() {
+            fetchVendorGSTTreatment();
+        });
+    });
+
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
     }
   });
 }
+//gst
+
+      $(document).ready(function() {
+        function fetchVendorGSTTreatment() {
+            var selectedVendor = $("#vendor").val();
+            console.log("Selected Vendor:", selectedVendor);
+            $.ajax({
+                type: "GET",
+                url: "{% url 'get_vendor_gst_treatment' %}", 
+                data: {
+                    vendor: selectedVendor
+                },
+               
+                success: function (response) {
+                    var gstTreatment = response.gst_treatment;
+                    $("#gst_treatment").val(gstTreatment);
+                },
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        }
+
+       
+        fetchVendorGSTTreatment();
+
+        // Call the function when the vendor selection changes
+        $("#vendor").change(function() {
+            fetchVendorGSTTreatment();
+        });
+    });
 function addressSame(){
     var chkbtn = document.getElementById('vokay');
     if (chkbtn.checked == true) {
@@ -3593,11 +3656,13 @@ $.ajax({
           return $(this).text() === enteredCName;
         }).prop('selected', true);
       }
+      
   },
   error: function(xhr, status, error) {
   console.error(xhr.responseText);
   }
 });
+
 }
 
 //--------payment terms modal-----------
@@ -3871,9 +3936,41 @@ function reloadExpenseAccounts() {
   });
 }
 });
-// / gst
+$(document).ready(function() {
+    function updateTaxDropdown() {
+        var selectedState = $("#state").val();
+        var selectedDestination = $("#destination_of_supply").val();
+        var taxDropdown = $("#tax");
+        
+        // Clear and reset the tax dropdown
+        taxDropdown.empty();
+        taxDropdown.append('<option value="">-- Select Tax --</option>');
+        
+        if (selectedState === selectedDestination) {
+            taxDropdown.append('<option value="">Non-Taxable</option>');
+            taxDropdown.append('<optgroup label="Taxes">');
+            taxDropdown.append('<option value="IGST0[0%]">IGST0[0%]</option>');
+            // Add other tax options...
+            taxDropdown.append('</optgroup>');
+        } else {
+            taxDropdown.append('<optgroup label="Tax Group">');
+            taxDropdown.append('<option value="GST0[0%]">GST0[0%]</option>');
+            // Add other tax group options...
+            taxDropdown.append('</optgroup>');
+        }
+    }
 
-// $(document).ready(function() {
+    // Call updateTaxDropdown when the state or destination selection changes
+    $("#state, #destination_of_supply").change(function() {
+        updateTaxDropdown();
+    });
+
+    // Call updateTaxDropdown on page load and whenever state or destination changes
+    updateTaxDropdown();
+});
+
+// / gst
+ // / $(document).ready(function() {
 //  
 //   function fetchVendorGSTTreatment() {
 //     var gst_treatment = document.getElementById("gst_treatment").value 
@@ -3923,36 +4020,6 @@ function reloadExpenseAccounts() {
 //   
 //   fetchVendorGSTTreatment();
 // });
-
-$(document).ready(function() {
-        function fetchVendorGSTTreatment() {
-            var selectedVendor = $("#vendor").val();
-            console.log("Selected Vendor:", selectedVendor);
-            $.ajax({
-                type: "GET",
-                url: "{% url 'get_vendor_gst_treatment' %}", 
-                data: {
-                    vendor: selectedVendor
-                },
-                success: function (response) {
-                    var gstTreatment = response.gst_treatment;
-                    $("#gst_treatment").val(gstTreatment);
-                },
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-            });
-        }
-
-       
-        fetchVendorGSTTreatment();
-
-        // Call the function when the vendor selection changes
-        $("#vendor").change(function() {
-            fetchVendorGSTTreatment();
-        });
-    });
-
 // var enteredAccountName = ""; // Define a global variable to store the entered account name
 
 // // $(document).on("click", "#account_submit", function (e) {

@@ -555,6 +555,7 @@ class payment_termsE(models.Model):
 
 class ExpenseE(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
+    company = models.ForeignKey(company_details,on_delete=models.CASCADE,null=True,blank=True)
     expense_account=models.CharField(max_length=100,default="")
     # expense_account=models.ForeignKey(AccountE,on_delete=models.CASCADE)
     amount=models.TextField(max_length=255)

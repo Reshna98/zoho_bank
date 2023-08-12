@@ -149,9 +149,9 @@ def edit_profile(request,pk):
 
     if request.method == "POST":
 
-        user1.first_name = capfirst(request.POST.get('f_name'))
-        user1.last_name  = capfirst(request.POST.get('l_name'))
-        user1.username = request.POST.get('uname')
+        # user1.first_name = capfirst(request.POST.get('f_name'))
+        # user1.last_name  = capfirst(request.POST.get('l_name'))
+        # user1.username = request.POST.get('uname')
         # pat.age = request.POST.get('age')
         # pat.address = capfirst(request.POST.get('address'))
         # pat.gender = request.POST.get('gender')
@@ -162,10 +162,29 @@ def edit_profile(request,pk):
         # #pat.doctor = doctor.objects.get(id = fkey1)
         # if len(request.FILES)!=0 :
         #     doc.profile_pic = request.FILES.get('file')
-
+        user1.first_name = capfirst(request.POST.get('f_name'))
+        user1.last_name  = capfirst(request.POST.get('l_name'))
+        user1.email = request.POST.get('email')
+        company.contact_number = request.POST.get('cnum')
+        company.address = capfirst(request.POST.get('ards'))
+        company.company_name = request.POST.get('comp_name')
+        company.company_email = request.POST.get('comp_email')
+        company.city = request.POST.get('city')
+        company.state = request.POST.get('state')
+        company.country = request.POST.get('country')
+        company.pincode = request.POST.get('pinc')
+        company.gst_num = request.POST.get('gst')
+        company.pan_num = request.POST.get('pan')
+        company.business_name = request.POST.get('bname')
+        company.company_type = request.POST.get('comp_type')
+        if len(request.FILES)!=0 :
+            company.profile_pic = request.FILES.get('file')
 
         company.save()
         user1.save()
+
+        # company.save()
+        # user1.save()
         return redirect('view_profile')
 
     context = {
@@ -4457,7 +4476,7 @@ def get_vendor_gst_treatment(request):
     v_user = request.user
     user = User.objects.get(id=v_user.id)
 
-    vendor_name = request.GET.get('vendor')  # Make sure the parameter name matches what you're sending
+    vendor_name = request.GET.get('vendor') 
     try:
         vendor = vendor_tableE.objects.get(vendor_display_name=vendor_name, user=user)
         gst_treatment = vendor.gst_treatment
@@ -4467,3 +4486,13 @@ def get_vendor_gst_treatment(request):
     print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}")
 
     return JsonResponse({'gst_treatment': gst_treatment})
+
+def get_company_state(request):
+    user = request.user
+    try:
+        company = company_details.objects.get(user=user)
+        state = company.state
+    except company_details.DoesNotExist:
+        state = None
+
+    return JsonResponse({"state": state})
