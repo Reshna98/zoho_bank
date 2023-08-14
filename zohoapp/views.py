@@ -4494,5 +4494,5 @@ def get_company_state(request):
         state = company.state
     except company_details.DoesNotExist:
         state = None
-
+    print("Fetched State:", state)
     return JsonResponse({"state": state})

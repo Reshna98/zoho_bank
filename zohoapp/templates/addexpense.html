@@ -667,41 +667,41 @@ textarea {
           <div class="col-sm-9">
             <select class="form-control" id="destination_of_supply" name="destination_of_supply">
               <option value="">-- Select Destination State --</option>
-              <option value="AN">Andaman and Nicobar Islands (AN)</option>
-              <option value="AP">Andhra Pradesh (AP)</option>
-              <option value="AR">Arunachal Pradesh (AR)</option>
-              <option value="AS">Assam (AS)</option>
-              <option value="BR">Bihar (BR)</option>
-              <option value="CH">Chandigarh (CH)</option>
-              <option value="CT">Chhattisgarh (CT)</option>
-              <option value="DN">Dadra and Nagar Haveli and Daman and Diu (DN)</option>
-              <option value="DL">Delhi (DL)</option>
-              <option value="GA">Goa (GA)</option>
-              <option value="GJ">Gujarat (GJ)</option>
-              <option value="HR">Haryana (HR)</option>
-              <option value="HP">Himachal Pradesh (HP)</option>
-              <option value="JK">Jammu and Kashmir (JK)</option>
-              <option value="JH">Jharkhand (JH)</option>
-              <option value="KA">Karnataka (KA)</option>
-              <option value="KL">Kerala (KL)</option>
-              <option value="LD">Lakshadweep (LD)</option>
-              <option value="MP">Madhya Pradesh (MP)</option>
-              <option value="MH">Maharashtra (MH)</option>
-              <option value="MN">Manipur (MN)</option>
-              <option value="ML">Meghalaya (ML)</option>
-              <option value="MZ">Mizoram (MZ)</option>
-              <option value="NL">Nagaland (NL)</option>
-              <option value="OR">Odisha (OR)</option>
-              <option value="PY">Puducherry (PY)</option>
-              <option value="PB">Punjab (PB)</option>
-              <option value="RJ">Rajasthan (RJ)</option>
-              <option value="SK">Sikkim (SK)</option>
-              <option value="TN">Tamil Nadu (TN)</option>
-              <option value="TG">Telangana (TG)</option>
-              <option value="TR">Tripura (TR)</option>
-              <option value="UP">Uttar Pradesh (UP)</option>
-              <option value="UK">Uttarakhand (UK)</option>
-              <option value="WB">West Bengal (WB)</option>
+              <option value="Andaman and Nicobar Islands (AN)">Andaman and Nicobar Islands (AN)</option>
+              <option value="Andhra Pradesh (AP)">Andhra Pradesh (AP)</option>
+              <option value="Arunachal Pradesh (AR)">Arunachal Pradesh (AR)</option>
+              <option value="Assam (AS)">Assam (AS)</option>
+              <option value="Bihar (BR)">Bihar (BR)</option>
+              <option value="Chandigarh (CH)">Chandigarh (CH)</option>
+              <option value="Chhattisgarh (CT)">Chhattisgarh (CT)</option>
+              <option value="Dadra and Nagar Haveli and Daman and Diu (DN)">Dadra and Nagar Haveli and Daman and Diu (DN)</option>
+              <option value="Delhi (DL)">Delhi (DL)</option>
+              <option value="Goa (GA)">Goa (GA)</option>
+              <option value="Gujarat (GJ)">Gujarat (GJ)</option>
+              <option value="Haryana (HR)">Haryana (HR)</option>
+              <option value="Himachal Pradesh (HP)">Himachal Pradesh (HP)</option>
+              <option value="Jammu and Kashmir (JK)">Jammu and Kashmir (JK)</option>
+              <option value="Jharkhand (JH)">Jharkhand (JH)</option>
+              <option value="Karnataka (KA)">Karnataka (KA)</option>
+              <option value="Kerala (KL)">Kerala (KL)</option>
+              <option value="Lakshadweep (LD)">Lakshadweep (LD)</option>
+              <option value="Madhya Pradesh (MP)">Madhya Pradesh (MP)</option>
+              <option value="Maharashtra (MH)">Maharashtra (MH)</option>
+              <option value="Manipur (MN)">Manipur (MN)</option>
+              <option value="Meghalaya (ML)">Meghalaya (ML)</option>
+              <option value="Mizoram (MZ)">Mizoram (MZ)</option>
+              <option value="Nagaland (NL)">Nagaland (NL)</option>
+              <option value="Odisha (OR)">Odisha (OR)</option>
+              <option value="Puducherry (PY)">Puducherry (PY)</option>
+              <option value="Punjab (PB)">Punjab (PB)</option>
+              <option value="Rajasthan (RJ)">Rajasthan (RJ)</option>
+              <option value="Sikkim (SK)">Sikkim (SK)</option>
+              <option value="Tamil Nadu (TN)">Tamil Nadu (TN)</option>
+              <option value="Telangana (TG)">Telangana (TG)</option>
+              <option value="Tripura (TR)">Tripura (TR)</option>
+              <option value="Uttar Pradesh (UP)">Uttar Pradesh (UP)</option>
+              <option value="Uttarakhand (UK)">Uttarakhand (UK)</option>
+              <option value="West Bengal (WB)">West Bengal (WB)</option>
             </select>
           </div>
         </div>
@@ -730,7 +730,7 @@ textarea {
           <div class="col-sm-9">
             <select class="form-control" id="tax" name="tax">
               <option value="">-- Select Tax --</option>
-              <option value="">Non-Taxable</option>
+              <!-- <option value="">Non-Taxable</option>
               <optgroup label="Taxes">
                 <option value="IGST0[0%]">IGST0[0%]</option>
                 <option value="IGST5[5%]">IGST5[5%]</option>
@@ -744,7 +744,7 @@ textarea {
                 <option value="GST12[12%]">GST12[12%]</option>
                 <option value="GST18[18%]">GST18[18%]</option>
                 <option value="GST28[28%]">GST28[28%]</option>
-              </optgroup>
+              </optgroup> -->
             </select>
           </div>
         </div>
@@ -3936,38 +3936,62 @@ function reloadExpenseAccounts() {
   });
 }
 });
+
+
 $(document).ready(function() {
-    function updateTaxDropdown() {
-        var selectedState = $("#state").val();
+    function updateTaxDropdown(state) {
+        var selectedState = state;
         var selectedDestination = $("#destination_of_supply").val();
         var taxDropdown = $("#tax");
-        
-        // Clear and reset the tax dropdown
+
+      
         taxDropdown.empty();
         taxDropdown.append('<option value="">-- Select Tax --</option>');
-        
-        if (selectedState === selectedDestination) {
-            taxDropdown.append('<option value="">Non-Taxable</option>');
-            taxDropdown.append('<optgroup label="Taxes">');
-            taxDropdown.append('<option value="IGST0[0%]">IGST0[0%]</option>');
-            // Add other tax options...
-            taxDropdown.append('</optgroup>');
-        } else {
-            taxDropdown.append('<optgroup label="Tax Group">');
-            taxDropdown.append('<option value="GST0[0%]">GST0[0%]</option>');
-            // Add other tax group options...
-            taxDropdown.append('</optgroup>');
+              if (selectedState.toLowerCase() === selectedDestination.toLowerCase() || selectedState.toLowerCase() === selectedDestination.toLowerCase().split(" ")[0]) {
+            // if (selectedState === selectedDestination) {
+                taxDropdown.append('<option value="">Non-Taxable</option>');
+                taxDropdown.append('<optgroup label="Tax Group">');
+                taxDropdown.append('<option value="GST0[0%]">GST0[0%]</option>');
+                taxDropdown.append('<option value="GST5[5%]">GST5[5%]</option>');
+                taxDropdown.append('<option value="GST12[12%]">GST12[12%]</option>');
+                taxDropdown.append('<option value="GST18[18%]">GST18[18%]</option>');
+                taxDropdown.append('<option value="GST28[28%]">GST28[28%]</option>');
+                taxDropdown.append('</optgroup>');
+            } else {
+              taxDropdown.append('<option value="">Non-Taxable</option>');
+                taxDropdown.append('<optgroup label="Taxes">');
+                taxDropdown.append('<option value="IGST0[0%]">IGST0[0%]</option>');
+                taxDropdown.append('<option value="IGST5[5%]">IGST5[5%]</option>');
+                taxDropdown.append('<option value="IGST12[12%]">IGST12[12%]</option>');
+                taxDropdown.append('<option value="IGST18[18%]">IGST18[18%]</option>');
+                taxDropdown.append('<option value="IGST28[28%]">IGST28[28%]</option>');
+                taxDropdown.append('</optgroup>');
+                
+            }
         }
-    }
 
-    // Call updateTaxDropdown when the state or destination selection changes
-    $("#state, #destination_of_supply").change(function() {
-        updateTaxDropdown();
+    // Fetch the state from the server
+    $.ajax({
+        type: "GET",
+        url: "{% url 'get_company_state' %}",
+        success: function(response) {
+            var state = response.state;
+            updateTaxDropdown(state); // Call the function with the fetched state
+
+            // Call updateTaxDropdown when the state or destination selection changes
+            $("#state, #destination_of_supply").change(function() {
+                updateTaxDropdown(state); // Call the function with the fetched state
+            });
+        },
+        error: function(xhr, status, error) {
+            console.error(error);
+        }
     });
 
-    // Call updateTaxDropdown on page load and whenever state or destination changes
+    // Call updateTaxDropdown on page load
     updateTaxDropdown();
 });
+
 
 // / gst
  // / $(document).ready(function() {
