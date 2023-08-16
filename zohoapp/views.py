@@ -3996,7 +3996,7 @@ def save_expense(request):
             # attachment_file = request.FILES.get('attachment')
             gst_treatment = request.POST.get('gst_treatment')
             destination_of_supply = request.POST.get('destination_of_supply')
-            reverse_charge = request.POST.get('reverse_charge',False)
+            reverse_charge = request.POST.get('reverse_charge')
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             # c = request.POST['c_name']
@@ -4288,8 +4288,7 @@ def edit_expensee(request,expense_id):
 
         if request.method == 'POST':
             date = request.POST.get('date')
-            select = request.POST['select']
-            expense_account = AccountE.objects.get(id=select)
+            expense_account = request.POST.get('expense_account')
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
             expense_type = request.POST.get('expense_type')
@@ -4312,12 +4311,16 @@ def edit_expensee(request,expense_id):
             vendor = vendor_tableE.objects.get(vendor_display_name=v)
             reporting_tags = request.POST.get('reporting_tags')
             taxamt = request.POST.get('taxamt', False)
-            image = request.FILES.get('image')
+            # image = request.FILES.get('image')
             # if 'image' in request.FILES:
             #     image = request.FILES['image']  # Set the uploaded image
             # else:
             #     image = None 
        
+            if request.FILES.get('image'):
+                image = request.FILES['image']
+            else:
+                image = None
 
             expense.date = date
             expense.expense_account = expense_account
@@ -4337,9 +4340,9 @@ def edit_expensee(request,expense_id):
             expense.customer_name = customer
             expense.reporting_tags = reporting_tags
             expense.vendor = vendor
-            # expense.image=image
-            if 'image' in request.FILES:
-                expense.image = request.FILES['image']
+            expense.image=image
+            # if 'image' in request.FILES:
+            #     expense.image = request.FILES['image']
 
             expense.save()
 
@@ -4349,7 +4352,7 @@ def edit_expensee(request,expense_id):
             c = addcustomerE.objects.all()
             v = vendor_tableE.objects.all()
             accounts = AccountE.objects.all()
-            account_types = set(AccountE.objects.values_list('type', flat=True))
+            account_types = set(AccountE.objects.values_list('account_type', flat=True))
 
             return render(request, 'editexpense.html', {'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
 
