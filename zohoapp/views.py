@@ -3973,6 +3973,7 @@ def expensepage(request):
     return render(request,'expense.html',context)
 
 def save_expense(request):
+    company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:
         if request.method == 'POST':
            
@@ -3995,16 +3996,17 @@ def save_expense(request):
                 sac = request.POST.get('sac')
             # attachment_file = request.FILES.get('attachment')
             gst_treatment = request.POST.get('gst_treatment')
+            gstin=request.POST.get('gstin',None)
             destination_of_supply = request.POST.get('destination_of_supply')
             reverse_charge = request.POST.get('reverse_charge')
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             # c = request.POST['c_name']
             c = request.POST.get('customer')
-            customer = addcustomerE.objects.get(customer_name=c)
+            customere = customer.objects.get(customerName=c)
 
             v= request.POST.get('vendor')
-            vendor=vendor_tableE.objects.get(vendor_display_name=v)
+            vendor=vendor_table.objects.get(vendor_display_name=v)
 
             # customer = addcustomer.objects.get(customer_id=c)
             taxamt = request.POST.get('taxamt',False)
@@ -4031,13 +4033,15 @@ def save_expense(request):
                 notes=notes,
                 hsn_code=hsn_code,
                 gst_treatment=gst_treatment,
+                gstin=gstin,
                 destination_of_supply=destination_of_supply,
                 reverse_charge=reverse_charge,
                 tax=tax,
                 invoice=invoice,
-                customer_name= customer,
-                vendor=vendor
+                customer_name= customere,
+                vendor=vendor,
                 # attachment_file=attachment_file
+                company=company
             )
 
             expense.save()
@@ -4045,9 +4049,9 @@ def save_expense(request):
             return redirect('expensepage')
         else:
             # Display the save_expense form
-            c = addcustomerE.objects.filter(user=request.user)
+            c = customer.objects.filter(user=request.user)
             # v=vendor_tableE.objects.all()
-            v = vendor_tableE.objects.filter(user=request.user)
+            v = vendor_table.objects.filter(user=request.user)
             accounts = AccountE.objects.filter(user=request.user)
             # account_types = set(AccountE.objects.values_list('account_type', flat=True))
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
@@ -4251,8 +4255,10 @@ def add_custmr(request):
         # shipphone=request.POST.get('shipphone')
 
         u = User.objects.get(id = request.user.id)
+        if balance == '':
+           balance = None
 
-        cust = addcustomerE(customer_name = name,customerType = cust_type, companyName= comp_name, GSTTreatment=gsttype, 
+        cust = customer(customerName = name,customerType = cust_type, companyName= comp_name, GSTTreatment=gsttype, 
                         customerWorkPhone = w_mobile,customerMobile = p_mobile, customerEmail=email,skype = skype,Facebook = fb, 
                         Twitter = twitter,placeofsupply=supply,Taxpreference = tax,currency=currency, website=website, 
                         designation = desg, department = dpt,OpeningBalance=balance,Address1=street1,Address2=street2, city=city, 
@@ -4265,9 +4271,9 @@ def customer_dropdownE(request):
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = addcustomerE.objects.filter(user=user)
+    option_objects = customer.objects.filter(user=user)
     for option in option_objects:
-        display_name = option.customer_name
+        display_name = option.customerName
         options[option.id] = [display_name, f"{display_name}"]
         
     return JsonResponse(options)
@@ -4283,6 +4289,7 @@ def customer_dropdownE(request):
 #     return JsonResponse(options)
         
 def edit_expensee(request,expense_id):
+    company = company_details.objects.get(user = request.user)
     if request.user.is_authenticated:
         expense = ExpenseE.objects.get(id=expense_id)
 
@@ -4306,9 +4313,9 @@ def edit_expensee(request,expense_id):
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
-            customer = addcustomerE.objects.get(customer_name=c)
+            customere = customer.objects.get(customerName=c)
             v = request.POST.get('vendor')
-            vendor = vendor_tableE.objects.get(vendor_display_name=v)
+            vendor = vendor_table.objects.get(vendor_display_name=v)
             reporting_tags = request.POST.get('reporting_tags')
             taxamt = request.POST.get('taxamt', False)
             # image = request.FILES.get('image')
@@ -4337,20 +4344,20 @@ def edit_expensee(request,expense_id):
             expense.reverse_charge = reverse_charge
             expense.tax = tax
             expense.invoice = invoice
-            expense.customer_name = customer
+            expense.customer_name = customere
             expense.reporting_tags = reporting_tags
             expense.vendor = vendor
             expense.image=image
             # if 'image' in request.FILES:
             #     expense.image = request.FILES['image']
-
+            expense.company=company
             expense.save()
 
             return redirect('expense_details',pk=expense.pk)
         else:
            
-            c = addcustomerE.objects.all()
-            v = vendor_tableE.objects.all()
+            c = customer.objects.all()
+            v = vendor_table.objects.all()
             accounts = AccountE.objects.all()
             account_types = set(AccountE.objects.values_list('account_type', flat=True))
 
@@ -4406,7 +4413,7 @@ def add_vendore(request):
         shipphone=request.POST.get('shipphone',None)
         
         u = User.objects.get(id = request.user.id)
-        vndr = vendor_tableE(salutation=title, first_name=first_name, last_name=last_name,vendor_display_name = dispn, company_name= comp, gst_treatment=gsttype, gst_number=gstin, 
+        vndr = vendor_table(salutation=title, first_name=first_name, last_name=last_name,vendor_display_name = dispn, company_name= comp, gst_treatment=gsttype, gst_number=gstin, 
                     pan_number=panno,vendor_wphone = w_mobile,vendor_mphone = p_mobile, vendor_email=email,skype_number = skype,
                     source_supply=supply,currency=currency, website=website, designation = desg, department = dpt,
                     opening_bal=balance,baddress=street, bcity=city, bstate=state, payment_terms=payment,bzip=pincode, 
@@ -4433,7 +4440,7 @@ def vendor_dropdownE(request):
     user = User.objects.get(id=request.user.id)
 
     options = {}
-    option_objects = vendor_tableE.objects.filter(user=user)
+    option_objects = vendor_table.objects.filter(user=user)
     for option in option_objects:
         display_name = f"{option.salutation} {option.first_name} {option.last_name}"
         options[option.id] = [display_name, display_name]
@@ -4475,20 +4482,37 @@ def pay_dropdownE(request):
 #     gst_treatment = vendor.gst_treatment
    
 #     return JsonResponse({'gst_treatment':gst_treatment})
+# def get_vendor_gst_treatment(request):
+#     v_user = request.user
+#     user = User.objects.get(id=v_user.id)
+
+#     vendor_name = request.GET.get('vendor') 
+#     try:
+#         vendor = vendor_tableE.objects.get(vendor_display_name=vendor_name, user=user)
+#         gst_treatment = vendor.gst_treatment
+#     except vendor_tableE.DoesNotExist:
+#         gst_treatment = None
+
+#     print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}")
+
+#     return JsonResponse({'gst_treatment': gst_treatment})
 def get_vendor_gst_treatment(request):
     v_user = request.user
     user = User.objects.get(id=v_user.id)
 
     vendor_name = request.GET.get('vendor') 
     try:
-        vendor = vendor_tableE.objects.get(vendor_display_name=vendor_name, user=user)
+        vendor = vendor_table.objects.get(vendor_display_name=vendor_name, user=user)
         gst_treatment = vendor.gst_treatment
-    except vendor_tableE.DoesNotExist:
+        gstin = vendor.gst_number  # Assuming 'gstin' is the field name for GSTIN in your model
+    except vendor_table.DoesNotExist:
         gst_treatment = None
+        gstin = None
 
-    print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}")
+    print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}, GSTIN: {gstin}")
 
-    return JsonResponse({'gst_treatment': gst_treatment})
+    return JsonResponse({'gst_treatment': gst_treatment, 'gstin': gstin})
+
 
 def get_company_state(request):
     user = request.user

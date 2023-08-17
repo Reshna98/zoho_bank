@@ -202,7 +202,7 @@
   <div class="card radius-15 p-3">
     <div class="card-body">
         <div class="card-title">
-          <h2 class="mb-0 text-uppercase text-right"><i class="fa fa-receipt"></i> &nbsp; New Expense</h2>
+          <h2 class="mb-0 text-uppercase text-right">New Expense</h2>
         </div>
     </div>
   </div>
@@ -235,7 +235,7 @@
               <optgroup class="" label="Other Current Asset">
                 <option value='Advance Tax'>Advance Tax</option>
                 <option value='Employee Advance'>Employee Advance</option>
-                <option value='Prepaid Expences'>Prepaid Expences</option>
+                <option value='Prepaid Expenses'>Prepaid Expenses</option>
                 <option value='GST TCS Receivable'>GST TCS Receivable</option>
                 <option value='GST TDS Receivable'>GST TDS Receivable</option>
                 <option value='Input Tax Credits'>Input Tax Credits</option>
@@ -255,7 +255,7 @@
                 <option value='Consultant Expense'>Consultant Expense</option>
                 <option value='Credit Card Expense'>Credit Card Expense</option>
                 <option value='IT and Internet Expenses'>IT and Internet Expenses</option>
-                <option value='Janitorial Expences'>Janitorial Expences</option>
+                <option value='Janitorial Expenses'>Janitorial Expences</option>
                 <option value='Lodging'>Lodging</option>
                 <option value='Meals and Entertainment'>Meals and Entertainment</option>
                 <option value='Office Supplies'>Office Supplies</option>
@@ -523,39 +523,33 @@
 // });
 
 </script>
-<div class="row">
+<!-- <div class="row">
 <label for="gst_treatment" class="col-md-3">GST Treatment</label>
 <div class="col-md-6 p-3">
 <input type="text" id="gst_treatment" name="gst_treatment" class="form-control text-dark bg-light" >
 </div>
 </div>
+<div class="row">
+  <label for="gstin" class="col-md-3">GSTIN</label>
+  <div class="col-md-6 p-3">
+  <input type="text" id="gstin" name="gstin" class="form-control text-dark bg-light" >
+  </div>
+  </div> -->
+  
+  <div class="row">
+  <label class="col-md-3">GST Treatment</label>
+  <div class="col-md-6 p-3">
+      <input type="text" class="form-control text-dark bg-light" id="gst_treatment" name="gst_treatment">
+  </div>
+</div>
 
-<!--         
-        <div class="form-group row">
-          <label for="gst_treatment" class="col-sm-3 col-form-label">GST Treatment</label>
-          <div class="col-sm-9">
-            
-            <select class="form-control" id="gst_treatment" name="gst_treatment">
-              <option value="">-- Select GST Treatment --</option>
-              <option value="Registered business-
-                  Regular Bussiness that is registered under gst">Registered business-
-                Regular Bussiness that is registered under gst</option>
-              <option value="Registered business-Composition Bussiness that is registered under the composition scheme in gst">
-                Registered business-Composition Bussiness that is registered under the composition scheme in gst</option>
-              <option value="Unregistered Business- Business that has not been registered under gst ">Unregistered Business-
-                Business that has not been registered under gst </option>
-              <option value="Consumer- a customer who is a regular consumer">Consumer- a customer who is a regular consumer
-              </option>
-              <option value="Overseas- Persons with whom you do import or export of supplies outside india ">Overseas- Persons
-                with whom you do import or export of supplies outside india </option>
-              <option value="Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer">
-                Business(unit)-That is located in a special economic zone(SEZ) of india or a SEZ Developer</option>
-              <option value="Notified list of goods manufactured and supplied within india classified as deemed export">Notified
-                list of goods manufactured and supplied within india classified as deemed export</option>
-            </select>
-            
-          </div>
-        </div> -->
+<div class="row" id="gstin_field" style="display: none;">
+  <label class="col-md-3">GSTIN</label>
+  <div class="col-md-6 p-3">
+      <input type="text" class="form-control text-dark bg-light" id="gstin" name="gstin">
+  </div>
+</div>
+
         
         <div class="row">
           <label for="destination_of_supply" class="col-md-3">Destination of Supply</label>
@@ -659,10 +653,10 @@
            <div class="row">
             <label for="customer" class="col-md-3">Customer</label>
             <div class="col-md-6 p-3">
-              <select class="form-control text-dark bg-light form-select" id="customer" name="customer"onchange="openpopup2(this);">
+              <select class="form-control text-dark bg-light form-select" id="customer" name="customer">
                 <option value="">-- Select a customer --</option>
                 {% for cust in customer %}
-                <option value="{{ cust.customer_name }}">{{ cust.customer_name }}</option>
+                <option value="{{ cust.customerName }}">{{ cust.customerName }}</option>
                  {% endfor %}
               
               </select>
@@ -687,12 +681,12 @@
       </div>
     <!-- </div> -->
       <div class="row mt-5 mb-3">
-    <!-- <div class="col-md-4"> -->
+    <div class="col-md-4">
       <div class="d-flex justify-content-center">
         <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="SAVE" id="save">
         <input class="btn  save_btn  rounded-pill text-grey  my-4 mt-2 py-2" type="reset" value="RESET">
         <!-- <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4 mt-2 py-2" type="reset" aria-label="Close" id="cancelButton">CANCEL</button> -->
-      <!-- </div> -->
+      </div>
 </div> 
     </div>
         </div>
@@ -2748,7 +2742,27 @@
                 </select>
               </div>       
             </div>
+<!--             
+            <div class="row cgstrow d-none">
+              <div class="col-md-3 mt-2">
+                <label id="glblc" style="color:rgb(190, 88, 88);">GSTIN/UIN *</label>
+              </div>
+              <div class="col-md-6 mt-2">
+                <input type="text" class="form-control text-dark bg-light" id="c_gstin" name="c_gstin" placeholder="29APPCK7465F1Z1">
+                <label id="cgst_label"></label>
+              </div>       
+            </div>
 
+            <div class="row">
+              <div class="col-md-3 mt-2">
+                <label for="c_pan">PAN Number</label>
+              </div>
+              <div class="col-md-6 mt-2">
+                <input type="text" class="form-control text-dark bg-light" id="c_pan" name="c_pan" placeholder="APPCK7465F">
+                <label id="cpan_label"></label>
+              </div>       
+            </div> -->
+            <!--  -->
             <div class="row mt-2">
               <div class="col-md-3 mt-2">
                 <label for="" style="color: rgb(190, 88, 88);">Place of Supply *</label>
@@ -3283,7 +3297,34 @@ function reloadVendor() {
         
       }
       //used for call 
-      $(document).ready(function() {
+    //   $(document).ready(function() {
+    //     function fetchVendorGSTTreatment() {
+    //         var selectedVendor = $("#vendor").val();
+    //         console.log("Selected Vendor:", selectedVendor);
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "{% url 'get_vendor_gst_treatment' %}", 
+    //             data: {
+    //                 vendor: selectedVendor
+    //             },
+               
+    //             success: function (response) {
+    //                 var gstTreatment = response.gst_treatment;
+    //                 $("#gst_treatment").val(gstTreatment);
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error(error);
+    //             }
+    //         });
+    //     }
+
+       
+    //     fetchVendorGSTTreatment();
+    //     $("#vendor").change(function() {
+    //         fetchVendorGSTTreatment();
+    //     });
+    // });
+    $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
             console.log("Selected Vendor:", selectedVendor);
@@ -3293,10 +3334,18 @@ function reloadVendor() {
                 data: {
                     vendor: selectedVendor
                 },
-               
                 success: function (response) {
                     var gstTreatment = response.gst_treatment;
+                    var gstin = response.gstin;
+
                     $("#gst_treatment").val(gstTreatment);
+
+                    if (gstin) {
+                        $("#gstin_field").show();
+                        $("#gstin").val(gstin);
+                    } else {
+                        $("#gstin_field").hide();
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -3304,13 +3353,13 @@ function reloadVendor() {
             });
         }
 
-       
         fetchVendorGSTTreatment();
+
+        // Call the function when the vendor selection changes
         $("#vendor").change(function() {
             fetchVendorGSTTreatment();
         });
     });
-
     },
     error: function(xhr, status, error) {
     console.error(xhr.responseText);
@@ -3319,7 +3368,36 @@ function reloadVendor() {
 }
 //gst
 
-      $(document).ready(function() {
+    //   $(document).ready(function() {
+    //     function fetchVendorGSTTreatment() {
+    //         var selectedVendor = $("#vendor").val();
+    //         console.log("Selected Vendor:", selectedVendor);
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "{% url 'get_vendor_gst_treatment' %}", 
+    //             data: {
+    //                 vendor: selectedVendor
+    //             },
+               
+    //             success: function (response) {
+    //                 var gstTreatment = response.gst_treatment;
+    //                 $("#gst_treatment").val(gstTreatment);
+    //             },
+    //             error: function (xhr, status, error) {
+    //                 console.error(error);
+    //             }
+    //         });
+    //     }
+
+       
+    //     fetchVendorGSTTreatment();
+
+    //     // Call the function when the vendor selection changes
+    //     $("#vendor").change(function() {
+    //         fetchVendorGSTTreatment();
+    //     });
+    // });
+    $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
             console.log("Selected Vendor:", selectedVendor);
@@ -3329,10 +3407,18 @@ function reloadVendor() {
                 data: {
                     vendor: selectedVendor
                 },
-               
                 success: function (response) {
                     var gstTreatment = response.gst_treatment;
+                    var gstin = response.gstin;
+
                     $("#gst_treatment").val(gstTreatment);
+
+                    if (gstin) {
+                        $("#gstin_field").show();
+                        $("#gstin").val(gstin);
+                    } else {
+                        $("#gstin_field").hide();
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error(error);
@@ -3340,7 +3426,6 @@ function reloadVendor() {
             });
         }
 
-       
         fetchVendorGSTTreatment();
 
         // Call the function when the vendor selection changes
@@ -3348,6 +3433,7 @@ function reloadVendor() {
             fetchVendorGSTTreatment();
         });
     });
+    
 function addressSame(){
     var chkbtn = document.getElementById('vokay');
     if (chkbtn.checked == true) {
@@ -3427,7 +3513,7 @@ $.ajax({
       pincode : $("#cpincode").val(),
       fax : $("#cfax").val(),
       phone : $("#cphone").val(),
-      country : $("ccountry").val(),
+      country : $("#ccountry").val(),
       csrfmiddlewaretoken: '{{ csrf_token }}'
       
     },
@@ -3755,7 +3841,9 @@ $(document).ready(function() {
         taxesGroup.hide();
         taxGroup.hide();
 
-        if (selectedState === selectedDestination) {
+        // if (selectedState === selectedDestination) 
+        if (selectedDestination.includes(selectedState))
+          {
             taxGroup.show();
         } else {
             taxesGroup.show();
@@ -3784,7 +3872,96 @@ $(document).ready(function() {
     updateTaxDropdown();
 });
 
+$(document).ready(function() {
+    $("#v_gsttype").change(function() {
+      var x=$('#v_gsttype').val();
+      // console.log(x)
+      if(x=="unregistered Business") 
+      {
+        $(".gstrow").addClass('d-none');
 
+      }
+      else if(x == 'Overseas'){
+        $(".gstrow").addClass('d-none');
+      }
+      else 
+      {
+        $(".gstrow").removeClass('d-none');
+        $(".gstrow").addClass('d-flex');
+      }
+    
+    });
+  });
+
+
+    $(document).ready(function() {
+    $("#v_gstin").change(function() {
+
+        var x=$("v_gstin").val();
+        var gst_label=document.getElementById("gst_label")
+        var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+        if (!expr.test(x)) {
+            gst_label.style.color="red";
+            gst_label.innerHTML = "Invalid GST Number.";
+        }
+        else{
+            gst_label.style.color="green";
+            gst_label.innerHTML = "valid GST Number.";
+
+        }
+      });
+    });
+
+    $(document).ready(function() {
+      $("#v_pan").change(function() {
+        var x= $("#v_pan").val();
+        var pan_label=document.getElementById("pan_label")
+        var expr=    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+        if (!expr.test(x)) {
+            pan_label.style.color="red";
+            pan_label.innerHTML = "Invalid PAN Number.";
+        }
+        else{
+            pan_label.style.color="green";
+            pan_label.innerHTML = "valid PAN Number.";
+
+        }
+      });
+    });
+    // $(document).ready(function() {
+    // $("#c_gstin").change(function() {
+
+    //     var x=$("c_gstin").val();
+    //     var gst_labelc=document.getElementById("gst_labelc")
+    //     var expr=/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+    //     if (!expr.test(x)) {
+    //         gst_labelc.style.color="red";
+    //         gst_labelc.innerHTML = "Invalid GST Number.";
+    //     }
+    //     else{
+    //         gst_labelc.style.color="green";
+    //         gst_labelc.innerHTML = "valid GST Number.";
+
+    //     }
+    //   });
+    // });
+
+    // $(document).ready(function() {
+    //   $("#c_pan").change(function() {
+    //     var x= $("#c_pan").val();
+    //     var cpan_label=document.getElementById("cpan_label")
+    //     var expr=    /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/
+    //     if (!expr.test(x)) {
+    //         cpan_label.style.color="red";
+    //         cpan_label.innerHTML = "Invalid PAN Number.";
+    //     }
+    //     else{
+    //         cpan_label.style.color="green";
+    //         cpan_label.innerHTML = "valid PAN Number.";
+
+    //     }
+    //   });
+    // });
 // / gst
  // / $(document).ready(function() {
 //  
