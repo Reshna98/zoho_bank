@@ -382,13 +382,13 @@
     <div class="row" id="hsn_div" style="display: none;">
       <label id="hsn_label" for="hsn_code" class="col-md-3   text-white">HSN</label>
       <div class="col-md-6 p-3">
-        <input type="text" id="hsn_code" name="hsn_code" class="form-control text-dark bg-light"  value="{{expense.hsn_code}}">
+        <input type="text" id="hsn_code" name="hsn_code" class="form-control text-dark bg-light"  value="{{expense.hsn_code}}" placeholder="6-digit number">
       </div>
     </div>
     <div class="row" id="sac_div" style="display:flex;">
       <label id="sac_label" for="sac" class="col-md-3   text-white">SAC</label>
       <div class="col-md-6 p-3">
-        <input type="text" id="sac" name="sac" class="form-control text-dark bg-light "  value="{{expense.sac}}">
+        <input type="text" id="sac" name="sac" class="form-control text-dark bg-light "  value="{{expense.sac}}" placeholder="6-digit number">
       </div>
     </div>
     <script>
@@ -433,6 +433,29 @@
   
   // Call the setDefaultSelection function when the page loads
   window.addEventListener("DOMContentLoaded", setDefaultSelection);
+  // Add event listener for input validation
+document.getElementById("sac").addEventListener("input", function() {
+    var inputValue = this.value;
+    var isSixDigits = /^\d{6}$/.test(inputValue);
+    
+    if (!isSixDigits) {
+        this.setCustomValidity("SAC code must be a 6-digit number");
+    } else {
+        this.setCustomValidity("");
+    }
+});
+
+// Add event listener for HSN input validation
+document.getElementById("hsn_code").addEventListener("input", function() {
+    var inputValue = this.value;
+    var isSixDigits = /^\d{6}$/.test(inputValue);
+    
+    if (!isSixDigits) {
+        this.setCustomValidity("HSN code must be a 6-digit number");
+    } else {
+        this.setCustomValidity("");
+    }
+});
     </script>
 
     <div class="row">

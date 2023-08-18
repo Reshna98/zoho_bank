@@ -3966,9 +3966,11 @@ def recurbill_email(request,id):
 #####################expense##############################################################
     
 def expensepage(request):
+    company = company_details.objects.get(user = request.user)
     expenses = ExpenseE.objects.filter(user=request.user)
     context = {
         'expenses': expenses,
+        'company':company
        }
     return render(request,'expense.html',context)
 
@@ -4056,8 +4058,8 @@ def save_expense(request):
             # account_types = set(AccountE.objects.values_list('account_type', flat=True))
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
-          
-            return render(request, 'addexpense.html', {'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
+            cp= company_details.objects.get(user = request.user)
+            return render(request, 'addexpense.html', {'company':cp,'vendor':v,'customer': c,'payments':p,'accounts': accounts, 'account_types': account_types,
             })
    
 def upload_documents(request, expense_id):
@@ -4200,10 +4202,12 @@ def account_dropdownE(request):
 def expense_details(request, pk):
     user = request.user
     expense = ExpenseE.objects.filter(user=user)
+    company = company_details.objects.get(user = request.user)
     expense_account=ExpenseE.objects.get(id=pk)
     context = {
         'expenses': expense,
         'expense': expense_account,
+        'company':company
     }
     return render(request, 'expenseview.html', context)
 
@@ -4324,8 +4328,14 @@ def edit_expensee(request,expense_id):
             # else:
             #     image = None 
        
+            # if request.FILES.get('image'):
+            #     image = request.FILES['image']
+            # else:
+            #     image = None
             if request.FILES.get('image'):
                 image = request.FILES['image']
+            elif expense.image:
+                image = expense.image
             else:
                 image = None
 
@@ -4360,8 +4370,8 @@ def edit_expensee(request,expense_id):
             v = vendor_table.objects.all()
             accounts = AccountE.objects.all()
             account_types = set(AccountE.objects.values_list('account_type', flat=True))
-
-            return render(request, 'editexpense.html', {'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
+            cp= company_details.objects.get(user = request.user)
+            return render(request, 'editexpense.html', {'company':cp ,'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
 
 def delet(request,id):
     items=ExpenseE.objects.filter(id=id)
