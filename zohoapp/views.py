@@ -4312,8 +4312,9 @@ def edit_expensee(request,expense_id):
                 hsn_code = request.POST.get('hsn_code')
                 sac = request.POST.get('sac')
             gst_treatment = request.POST.get('gst_treatment')
+            # gstin=request.POST.get('gstin',None)
             destination_of_supply = request.POST.get('destination_of_supply')
-            reverse_charge = request.POST.get('reverse_charge', False)
+            # reverse_charge = request.POST.get('reverse_charge', False)
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
@@ -4332,6 +4333,18 @@ def edit_expensee(request,expense_id):
             #     image = request.FILES['image']
             # else:
             #     image = None
+            reverse_charge = request.POST.get('reverse_charge')
+            if reverse_charge == 'True':
+                expense.reverse_charge = True
+            else:
+                expense.reverse_charge = False
+
+            gstin = request.POST.get('gstin', None)
+            if gstin is not None:
+                expense.gstin = gstin
+            else:
+                expense.gstin = None
+
             if request.FILES.get('image'):
                 image = request.FILES['image']
             elif expense.image:
@@ -4350,6 +4363,7 @@ def edit_expensee(request,expense_id):
             expense.notes = notes
             expense.hsn_code = hsn_code
             expense.gst_treatment = gst_treatment
+            expense.gstin=gstin
             expense.destination_of_supply = destination_of_supply
             expense.reverse_charge = reverse_charge
             expense.tax = tax

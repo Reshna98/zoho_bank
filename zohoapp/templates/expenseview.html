@@ -38,115 +38,31 @@
     flex: 1;
     
 }
+.info-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+ .info-item h6.label {
+
+  margin-left: 10px;
+    display: inline-block;
+} 
+
+.info-item p.value {
+  /* margin: 0; */
+  margin-left: 10px;
+}
+
 
 
 </style>
-  <!-- <div class="row fixed-top  " style="top: 7rem; margin-left: 20rem;" >
-   
-   <div class="col-md-12" style="right: 0;">
-     <div class="row">
-        -->
-       <!-- <div class="col-md-3" style="border-right: 1px solid white;height: 100vh;position: fixed;"> -->
-         <!-- <div class="row">
-           <div class="col-md-4"><a class="text-white" style="font-size: 1.5rem;">All Expenses</a></div>
-           <div class="col-md-4 " style="margin-top: -3rem;"><a style="color: #ccc;width: 4rem;height: 2rem;margin-top: 3rem;" class="btn btn-success" href="{%url 'save_expense'%}">New</a>
-           
-           </div>
-         </div> 
-         
- 
-<div class="container-fluid" style="background-color: rgb(36, 33, 33);">  
-         <table class="table table-responsive text-white" >
-           <thead>
-             <tr>
-               <th>Expense Accounts</th>
-              
-             </tr>
-             
-           </thead>
-           <tbody>
-           
-            {%for expense in expenses%}
-             <tr>
-    
-               <td ><a class="text-white" href="{% url 'expense_details' expense.id %}" >{{expense.expense_account}}</a></td>
-            
-             </tr>
-            {%endfor%}
-           </tbody>
-         </table>
-      
-       </div> 
-        <div class="col-md-9" style="margin-left: 25rem;">
-          <div class="row" style="position: fixed;">
-            <div class="col-md-4" style="position: fixed;"><a class="text-white" style="font-size: 1rem;">
-                <h2 style="font-size: small; margin-left: -2rem">{{expense.expense_account}}</h2>
-              </a></div>
-            <div class="col-sm-12" style="margin-top: -3rem;margin-left: 10rem;position: fixed;">
-              <a
-                style="color: #ccc;width: 4rem;height: 2rem;margin-top: 3rem;" class="btn btn-light text-dark "
-                onclick="location.href ='{% url 'edit_expensee' expense.id %}'"><i class="fa fa-pencil"></i></a>
-              
-              
 
-<form method="post" enctype="multipart/form-data" id="upload-form" action="{% url 'upload_documents' expense_id=expense.id %}">
-  {% csrf_token %}
-  <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;" >
-  <a href="#" class="btn btn-light text-dark file-button text-white" id="file-button" style="color: #ccc;height: 2rem;margin-top: -3.7rem;margin-left: 10rem;">
-    <i class="fas fa-paperclip" style="color: black;"></i>
-  </a>
-</form>
-
-<script>
-  document.getElementById('file-button').addEventListener('click', function(e) {
-    e.preventDefault();
-    document.getElementById('attachment').click();
-  });
-
-  function handleFileSelection(event) {
-    var input = event.target;
-    var form = document.getElementById('upload-form');
-    form.submit();
-  }
-</script>
-
-<a href="{% url 'delet' expense.id %}" style="color: #ccc;height: 2rem;margin-top: -6.7rem;margin-left: 5rem;"
-                class="btn btn-danger  text-white ">Delete</a>
-
-</div></div>
-<div class="container-fluid">
-  <div class="card">
-   <div class="tabs" style="margin-top:9%;"> -->
-   <!-- <div class="tab-header">
-
-    <div class="active p-3" style="color: rgb(24, 125, 165);"> --> 
-      <!-- <i class="fa fa code"></i>OverView -->
-    <!-- </div></div> -->
-      
-  <!-- <div class="tab-body">
-    <div class="activ ">
-     <h6 class="mr-5">Expense Account:</h6> <br>
-     <h6 style="margin-top: -3rem; margin-left: 10rem;" id="expense-account">{{expense.expense_account}}</h6> <br>
-     <h6 class="mr-5">Expense Type:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="expense-type">{{ expense.expense_type }} {{expense.goods_label}}</h6> <br>
-     <h6 class="mr-5">Amount:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="amount">{{expense.amount}}</h6> <br>
-     <h6 class="mr-5">Paid Through:</h6> <br>
-     <h6 style="margin-top: -3rem; margin-left: 10rem;" id="paidthrough">{{expense.paid}}</h6> <br>
-     <h6 class="mr-5">Vendor:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="vendor">{{expense.vendor.vendor_display_name}}</h6> <br> -->
-     <!-- <h6 class="mr-5">GST Treatment:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="gst">{{expense.gst_treatment}}</h6><br> -->
-     <!-- <h6 class="mr-5">Destination Of Supply:</h6>
-     <h6 style="margin-top: -1.7rem; margin-left: 12rem;" id="destination">{{expense.destination_of_supply}}</h6> <br>
-     <h6 class="mr-5">Tax:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="tax">{{expense.tax}}</h6> <br>
-     <h6 class="mr-5">Notes:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="notes">{{expense.notes}}</h6> <br>
-     <h6 class="mr-5">Customer Name:</h6>
-     <h6 style="margin-top: -2rem; margin-left: 10rem;" id="customername">{{expense.customer_name.customerName}}</h6> <br>
-    
-    </div>  -->
 
     <section>
       <div class="container-fluid">
@@ -190,7 +106,7 @@
                     <tr>
     
                       <td><a class="text-white"
-                          href="{% url 'expense_details' expense.id %}">{{expense.expense_account}}</a></td>
+                          href="{% url 'expense_details' expense.id %}">{{expense.expense_account}} <span class="d-flex justify-content-end align-items-start"> {{expense.amount}}</span></a></td>
     
                     </tr>
                     {%endfor%}
@@ -208,22 +124,10 @@
                 <div class="row">
                   <div class="col-md-6">
                     <h5 class="card-title">{{expense.expense_account}}</h5>
-                    <h6 class="text-center" style="background-color: rgb(240, 161, 14); width:80px;">overview</h6>
+                    <h6 class="text-center" style="background-color: rgb(240, 161, 14); width:80px;">Overview</h6>
                 
                   </div>
-                  <!-- <div class="col-md-6 text-right"> 
-                    <a style="color: orange;width: 2rem;height: 2rem;" class="btn btn-warning text-dark p-2"
-                      href ="{% url 'edit_expensee' expense.id %}"><i class="fa fa-pencil"></i></a>
-                    <a href="{% url 'delet' expense.id %}" style="color:orange;height: 2rem; width: 2rem;"
-                     class="btn btn-warning text-dark p-2"> <i class="fa fa-trash"></i></a>
-
-                     <form method="post" enctype="multipart/form-data" id="upload-form" action="{% url 'upload_documents' expense_id=expense.id %}">
-                      {% csrf_token %}
-                      <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;" >
-                      <a href="#" class="btn btn-warning text-dark file-button text-dark p-2" id="file-button" style="color: orange;height: 2rem; width: 2rem;">
-                        <i class="fa fa-paperclip"></i>
-                      </a>
-                    </form> -->
+                
                     <div class="col-md-6 d-flex justify-content-end align-items-start p-2 gap-2">
                       
                           <a style="color: orange; width: 2rem; height: 2rem;" class="btn btn-warning text-dark p-2"
@@ -262,21 +166,48 @@
                 <h3 class="text-center p-2">Expense Details</h3>
                 <div class="row">
                   
-                  <div class="col-md-5 text-center">
+                  <div class="col-md-5">
                     {% if expense.image %}
-                    <img src="{{ expense.image.url }}" alt="Expense Receipt" style="max-width: 200px; max-height: 200px;" class="p-2" >
+                    <img src="{{ expense.image.url }}" alt="Expense Receipt" style="max-width: 200px; max-height: 200px;" class="p-2 text-center" >
                     <br>
                 {% endif %}
-               <h4 class="p-2 text-center"> {{expense.expense_account}}<h4>
-                <div class="info-container p-2">
-                <div class="info-item ">
+               <h4 class="p-2"> {{expense.expense_account}}</h4>
+                <div class="info-container">
+                <div class="info-item">
                   <h6 class="label">Customer:</h6>
                   <p class="value">{{expense.customer_name.customerName}}</p>
                 </div>
                 <div class="info-item">
-                  <h6 class="label">Vendor:</h6>
+                  <h6 class="label" style="margin-left: 10px;">Vendor:</h6>
                   <p class="value">{{expense.vendor.vendor_display_name}}</p>
                 </div>
+                <div class="info-item">
+                  <h6 class="label">Destination of Supply:</h6>
+                  <p class="value">{{expense.destination_of_supply}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Tax:</h6>
+                  <p class="value">{{expense.tax}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Invoice:</h6>
+                  <p class="value">{{expense.invoice}}</p>
+                </div>
+                <div class="info-item">
+                  <h6 class="label">Notes:</h6>
+                  <p class="value">{{expense.notes}}</p>
+                </div>
+                
+                {% if expense.reverse_charge %}
+                <div class="info-item">
+                 <h6 class="label">Reverse Charge:</h6>
+                   <p class="value">Applicable</p></div>
+                {%else%}
+                <div class="info-item">
+                  <h6 class="label">Reverse Charge:</h6>
+                    <p class="value"> Not Applicable</p>
+                </div>
+                {%endif%}
                 </div></div>
                   <div class="col-md-7">
                     <div class="card card-custom">
@@ -328,6 +259,10 @@
                           <div class="info-item">
                            <h6 class="label">GSTIN:</h6>
                              <p class="value">{{ expense.gstin }}</p>
+                          {%else%}  
+                          <div class="info-item">
+                            <h6 class="label">GSTIN:</h6>
+                              <p class="value">Nil</p>
                           {%endif%}
                           </div>
                         </div>

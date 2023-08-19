@@ -239,7 +239,7 @@
               <option value="Prepaid Expenses" {% if expense.expense_account == "Prepaid Expenses" %}selected{% endif %}>Prepaid Expenses</option>
               <option value="GST TCS Receivable" {% if expense.expense_account == "GST TCS Receivable" %}selected{% endif %}>GST TCS Receivable</option>
               <option value="GST TDS Receivable" {% if expense.expense_account == "GST TDS Receivable" %}selected{% endif %}>GST TDS Receivable</option>
-              <option value="GST Input Tax Credits" {% if expense.expense_account == "Input Tax Credits" %}selected{% endif %}>Input Tax Credits</option>
+              <option value="GST Input Tax Credits" {% if expense.expense_account == "GST Input Tax Credits" %}selected{% endif %}>GST Input Tax Credits</option>
               <option value="Input CGST" {% if expense.expense_account == "Input CGST" %}selected{% endif %}>Input CGST</option>
               <option value="Input IGST" {% if expense.expense_account == "Input IGST" %}selected{% endif %}>Input IGST</option>
               <option value="Input SGST" {% if expense.expense_account == "Input SGST" %}selected{% endif %}>Input SGST</option>
@@ -729,7 +729,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
   <div class="row">
     <label class="col-md-3">Reverse Charge</label>
     <div class="col-md-6 p-3">
-    <input type="checkbox" name="reverse_charge" id="reverse_charge" value="applicable" {% if expense.reverse_charge == 'applicable' %}checked="checked"{% endif %}>
+    <input type="checkbox" name="reverse_charge" id="reverse_charge" value="True" {% if expense.reverse_charge == 'True' %}checked="checked"{% endif %}>
   
     <p class="text-white">This transaction is applicable for reverse charge</p>
       
@@ -752,6 +752,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
             <option value="">Non-Taxable</option>
             <optgroup label="Taxes" id="taxesGroup">
               <option value="IGST0[0%]" {% if expense.tax == 'IGST0[0%]' %}selected{% endif %}>IGST0[0%]</option>
+              <option value="IGST3[3%]" {% if expense.tax == 'IGST3[3%]' %}selected{% endif %}>IGST3[3%]</option>
               <option value="IGST5[5%]" {% if expense.tax == 'IGST5[5%]' %}selected{% endif %}>IGST5[5%]</option>
               <option value="IGST12[12%]" {% if expense.tax == 'IGST12[12%]' %}selected{% endif %}>IGST12[12%]</option>
               <option value="IGST18[18%]" {% if expense.tax == 'IGST18[18%]' %}selected{% endif %}>IGST18[18%]</option>
@@ -759,6 +760,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
             </optgroup>
             <optgroup label="Tax Group" id="taxGroup">
               <option value="GST0[0%]" {% if expense.tax == 'GST0[0%]' %}selected{% endif %}>GST0[0%]</option>
+              <option value="GST3[3%]" {% if expense.tax == 'GST3[3%]' %}selected{% endif %}>GST3[3%]</option>
               <option value="GST5[5%]" {% if expense.tax == 'GST5[5%]' %}selected{% endif %}>GST5[5%]</option>
               <option value="GST12[12%]" {% if expense.tax == 'GST12[12%]' %}selected{% endif %}>GST12[12%]</option>
               <option value="GST18[18%]" {% if expense.tax == 'GST18[18%]' %}selected{% endif %}>GST18[18%]</option>
@@ -824,7 +826,9 @@ document.getElementById("hsn_code").addEventListener("input", function() {
       <div class="col-md-4">
         <div class="d-flex">
           <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="EDIT" id="save">
-          <input type="submit" onclick="location.href='{% url 'expense_details' expense.id %}'"class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="CANCEL" id="cancel">
+          <input type="submit" class="btn save_btn mt-2 py-2 rounded-pill text-grey my-4 mx-2" style="width: 200px; text-align: center;" value="CANCEL" id="cancel" onclick="cancelButtonClick()">
+
+          <!-- <input type="submit" onclick="location.href='{% url 'expense_details' expense.id %}'"class="btn save_btn mt-2 py-2 rounded-pill text-grey  my-4 mx-2" style="width: 200px; text-align: center ;" value="CANCEL" id="cancel"> -->
         </div>
 
     </div> 
@@ -833,6 +837,13 @@ document.getElementById("hsn_code").addEventListener("input", function() {
   </div>
   </div>
     </form>
+    <script>
+      function cancelButtonClick() {
+         
+          location.href = "{% url 'expense_details' expense.id %}";
+      }
+  </script>
+  
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -3410,72 +3421,6 @@ $.ajax({
       }).prop('selected', true);
       
     }
-    //used for call 
-//     $(document).ready(function() {
-//       function fetchVendorGSTTreatment() {
-//           var selectedVendor = $("#vendor").val();
-//           console.log("Selected Vendor:", selectedVendor);
-//           $.ajax({
-//               type: "GET",
-//               url: "{% url 'get_vendor_gst_treatment' %}", 
-//               data: {
-//                   vendor: selectedVendor
-//               },
-             
-//               success: function (response) {
-//                   var gstTreatment = response.gst_treatment;
-//                   $("#gst_treatment").val(gstTreatment);
-//               },
-//               error: function (xhr, status, error) {
-//                   console.error(error);
-//               }
-//           });
-//       }
-
-     
-//       fetchVendorGSTTreatment();
-//       $("#vendor").change(function() {
-//           fetchVendorGSTTreatment();
-//       });
-//   });
-
-//   },
-//   error: function(xhr, status, error) {
-//   console.error(xhr.responseText);
-//   }
-// });
-// }
-// //gst
-
-//     $(document).ready(function() {
-//       function fetchVendorGSTTreatment() {
-//           var selectedVendor = $("#vendor").val();
-//           console.log("Selected Vendor:", selectedVendor);
-//           $.ajax({
-//               type: "GET",
-//               url: "{% url 'get_vendor_gst_treatment' %}", 
-//               data: {
-//                   vendor: selectedVendor
-//               },
-             
-//               success: function (response) {
-//                   var gstTreatment = response.gst_treatment;
-//                   $("#gst_treatment").val(gstTreatment);
-//               },
-//               error: function (xhr, status, error) {
-//                   console.error(error);
-//               }
-//           });
-//       }
-
-     
-//       fetchVendorGSTTreatment();
-
-//       // Call the function when the vendor selection changes
-//       $("#vendor").change(function() {
-//           fetchVendorGSTTreatment();
-//       });
-//   });
 $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
@@ -3492,7 +3437,8 @@ $(document).ready(function() {
 
                     $("#gst_treatment").val(gstTreatment);
 
-                    if (gstin) {
+                    // if (gstin) {
+                      if (gstin || gstin === null) {
                         $("#gstin_field").show();
                         $("#gstin").val(gstin);
                     } else {
@@ -3519,36 +3465,6 @@ $(document).ready(function() {
   });
 }
 //gst
-
-    //   $(document).ready(function() {
-    //     function fetchVendorGSTTreatment() {
-    //         var selectedVendor = $("#vendor").val();
-    //         console.log("Selected Vendor:", selectedVendor);
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'get_vendor_gst_treatment' %}", 
-    //             data: {
-    //                 vendor: selectedVendor
-    //             },
-               
-    //             success: function (response) {
-    //                 var gstTreatment = response.gst_treatment;
-    //                 $("#gst_treatment").val(gstTreatment);
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     }
-
-       
-    //     fetchVendorGSTTreatment();
-
-    //     // Call the function when the vendor selection changes
-    //     $("#vendor").change(function() {
-    //         fetchVendorGSTTreatment();
-    //     });
-    // });
     $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
@@ -3565,7 +3481,8 @@ $(document).ready(function() {
 
                     $("#gst_treatment").val(gstTreatment);
 
-                    if (gstin) {
+                    // if (gstin) {
+                    if (gstin || gstin === null) {
                         $("#gstin_field").show();
                         $("#gstin").val(gstin);
                     } else {
