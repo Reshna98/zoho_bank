@@ -3981,14 +3981,13 @@ def save_expense(request):
            
             date = request.POST.get('date')
             
-            # select = request.POST['select']
-            # expense_account = AccountE.objects.get(account_name=select)
+           
             expense_account = request.POST.get('expense_account')
             amount = request.POST.get('amount')
             currency = request.POST.get('currency')
             expense_type = request.POST.get('expense_type')
             paid = request.POST.get('paid')
-            # vendor = request.POST.get('vendor')
+
             notes = request.POST.get('notes')
             if request.POST.get('expense_type') == 'goods':
                 hsn_code = request.POST.get('sac')
@@ -3996,28 +3995,22 @@ def save_expense(request):
             else:
                 hsn_code = request.POST.get('hsn_code')
                 sac = request.POST.get('sac')
-            # attachment_file = request.FILES.get('attachment')
+    
             gst_treatment = request.POST.get('gst_treatment')
             gstin=request.POST.get('gstin',None)
             destination_of_supply = request.POST.get('destination_of_supply')
             reverse_charge = request.POST.get('reverse_charge')
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
-            # c = request.POST['c_name']
             c = request.POST.get('customer')
-            customere = customer.objects.get(customerName=c)
-
+            customere = customer.objects.get(id=c)
             v= request.POST.get('vendor')
-            vendor=vendor_table.objects.get(vendor_display_name=v)
+            vendor=vendor_table.objects.get(id=v)
 
-            # customer = addcustomer.objects.get(customer_id=c)
+          
             taxamt = request.POST.get('taxamt',False)
-            # reporting_tags=request.post.get('retag')
+           
             image = request.FILES.get('image')
-            # if 'image' in request.FILES:
-            #     image = request.FILES['image']  # Set the uploaded image
-            # else:
-            #     image = None  
 
 
             expense = ExpenseE.objects.create(
@@ -4031,7 +4024,6 @@ def save_expense(request):
                 sac=sac,
                 expense_type=expense_type,
                 paid=paid,
-                # reporting_tags=reporting_tags,
                 notes=notes,
                 hsn_code=hsn_code,
                 gst_treatment=gst_treatment,
@@ -4042,7 +4034,6 @@ def save_expense(request):
                 invoice=invoice,
                 customer_name= customere,
                 vendor=vendor,
-                # attachment_file=attachment_file
                 company=company
             )
 
@@ -4050,12 +4041,10 @@ def save_expense(request):
 
             return redirect('expensepage')
         else:
-            # Display the save_expense form
+          
             c = customer.objects.filter(user=request.user)
-            # v=vendor_tableE.objects.all()
             v = vendor_table.objects.filter(user=request.user)
             accounts = AccountE.objects.filter(user=request.user)
-            # account_types = set(AccountE.objects.values_list('account_type', flat=True))
             account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
             p = payment_termsE.objects.filter(user=request.user)
             cp= company_details.objects.get(user = request.user)
@@ -4075,10 +4064,8 @@ def upload_documents(request, expense_id):
         return redirect("expense_details", pk=expense.pk)
 
 def add_accountE(request):
-    # user = User.objects.get(id=request.user.id)
     accounts = AccountE.objects.filter(user=request.user)
     account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
-    # account_types = set(AccountE.objects.values_list('account_type', flat=True))
     if request.method=='POST':
         a=AccountE()
         cur_user = request.user
@@ -4173,7 +4160,7 @@ def add_accountE(request):
             a.parent_account = request.POST.get("parent_account222",None)
             a.bank_account_no = request.POST.get("account_number",None)
             a.currency = request.POST.get("currency",None)
-        # account_dropdownE(request)
+       
         a.save()
        
         
@@ -4189,7 +4176,7 @@ def account_dropdownE(request):
     options = {}
     account_objects = AccountE.objects.filter(user=user)
     for account in account_objects:
-        # options[account.id] = account.name
+        
         options[account.id] = {
             'account_name': account.account_name,
             'account_type': account.account_type
@@ -4281,16 +4268,7 @@ def customer_dropdownE(request):
         options[option.id] = [display_name, f"{display_name}"]
         
     return JsonResponse(options)
-# def customer_dropdownE(request):
-#     user = User.objects.get(id=request.user.id)
 
-#     options = {}
-#     option_objects = addcustomerE.objects.filter(user = user)
-#     for option in option_objects:
-#         options[option.id] = [option.customer_name]
-
-
-#     return JsonResponse(options)
         
 def edit_expensee(request,expense_id):
     company = company_details.objects.get(user = request.user)
@@ -4312,27 +4290,17 @@ def edit_expensee(request,expense_id):
                 hsn_code = request.POST.get('hsn_code')
                 sac = request.POST.get('sac')
             gst_treatment = request.POST.get('gst_treatment')
-            # gstin=request.POST.get('gstin',None)
             destination_of_supply = request.POST.get('destination_of_supply')
-            # reverse_charge = request.POST.get('reverse_charge', False)
+           
             tax = request.POST.get('tax')
             invoice = request.POST.get('invoice')
             c = request.POST.get('customer')
-            customere = customer.objects.get(customerName=c)
+            customere = customer.objects.get(id=c)
             v = request.POST.get('vendor')
-            vendor = vendor_table.objects.get(vendor_display_name=v)
+            vendor = vendor_table.objects.get(id=v)
             reporting_tags = request.POST.get('reporting_tags')
             taxamt = request.POST.get('taxamt', False)
-            # image = request.FILES.get('image')
-            # if 'image' in request.FILES:
-            #     image = request.FILES['image']  # Set the uploaded image
-            # else:
-            #     image = None 
-       
-            # if request.FILES.get('image'):
-            #     image = request.FILES['image']
-            # else:
-            #     image = None
+           
             reverse_charge = request.POST.get('reverse_charge')
             if reverse_charge == 'True':
                 expense.reverse_charge = True
@@ -4372,18 +4340,18 @@ def edit_expensee(request,expense_id):
             expense.reporting_tags = reporting_tags
             expense.vendor = vendor
             expense.image=image
-            # if 'image' in request.FILES:
-            #     expense.image = request.FILES['image']
+            
             expense.company=company
             expense.save()
 
             return redirect('expense_details',pk=expense.pk)
         else:
            
-            c = customer.objects.all()
-            v = vendor_table.objects.all()
-            accounts = AccountE.objects.all()
-            account_types = set(AccountE.objects.values_list('account_type', flat=True))
+            c = customer.objects.filter(user=request.user)
+            v = vendor_table.objects.filter(user=request.user)
+            accounts = AccountE.objects.filter(user=request.user)
+            account_types = set(AccountE.objects.filter(user=request.user).values_list('account_type', flat=True))
+            p = payment_termsE.objects.filter(user=request.user)
             cp= company_details.objects.get(user = request.user)
             return render(request, 'editexpense.html', {'company':cp ,'vendor': v, 'customer': c, 'accounts': accounts, 'account_types': account_types, 'expense': expense})
 
@@ -4398,8 +4366,6 @@ def delet(request,id):
     
 def add_vendore(request):
     
-    # company = ExpenseE.objects.get(user = request.user)
-    # user = User.objects.get(id=request.user.id)
     if request.method=='POST':
 
         title=request.POST.get('title')
@@ -4448,15 +4414,6 @@ def add_vendore(request):
         return HttpResponse("success")
    
 
-# @login_required(login_url='login')
-# def vendor_dropdownE(request):
-#     user = User.objects.get(id=request.user.id)
-
-#     options = {}
-#     option_objects = vendor_tableE.objects.filter(user = user)
-#     for option in option_objects:
-#         options[option.id] = [option.first_name+ " " + option.last_name,option.first_name+ " " + option.last_name+" "+ str(option.id)]
-#     return JsonResponse(options)
 
 @login_required(login_url='login')
 
@@ -4497,45 +4454,26 @@ def pay_dropdownE(request):
 
     return JsonResponse(options)  
 
-# def get_vendor_gst_treatment(request):
-#     v_user = request.user
-#     user = User.objects.get(id=v_user.id)
-  
-#     vendor = request.GET.get('vendor')
-#     vendor = vendor_tableE.objects.get(vendor_display_name=vendor, user=user)
-#     gst_treatment = vendor.gst_treatment
-   
-#     return JsonResponse({'gst_treatment':gst_treatment})
-# def get_vendor_gst_treatment(request):
-#     v_user = request.user
-#     user = User.objects.get(id=v_user.id)
-
-#     vendor_name = request.GET.get('vendor') 
-#     try:
-#         vendor = vendor_tableE.objects.get(vendor_display_name=vendor_name, user=user)
-#         gst_treatment = vendor.gst_treatment
-#     except vendor_tableE.DoesNotExist:
-#         gst_treatment = None
-
-#     print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}")
-
-#     return JsonResponse({'gst_treatment': gst_treatment})
 def get_vendor_gst_treatment(request):
     v_user = request.user
     user = User.objects.get(id=v_user.id)
 
     vendor_name = request.GET.get('vendor') 
-    try:
-        vendor = vendor_table.objects.get(vendor_display_name=vendor_name, user=user)
-        gst_treatment = vendor.gst_treatment
-        gstin = vendor.gst_number  # Assuming 'gstin' is the field name for GSTIN in your model
-    except vendor_table.DoesNotExist:
-        gst_treatment = None
-        gstin = None
+    if vendor_name: 
+        try:
+            vendor = vendor_table.objects.get(id=vendor_name, user=user)
+            gst_treatment = vendor.gst_treatment
+            gstin = vendor.gst_number  
+        except vendor_table.DoesNotExist:
+            gst_treatment = None
+            gstin = None
 
-    print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}, GSTIN: {gstin}")
+        print(f"Vendor Name: {vendor_name}, GST Treatment: {gst_treatment}, GSTIN: {gstin}")
 
-    return JsonResponse({'gst_treatment': gst_treatment, 'gstin': gstin})
+        return JsonResponse({'gst_treatment': gst_treatment, 'gstin': gstin})
+    else:
+     
+        return JsonResponse({'gst_treatment': None, 'gstin': None})
 
 
 def get_company_state(request):

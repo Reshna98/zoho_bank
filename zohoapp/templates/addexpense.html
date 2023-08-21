@@ -485,27 +485,14 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           </div>
         </div>
         
-        <!-- <div class="form-group row">
-          <label for="vendor" class="col-sm-2 col-form-label">Vendor</label>
-          <div class="col-sm-10">
-            <select class="form-control select2" id="vendor" name="vendor">
-              <option value="">-- Select a vendor --</option>
-              <option value="registered Vendor">registered Vendor</option>
-              <option value="overseas Vendor">overseas Vendor</option>
-              <option value="SEZ Vendor">SEZ Vendor</option>
-              <option value="Deemed Export Vendor">Deemed Export Vendor</option>
-              <option value="Unregistered Vendor">Unregistered Vendor</option>
-              <option value="Composition Reg Vendor">Composition Reg Vendor</option>
-            </select>
-          </div>
-        </div> -->
+       
         <div class="row">
           <label for="vendor" class="col-md-3">Vendor</label>
           <div class="col-md-6 p-3">
             <select class="form-control text-dark bg-light form-select" id="vendor" name="vendor">
               <option value="">-- Select vendor --</option>
               {% for v in vendor %}
-              <option value="{{ v.vendor_display_name}}">{{v.vendor_display_name }}</option>
+              <option value="{{ v.id}}">{{v.vendor_display_name }}</option>
               <!-- <option value="{{v.id}} {{ v.first_name }} {{ v.last_name }}" class="text-dark bg-light">{{ v.first_name }} {{ v.last_name }}</option> -->
                {% endfor %} 
             </select>
@@ -514,52 +501,9 @@ document.getElementById("hsn_code").addEventListener("input", function() {
      
         </div>
      
-        <!-- <div class="row">
-          <div class="col-sm-3">
-            <label style="color: rgb(190, 88, 88);">Vendor Name *</label>
-          </div>
-          <div class="col-sm-9">
-            <select name="vendor" id="vendor" class="form-control text-dark bg-light" >
-              <option value="" class="text-dark bg-light"></option>
-              {% for v in vendor %}
-              <option value="{{v.id}} {{ v.first_name }} {{ v.last_name }}" class="text-dark bg-light">{{ v.first_name }} {{ v.last_name }}</option>
-              {% endfor %}
-            </select>
-            <a href="" data-toggle="modal" data-target="#newvendor">+ Add New Vendor</a>
-          </div>
-        </div> -->
-  <script>
-    // function handleSelectChangev(select) {
-    //     if (select.value === "new") {
-    //         window.location.href = "{% url 'add_vendore' %}";
-    //     }
-    // }
-//   function handleSelectChangev(select) {
-//   if (select.value === "new") {
-//     $('#addVendorModal').modal('show');
-//   }
-// }
+      
+ 
 
-// $(document).ready(function() {
-//   $('#addVendorModal').modal({
-//     backdrop: false
-//   });
-// });
-
-</script>
-<!-- <div class="row">
-<label for="gst_treatment" class="col-md-3">GST Treatment</label>
-<div class="col-md-6 p-3">
-<input type="text" id="gst_treatment" name="gst_treatment" class="form-control text-dark bg-light" >
-</div>
-</div>
-<div class="row">
-  <label for="gstin" class="col-md-3">GSTIN</label>
-  <div class="col-md-6 p-3">
-  <input type="text" id="gstin" name="gstin" class="form-control text-dark bg-light" >
-  </div>
-  </div> -->
-  
   <div class="row">
   <label class="col-md-3">GST Treatment</label>
   <div class="col-md-6 p-3">
@@ -663,17 +607,6 @@ document.getElementById("hsn_code").addEventListener("input", function() {
           </div>
         </div>
        
-              <!-- <div class="form-group row">
-                <label for="customer_id" class="col-sm-2 col-form-label">Customer</label>
-                <div class="col-sm-10">
-            
-            <select class="registration-type" id="customer_sel" name="cx_name" onchange="handleSelectChange(this);">
-              <option type="hidden" value="">select one</option>
-              {% for cust in customer %}
-                  <option value="{{ cust.customer_name }}">{{ cust.customer_name }}</option>
-              {% endfor %}
-              <option value="new">Register as a customer</option>
-          </select>  -->
          
           
            <div class="row">
@@ -682,7 +615,7 @@ document.getElementById("hsn_code").addEventListener("input", function() {
               <select class="form-control text-dark bg-light form-select" id="customer" name="customer">
                 <option value="">-- Select a customer --</option>
                 {% for cust in customer %}
-                <option value="{{ cust.customerName }}">{{ cust.customerName }}</option>
+                <option value="{{ cust.id }}">{{ cust.customerName }}</option>
                  {% endfor %}
               
               </select>
@@ -3307,6 +3240,9 @@ function reloadVendor() {
     type: "GET",
     dataType: "json",
     data: $(this).serialize(),
+    data:enteredVName,
+  
+  
     csrfmiddlewaretoken: '{{ csrf_token }}',
 
     success: function(data) {
@@ -3314,7 +3250,8 @@ function reloadVendor() {
       dropdown.empty();
       $.each(data, function(key, value) {
           console.log(value)
-          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+          // dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(value[1]));
+          dropdown.append($('<option></option>').attr('value', key).text(value[0]).val(key));
       });
       if (enteredVName) {
         dropdown.find('option').filter(function() {
@@ -3323,33 +3260,7 @@ function reloadVendor() {
         
       }
       //used for call 
-    //   $(document).ready(function() {
-    //     function fetchVendorGSTTreatment() {
-    //         var selectedVendor = $("#vendor").val();
-    //         console.log("Selected Vendor:", selectedVendor);
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'get_vendor_gst_treatment' %}", 
-    //             data: {
-    //                 vendor: selectedVendor
-    //             },
-               
-    //             success: function (response) {
-    //                 var gstTreatment = response.gst_treatment;
-    //                 $("#gst_treatment").val(gstTreatment);
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     }
-
-       
-    //     fetchVendorGSTTreatment();
-    //     $("#vendor").change(function() {
-    //         fetchVendorGSTTreatment();
-    //     });
-    // });
+    
     $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
@@ -3394,35 +3305,6 @@ function reloadVendor() {
 }
 //gst
 
-    //   $(document).ready(function() {
-    //     function fetchVendorGSTTreatment() {
-    //         var selectedVendor = $("#vendor").val();
-    //         console.log("Selected Vendor:", selectedVendor);
-    //         $.ajax({
-    //             type: "GET",
-    //             url: "{% url 'get_vendor_gst_treatment' %}", 
-    //             data: {
-    //                 vendor: selectedVendor
-    //             },
-               
-    //             success: function (response) {
-    //                 var gstTreatment = response.gst_treatment;
-    //                 $("#gst_treatment").val(gstTreatment);
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error(error);
-    //             }
-    //         });
-    //     }
-
-       
-    //     fetchVendorGSTTreatment();
-
-    //     // Call the function when the vendor selection changes
-    //     $("#vendor").change(function() {
-    //         fetchVendorGSTTreatment();
-    //     });
-    // });
     $(document).ready(function() {
         function fetchVendorGSTTreatment() {
             var selectedVendor = $("#vendor").val();
@@ -3560,6 +3442,7 @@ $.ajax({
   type: "GET",
   dataType: "json",
   data: $(this).serialize(),
+  data:enteredCName,
   csrfmiddlewaretoken: '{{ csrf_token }}',
 
   success: function(data) {
@@ -3567,13 +3450,19 @@ $.ajax({
     var dropdown = $('#customer');
     dropdown.empty();
     $.each(data, function(key, value) {
-        dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(value[0]));
+        // dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(value[0]));
+        dropdown.append($('<option></option>').attr('value', key).text(value[1]).val(key));
     });
     if (enteredCName) {
         dropdown.find('option').filter(function() {
           return $(this).text() === enteredCName;
         }).prop('selected', true);
       }
+   
+
+    // if (enteredCName) {
+    //             dropdown.val(enteredCName);
+    //         }
       
   },
   error: function(xhr, status, error) {
@@ -3954,6 +3843,7 @@ $(document).ready(function() {
         }
       });
     });
+   
     // $(document).ready(function() {
     // $("#c_gstin").change(function() {
 
@@ -4305,6 +4195,7 @@ $(document).ready(function() {
 //     },
 //   });
 // }
+
 
 
 </script>
