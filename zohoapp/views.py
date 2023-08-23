@@ -4485,3 +4485,53 @@ def get_company_state(request):
         state = None
     print("Fetched State:", state)
     return JsonResponse({"state": state})
+
+
+# banking
+def bank_home(request):
+    cp= company_details.objects.get(user = request.user)
+    bank= Bankcreation.objects.filter(user=request.user)
+           
+    return render(request,'bank_home.html', {'company':cp, 'bank':bank})
+
+def create_bank(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+           
+            date = request.POST.get('date')
+            name = request.POST.get('name')
+            opn_bal = request.POST.get('opn_bal')
+            bal_type=request.POST.get('bal_type')
+            branch= request.POST.get('branch')
+            ac_no= request.POST.get('ac_no')
+            ifsc=request.POST.get('ifsc')
+            if bal_type == 'Debit':
+                opn_bal = -abs(int(opn_bal))
+            else:
+                opn_bal = abs(int(opn_bal))
+
+
+            bank = Bankcreation.objects.create(
+                user=request.user,
+                name=name,
+                opn_bal=opn_bal,
+                bal_type=bal_type,
+                branch=branch,
+                ac_no=ac_no,
+                ifsc=ifsc
+              
+            )
+
+            bank.save()
+            return redirect('bank_home')
+        else:
+          
+          
+            cp= company_details.objects.get(user = request.user)
+            return render(request, 'addbank.html', {'company':cp})
+
+def bank_listout(request):
+    cp= company_details.objects.get(user = request.user)
+    bank= Bankcreation.objects.filter(user=request.user)
+           
+    return render(request,'bank_listout.html', {'company':cp, 'bank':bank})   

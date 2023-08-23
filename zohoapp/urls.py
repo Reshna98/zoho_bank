@@ -209,6 +209,9 @@ urlpatterns = [
     path('get_vendor_gst_treatment', views.get_vendor_gst_treatment, name='get_vendor_gst_treatment'),
     path('get_company_state', views.get_company_state, name='get_company_state'),
     
+    path('bank_home', views.bank_home, name='bank_home'),
+    path('create_bank', views.create_bank, name='create_bank'),
+    path('bank_listout', views.bank_listout, name='bank_listout'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

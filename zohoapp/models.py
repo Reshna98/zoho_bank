@@ -584,3 +584,12 @@ class AttachE(models.Model):
     expense = models.ForeignKey(ExpenseE, on_delete=models.CASCADE, null=True)
     attachment= models.FileField(upload_to='attachment/', blank=True, null=True)
 
+# banking
+class Bankcreation(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    name = models.CharField(max_length=220,default='', null=True, blank=True)
+    branch = models.CharField(max_length=220,default='', null=True, blank=True)
+    ac_no = models.CharField(max_length=220,default='', null=True, blank=True)
+    ifsc = models.CharField(max_length=220,default='', null=True, blank=True)
+    opn_bal =models.IntegerField(null=True, blank=True)
+    bal_type=models.CharField(max_length=220,default='', null=True, blank=True)

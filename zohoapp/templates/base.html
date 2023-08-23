@@ -167,7 +167,7 @@
             <span class="menu-icon">
               <i class="mdi mdi-sitemap"></i>
             </span>
-            <span class="menu-title">Banking</span>
+            <span class="menu-title">Bank and Cash</span>
             
           </a>
           <ul class="dropdown-menu">
@@ -182,7 +182,15 @@
                 </a>
               </div> 
               
-               
+              <div class="dropdown-item">
+                <a class="d-inline-block" style="color: #3f6391" href="{% url 'bank_home' %}">Banking</a>
+                <a class="d-inline-block" style="color: #3f6391;margin-left: 3px;" href="{% url 'create_bank' %}">
+                  <span class="icon bg-light rounded-circle" style="text-align: right; width: 25px;">
+                    <i class="mdi mdi-plus"></i>
+                  </span>
+                </a>
+              </div> 
+              
                                                                 
             </li>               
           </ul>
