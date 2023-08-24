@@ -593,3 +593,11 @@ class Bankcreation(models.Model):
     ifsc = models.CharField(max_length=220,default='', null=True, blank=True)
     opn_bal =models.IntegerField(null=True, blank=True)
     bal_type=models.CharField(max_length=220,default='', null=True, blank=True)
+
+class bank_to_cash(models.Model):
+    user=models.ForeignKey(User,on_delete=models.CASCADE)
+    bank= models.ForeignKey(Bankcreation,on_delete=models.CASCADE,null=True, blank=True)
+    cash=models.CharField(max_length=220,default='', null=True, blank=True)
+    amount =models.IntegerField(null=True, blank=True)
+    date = models.DateField(null=True, blank=True)
+    description=models.CharField(max_length=220,default='', null=True, blank=True)

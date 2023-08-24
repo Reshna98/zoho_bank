@@ -211,7 +211,8 @@ urlpatterns = [
     
     path('bank_home', views.bank_home, name='bank_home'),
     path('create_bank', views.create_bank, name='create_bank'),
-    path('bank_listout', views.bank_listout, name='bank_listout'),
+    path('bank_listout/<int:id>', views.bank_listout, name='bank_listout'),
+    path('banktocash>/<int:id>', views.banktocash, name='banktocash'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

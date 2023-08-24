@@ -4488,6 +4488,7 @@ def get_company_state(request):
 
 
 # banking
+
 def bank_home(request):
     cp= company_details.objects.get(user = request.user)
     bank= Bankcreation.objects.filter(user=request.user)
@@ -4530,8 +4531,36 @@ def create_bank(request):
             cp= company_details.objects.get(user = request.user)
             return render(request, 'addbank.html', {'company':cp})
 
-def bank_listout(request):
+def bank_listout(request,id):
     cp= company_details.objects.get(user = request.user)
     bank= Bankcreation.objects.filter(user=request.user)
-           
-    return render(request,'bank_listout.html', {'company':cp, 'bank':bank})   
+    banks =bank_to_cash.get_object_or_404(Bankcreation, id=id)      
+    bankc=bank_to_cash.objects.filter(user=request.user)
+    return render(request,'banklistout.html', {'company':cp, 'bank':bank ,'banks':banks ,'bankc':bankc})   
+
+def banktocash(request, id):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            date = request.POST.get('date')
+            b = request.POST.get('bank')
+            bank = Bankcreation.objects.get(id=b)
+            cash = request.POST.get('cash')
+            amount = request.POST.get('amount')
+            description = request.POST.get('description')
+
+            bank_cash = bank_to_cash.objects.create(
+                user=request.user,
+                bank=bank,
+                cash=cash,
+                amount=amount,
+                description=description,
+                date=date
+            )
+
+            bank_cash.save()
+
+            return redirect('bank_listout', id=bank.id)
+        else:
+            b = Bankcreation.objects.filter(user=request.user)
+            cp = company_details.objects.get(user=request.user)
+            return render(request, 'banklistout.html', {'company': cp, 'bank': b})

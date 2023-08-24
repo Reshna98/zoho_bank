@@ -1,0 +1,319 @@
+{% extends 'base.html' %}
+{%load static%}
+{% block content %}
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+ 
+<section ><style>
+  .card-custom {
+    background-color: rgba(255, 255, 255, 0.5);
+   /* height: 400px; */
+
+}
+
+
+.card-text {
+    margin-bottom: 0.5rem;
+}
+.info-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+}
+
+.label {
+    margin: 0;
+    width: 130px; 
+   
+}
+
+.value {
+    margin: 0;
+    flex: 1;
+    
+}
+.info-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+ .info-item h6.label {
+
+  margin-left: 10px;
+    display: inline-block;
+} 
+
+.info-item p.value {
+  margin-left: 10px;
+}
+.bank-info {
+        margin-bottom: 10px;
+    }
+
+.bank-info span {
+        padding: 5px; 
+        
+    }
+
+    .modal{
+      z-index: 9999;
+      overflow: scroll;
+        }
+
+</style>
+
+
+    <section>
+      <div class="container-fluid">
+        <div class="row">
+          <!-- Left Side: Table -->
+          <div class="col-md-4" style="background-color: gray;">
+            <div class="row">
+              <div class="col-md-12">
+                <a class="text-white" style="font-size: 1.5rem;">All Banks</a>
+              </div>
+            </div>
+          
+            <div class="row">
+              <div class="col-md-6">
+                  <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
+              </div>
+              <div class="col-md-6 d-flex justify-content-end align-items-start">
+                  <a style="color: #ccc;width: 4rem;height: 2rem;" class="btn btn-warning" href="{%url 'create_bank'%}">New</a>
+              </div>
+          </div>
+            <div class="row">
+              <div class="col-md-12" style="background-color: gray;">
+                <table class="table table-responsive text-white" id="table">
+                  <thead>
+                    <tr>
+                      <th class="text-dark">Bank Accounts</th>
+    
+                    </tr>
+    
+                  </thead>
+                  <tbody>
+    
+                    {%for bank in bank%}
+                    <tr>
+    
+                      <td><a class="text-white"
+                          href="{% url 'bank_listout' bank.id %}">{{bank.name}} <span class="d-flex justify-content-end align-items-start"> {{expense.amount}}</span></a></td>
+    
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+    
+              </div>
+            </div>
+          </div>
+    
+          <!-- Right Side: Card -->
+          <div class="col-md-8">
+            <div class="card">
+              <div class="card-header" style="background-color: rgb(75, 75, 75);">
+                <div class="row">
+                 <div class="col-md-6">
+                    <h6 class="bank-info">Bank Name: <span>{{ banks.name }}</span></h6>
+                    <h6 class="bank-info">Account Number: <span>{{ banks.ac_no }}</span></h6>
+                    <h6 class="bank-info">IFSC Code: <span>{{ banks.ifsc }}</span></h6>
+                  </div>
+                
+                    <div class="col-md-6 d-flex justify-content-end align-items-start p-2 gap-2">
+                      
+                          <a style="color: orange; width: 2rem; height: 2rem;" class="btn btn-warning text-dark p-2"
+                              href="">
+                              <i class="fa fa-pencil"></i>
+                          </a>
+                          <a href="" style="color: orange; height: 2rem; width: 2rem;"
+                              class="btn btn-warning text-dark p-2">
+                              <i class="fa fa-trash"></i>
+                          </a>
+                          <form method="post" enctype="multipart/form-data" id="upload-form" action="">
+                              {% csrf_token %}
+                              <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;">
+                              <a href="#" class="btn btn-warning text-dark file-button text-dark p-2" id="file-button" style="color: orange; height: 2rem; width: 2rem;">
+                                  <i class="fa fa-paperclip"></i>
+                              </a>
+                      </form>
+                     
+                    <script>
+                      document.getElementById('file-button').addEventListener('click', function(e) {
+                        e.preventDefault();
+                        document.getElementById('attachment').click();
+                      });
+                    
+                      function handleFileSelection(event) {
+                        var input = event.target;
+                        var form = document.getElementById('upload-form');
+                        form.submit();
+                      }
+                    </script>
+                   
+                    </div>
+                 </div>   
+                 <div class="row justify-content-end"> <!-- Align select dropdown to the right -->
+                  <div class="col-md-3 p-2" style="width: 180px;">
+                      <div class="form-group ">
+                          <select class="form-control p-2 form-select bg-light text-dark" id="selectOption">
+                              <option value="">Deposit/withdraw</option>
+                              <option value="Bank To Cash Transfer">Bank To Cash Transfer</option>
+                              <option value="Cash To Bank Transfer">Cash To Bank Transfer</option>
+                              <option value="Bank To Bank Transfer">Bank To Bank Transfer</option>
+                              <option value="Adjust Bank Balance">Adjust Bank Balance</option>
+                          </select>
+                      </div>
+                  </div>
+              </div>   
+              <div class="modal fade" id="bankToCashTransferModal">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                        <div class="modal-header " style="background: rgb(32, 35, 37);">
+                            <h3 class="m-3 text-uppercase">Bank To Cash Transfer</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="background: rgb(32, 35, 37);">
+                            <div class="card p-3 m-3">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+
+                                
+                                    {%csrf_token%}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="bank">From</label>
+                                            <select class="form-control text-dark bg-light form-select" id="bank" name="bank">
+                                              <option value="">-- Select a Bank --</option>
+                                              {% for b in bank %}
+                                              <option value="{{b.id }}">{{ b.name }}</option>
+                                               {% endfor %}
+                                            
+                                            </select>
+                                          </div>
+                                        <div class="col-md-6">
+                                            <label for="cash">To</label>
+                                            <input type="text" class="form-control text-dark bg-light" id="cash" maxlength="10" name="cash" value="Cash" readonly>
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="amount">Amount</label>
+                                            <input type="number" class="form-control text-dark bg-light" id="amount"
+                                                   maxlength="10" name="amount">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control text-dark bg-light" id="date"
+                                                   name="date">
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <label for="description">Description:</label>
+                                            <textarea name="description" class="form-control text-dark bg-light"
+                                                      id="description" placeholder="Max. 500 characters"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-5">
+                                      <div class="col-md-4"></div>
+                                      <div class="col-md-4">
+                                        <div class="d-flex">
+                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          type="submit" data-dismiss="modal" id="paySave">Save
+                                          </button> 
+                                          
+                        
+                                          <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
+                                            data-dismiss="modal" aria-label="Close">
+                                              <span aria-hidden="true">Cancel</span>
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4"></div>
+                                   
+                                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+ </div>  
+            <script>
+              document.getElementById('selectOption').addEventListener('change', function() {
+                  var selectedValue = this.value;
+                  if (selectedValue === 'Bank To Cash Transfer') {
+                      $('#bankToCashTransferModal').modal('show');
+                  } else {
+                      // Hide the modal if any other option is selected
+                      $('#bankToCashTransferModal').modal('hide');
+                  }
+              });
+          </script>
+              </div>
+            
+            <div class="card-body">
+             
+              <!-- <div class="container-fluid"> -->
+                  <table class="table table-responsive-md mt-4" id="table">
+                      <thead>
+                          <tr>
+                              <th>TYPE</th>
+                              <th>NAME</th>
+                              <th>DATE</th>
+                              <th>AMOUNT</th>
+                          
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {% for b in bankc %}
+                      
+                          <tr>
+                          <td>{{b.}}</a></td>
+                          <td> {{ b.ifsc}}</a></td>
+                          <td >{{ b.opn_bal }}</td>
+                          <td >{{ b.balance }}</a></td>
+                      
+                          </tr>
+                          {%endfor%}
+                      </tbody>
+                  </table>
+              </div>
+    
+        </div>
+          
+    
+  </section>
+  <script>
+    $(document).ready(function() {
+      var $rows = $('#table tbody tr');
+      $('#search').keyup(function() {
+        var val = $.trim($(this).val()).replace(/ +/g, ' ').toLowerCase();
+        $rows.show().filter(function() {
+          var text = $(this).text().replace(/\s+/g, ' ').toLowerCase();
+          return !~text.indexOf(val);
+        }).hide();
+      });
+    });
+  
+  
+  // $('.dropdown-toggle').dropdown();
+  </script>
+       
+{%endblock%}
