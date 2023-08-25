@@ -177,6 +177,16 @@
                       </div>
                   </div>
               </div>   
+              <div class="row justify-content-end"> <!-- Align select dropdown to the right -->
+                <div class="col-md-3 p-2" style="width: 180px;">
+                 
+                    <h4>Balance:{{bankc.balance}}</h4>
+                 
+                </div>
+            </div>   
+
+
+<!-- bank to cash -->
               <div class="modal fade" id="bankToCashTransferModal">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
@@ -194,8 +204,8 @@
                                     {%csrf_token%}
                                     <div class="row">
                                         <div class="col-md-6">
-                                            <label for="bank">From</label>
-                                            <select class="form-control text-dark bg-light form-select" id="bank" name="bank">
+                                            <label for="fromB">From</label>
+                                            <select class="form-control text-dark bg-light form-select" id="fromB" name="fromB">
                                               <option value="">-- Select a Bank --</option>
                                               {% for b in bank %}
                                               <option value="{{b.id }}">{{ b.name }}</option>
@@ -204,8 +214,8 @@
                                             </select>
                                           </div>
                                         <div class="col-md-6">
-                                            <label for="cash">To</label>
-                                            <input type="text" class="form-control text-dark bg-light" id="cash" maxlength="10" name="cash" value="Cash" readonly>
+                                            <label for="toB">To</label>
+                                            <input type="text" class="form-control text-dark bg-light" id="toB" maxlength="10" name="toB" value="Cash" readonly>
                                         </div>
                                     </div>
             
@@ -229,6 +239,8 @@
                                                       id="description" placeholder="Max. 500 characters"></textarea>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="selectedType" name="type">
+
                                     <div class="row mt-5">
                                       <div class="col-md-4"></div>
                                       <div class="col-md-4">
@@ -237,11 +249,102 @@
                                           type="submit" data-dismiss="modal" id="paySave">Save
                                           </button> 
                                           
-                        
-                                          <button type="button" class="close btn save_btn rounded-pill text-grey w-50 my-4" 
-                                            data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">Cancel</span>
-                                          </button>
+                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4"></div>
+                                   
+                                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+ <!-- </div>   -->
+            <script>
+
+              
+              document.getElementById('selectOption').addEventListener('change', function() {
+                  var selectedValue = this.value;
+                  if (selectedValue === 'Bank To Cash Transfer') {
+                      $('#bankToCashTransferModal').modal('show');
+                      document.getElementById('selectedType').value = selectedValue;
+                  } else {
+                      $('#bankToCashTransferModal').modal('hide');
+                  }
+              });
+            document.querySelector('#bankToCashTransferModal .close').addEventListener('click', function() {
+            $('#bankToCashTransferModal').modal('hide');
+            location.reload();
+            });
+          </script>
+<!-- cash to bank -->
+              </div>
+              <div class="modal fade" id="cash_to_bank">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                        <div class="modal-header " style="background: rgb(32, 35, 37);">
+                            <h3 class="m-3 text-uppercase">Cash To Bank Transfer</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="background: rgb(32, 35, 37);">
+                            <div class="card p-3 m-3">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+
+                                
+                                    {%csrf_token%}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label for="fromB">From</label>
+                                            <input type="text" class="form-control text-dark bg-light" id="fromB" maxlength="10" name="fromB" value="Cash" readonly>
+                                          </div>
+                                        <div class="col-md-6">
+                                          <label for="toB">To</label>
+                                          <select class="form-control text-dark bg-light form-select" id="toB" name="toB">
+                                            <option value="">-- Select a Bank --</option>
+                                            {% for b in bank %}
+                                            <option value="{{b.id }}">{{ b.name }}</option>
+                                             {% endfor %}
+                                          
+                                          </select>
+                                           
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="amount">Amount</label>
+                                            <input type="number" class="form-control text-dark bg-light" id="amount"
+                                                   maxlength="10" name="amount">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control text-dark bg-light" id="date"
+                                                   name="date">
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <label for="description">Description:</label>
+                                            <textarea name="description" class="form-control text-dark bg-light"
+                                                      id="description" placeholder="Max. 500 characters"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="selectedTypeC" name="type">
+                                    <div class="row mt-5">
+                                      <div class="col-md-4"></div>
+                                      <div class="col-md-4">
+                                        <div class="d-flex">
+                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          type="submit" data-dismiss="modal" id="paySave">Save
+                                          </button> 
+                                          
+                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
                                         </div>
                                       </div>
                                       <div class="col-md-4"></div>
@@ -256,22 +359,230 @@
             
  </div>  
             <script>
+              
+              
               document.getElementById('selectOption').addEventListener('change', function() {
                   var selectedValue = this.value;
-                  if (selectedValue === 'Bank To Cash Transfer') {
-                      $('#bankToCashTransferModal').modal('show');
+                  if (selectedValue === 'Cash To Bank Transfer') {
+                      $('#cash_to_bank').modal('show');
+                      document.getElementById('selectedTypeC').value = selectedValue;
                   } else {
-                      // Hide the modal if any other option is selected
-                      $('#bankToCashTransferModal').modal('hide');
+                      $('#cash_to_bank').modal('hide');
                   }
               });
+            document.querySelector('#cash_to_bank .close').addEventListener('click', function() {
+            $('#cash_to_bank').modal('hide');
+            location.reload();
+            });
           </script>
+
+              <!-- </div> -->
+              <!-- bank to bank -->
+              <div class="modal fade" id="bank_to_bank">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+                        <div class="modal-header " style="background: rgb(32, 35, 37);">
+                            <h3 class="m-3 text-uppercase">Bank To Bank Transfer</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" style="background: rgb(32, 35, 37);">
+                            <div class="card p-3 m-3">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+
+                                
+                                    {%csrf_token%}
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                          <label for="fromB">From</label>
+                                          <select class="form-control text-dark bg-light form-select" id="fromB" name="fromB">
+                                            <option value="">-- Select a Bank --</option>
+                                            {% for b in bank %}
+                                            <option value="{{b.id }}">{{ b.name }}</option>
+                                             {% endfor %}
+                                          
+                                          </select>
+                                          </div>
+                                        <div class="col-md-6">
+                                          <label for="toB">To</label>
+                                          <select class="form-control text-dark bg-light form-select" id="toB" name="toB">
+                                            <option value="">-- Select a Bank --</option>
+                                            {% for b in bank %}
+                                            <option value="{{b.id }}">{{ b.name }}</option>
+                                             {% endfor %}
+                                          
+                                          </select>
+                                           
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-6">
+                                            <label for="amount">Amount</label>
+                                            <input type="number" class="form-control text-dark bg-light" id="amount"
+                                                   maxlength="10" name="amount">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="date">Date</label>
+                                            <input type="date" class="form-control text-dark bg-light" id="date"
+                                                   name="date">
+                                        </div>
+                                    </div>
+            
+                                    <div class="row mt-3">
+                                        <div class="col-md-12">
+                                            <label for="description">Description:</label>
+                                            <textarea name="description" class="form-control text-dark bg-light"
+                                                      id="description" placeholder="Max. 500 characters"></textarea>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="selectedTypeB" name="type">
+                                    <div class="row mt-5">
+                                      <div class="col-md-4"></div>
+                                      <div class="col-md-4">
+                                        <div class="d-flex">
+                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          type="submit" data-dismiss="modal" id="paySave">Save
+                                          </button> 
+                                          
+                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                                        </div>
+                                      </div>
+                                      <div class="col-md-4"></div>
+                                   
+                                    
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
+ </div>  
+            <script>
+              
+              
+              document.getElementById('selectOption').addEventListener('change', function() {
+                  var selectedValue = this.value;
+                  if (selectedValue === 'Bank To Bank Transfer') {
+                      $('#bank_to_bank').modal('show');
+                      document.getElementById('selectedTypeB').value = selectedValue;
+                  } else {
+                      $('#bank_to_bank').modal('hide');
+                  }
+              });
+            document.querySelector('#bank_to_bank .close').addEventListener('click', function() {
+            $('#bank_to_bank').modal('hide');
+            location.reload();
+            });
+          </script></div>
+
+<!-- adjust balance -->
+<div class="modal fade" id="adjbank">
+  <div class="modal-dialog modal-xl">
+      <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
+          <div class="modal-header " style="background: rgb(32, 35, 37);">
+              <h3 class="m-3 text-uppercase">Adjust Bank Balance</h3>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body" style="background: rgb(32, 35, 37);">
+              <div class="card p-3 m-3">
+                <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+
+                  
+                      {%csrf_token%}
+                      <div class="row">
+                          <div class="col-md-6">
+                            <label for="adjacname">Account Name</label>
+                            <select class="form-control text-dark bg-light form-select" id="adjacname" name="adjacname">
+                              <option value="">-- Select a Bank --</option>
+                              {% for b in bank %}
+                              <option value="{{b.id }}">{{ b.name }}</option>
+                               {% endfor %}
+                            
+                            </select>
+                            </div>
+                          <div class="col-md-6">
+                            <label for="adjtype">Type</label>
+                            <select class="form-control text-dark bg-light form-select" id="adjtype" name="adjtype">
+                          
+                                <option value="Increase Balance">Increase Balance</option>
+                                <option value="Reduce Balance">Reduce Balance</option>
+                            </select>
+                             
+                          </div>
+                      </div>
+
+                      <div class="row mt-3">
+                          <div class="col-md-6">
+                              <label for="amount">Amount</label>
+                              <input type="number" class="form-control text-dark bg-light" id="amount"
+                                     maxlength="10" name="amount">
+                          </div>
+                          <div class="col-md-6">
+                              <label for="date">Date</label>
+                              <input type="date" class="form-control text-dark bg-light" id="date"
+                                     name="date">
+                          </div>
+                      </div>
+
+                      <div class="row mt-3">
+                          <div class="col-md-12">
+                              <label for="description">Description:</label>
+                              <textarea name="description" class="form-control text-dark bg-light"
+                                        id="description" placeholder="Max. 500 characters"></textarea>
+                          </div>
+                      </div>
+                      <input type="hidden" id="selectedTypeA" name="type">
+                      <div class="row mt-5">
+                        <div class="col-md-4"></div>
+                        <div class="col-md-4">
+                          <div class="d-flex">
+                            <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                            type="submit" data-dismiss="modal" id="paySave">Save
+                            </button> 
+                            
+                            <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                          </div>
+                        </div>
+                        <div class="col-md-4"></div>
+                     
+                      
+                      </div>
+                  </form>
               </div>
+          </div>
+      </div>
+  </div>
+
+</div>  
+<script>
+
+
+document.getElementById('selectOption').addEventListener('change', function() {
+    var selectedValue = this.value;
+    if (selectedValue === 'Adjust Bank Balance') {
+        $('#adjbank').modal('show');
+        document.getElementById('selectedTypeA').value = selectedValue;
+    } else {
+        $('#adjbank').modal('hide');
+    }
+});
+document.querySelector('#adjbank .close').addEventListener('click', function() {
+$('#adjbank').modal('hide');
+location.reload();
+});
+</script>
+
             
             <div class="card-body">
              
               <!-- <div class="container-fluid"> -->
                   <table class="table table-responsive-md mt-4" id="table">
+                    <h6>Transactions</h6>
                       <thead>
                           <tr>
                               <th>TYPE</th>
@@ -285,10 +596,10 @@
                           {% for b in bankc %}
                       
                           <tr>
-                          <td>{{b.}}</a></td>
-                          <td> {{ b.ifsc}}</a></td>
-                          <td >{{ b.opn_bal }}</td>
-                          <td >{{ b.balance }}</a></td>
+                          <td>{{b.type}}</a></td>
+                          <td> {{ b.}}</a></td>
+                          <td >{{ b.date }}</td>
+                          <td >{{ b.amount }}</a></td>
                       
                           </tr>
                           {%endfor%}

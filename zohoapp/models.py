@@ -591,13 +591,18 @@ class Bankcreation(models.Model):
     branch = models.CharField(max_length=220,default='', null=True, blank=True)
     ac_no = models.CharField(max_length=220,default='', null=True, blank=True)
     ifsc = models.CharField(max_length=220,default='', null=True, blank=True)
-    opn_bal =models.IntegerField(null=True, blank=True)
+    opn_bal =models.FloatField(null=True, blank=True)
     bal_type=models.CharField(max_length=220,default='', null=True, blank=True)
 
-class bank_to_cash(models.Model):
+class transactions(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
-    bank= models.ForeignKey(Bankcreation,on_delete=models.CASCADE,null=True, blank=True)
-    cash=models.CharField(max_length=220,default='', null=True, blank=True)
-    amount =models.IntegerField(null=True, blank=True)
+    bank=models.ForeignKey(Bankcreation, on_delete=models.CASCADE,null=True, blank=True)
+    fromB=models.CharField(max_length=220,default='', null=True, blank=True)
+    toB=models.CharField(max_length=220,default='', null=True, blank=True)
+    amount = models.FloatField(null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     description=models.CharField(max_length=220,default='', null=True, blank=True)
+    type=models.CharField(max_length=220,default='', null=True, blank=True)
+    adjtype=models.CharField(max_length=220,default='', null=True, blank=True)
+    adjacname=models.CharField(max_length=220,default='', null=True, blank=True)
+    balance=models.FloatField(null=True, blank=True, default=0.0)
