@@ -134,10 +134,10 @@
                     <div class="col-md-6 d-flex justify-content-end align-items-start p-2 gap-2">
                       
                           <a style="color: orange; width: 2rem; height: 2rem;" class="btn btn-warning text-dark p-2"
-                              href="">
+                              href="{%url 'edit_bank' banks.id %}">
                               <i class="fa fa-pencil"></i>
                           </a>
-                          <a href="" style="color: orange; height: 2rem; width: 2rem;"
+                          <a href="{%url 'delete_bank' banks.id %}" style="color: orange; height: 2rem; width: 2rem;"
                               class="btn btn-warning text-dark p-2">
                               <i class="fa fa-trash"></i>
                           </a>
@@ -180,7 +180,7 @@
               <div class="row justify-content-end"> <!-- Align select dropdown to the right -->
                 <div class="col-md-3 p-2" style="width: 180px;">
                  
-                    <h4>Balance:{{bankc.balance}}</h4>
+                    <h4>Balance:{{bank_balance}}</h4>
                  
                 </div>
             </div>   

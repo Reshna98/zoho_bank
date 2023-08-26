@@ -211,9 +211,10 @@ urlpatterns = [
     
     path('bank_home', views.bank_home, name='bank_home'),
     path('create_bank', views.create_bank, name='create_bank'),
+    path('edit_bank/<int:bank_id>', views.edit_bank, name='edit_bank'),
     path('bank_listout/<int:id>', views.bank_listout, name='bank_listout'),
-    path('banktocash>/<int:id>', views.banktocash, name='banktocash'),
-    # path('bank_transactions/<int:bank_id>', views.bank_transactions, name='bank_transactions'),
+    path('banktocash/<int:id>', views.banktocash, name='banktocash'),
+    path('delete_bank/<int:bank_id>', views.delete_bank, name='delete_bank'),
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

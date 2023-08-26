@@ -593,7 +593,8 @@ class Bankcreation(models.Model):
     ifsc = models.CharField(max_length=220,default='', null=True, blank=True)
     opn_bal =models.FloatField(null=True, blank=True)
     bal_type=models.CharField(max_length=220,default='', null=True, blank=True)
-
+    date = models.DateField(null=True, blank=True)
+ 
 class transactions(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
     bank=models.ForeignKey(Bankcreation, on_delete=models.CASCADE,null=True, blank=True)
@@ -605,4 +606,4 @@ class transactions(models.Model):
     type=models.CharField(max_length=220,default='', null=True, blank=True)
     adjtype=models.CharField(max_length=220,default='', null=True, blank=True)
     adjacname=models.CharField(max_length=220,default='', null=True, blank=True)
-    balance=models.FloatField(null=True, blank=True, default=0.0)
+    # balance=models.FloatField(null=True, blank=True, default=0.0)
