@@ -156,22 +156,19 @@
                         
 
                     </div>
-                    <!-- <div class="col-md-7"></div>
+                    <div class="col-md-7"></div>
                     <div class="col-md-2">
                         <a class="btn text-center " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
                         role="button"><i class="fa fa-filter mt-2 mx-4"></i>
                         </a>
                         <div class="dropdown-menu ">
-                            <a class="dropdown-item" href="{% url 'recurring_bill' %}">All</a>
-                            <a class="dropdown-item" href="{% url 'recur_custasc' %}">Customer A-Z</a>
-                            <a class="dropdown-item" href="{% url 'recur_custdesc' %}">Customer Z-A</a>
-                            <a class="dropdown-item" href="{% url 'recur_vendorasc' %}">Vendor A-Z</a>
-                            <a class="dropdown-item" href="{% url 'recur_vendordesc' %}">Vendor Z-A</a>
-                            <a class="dropdown-item" href="{% url 'recur_profileasc' %}">Profile A-Z</a>
-                            <a class="dropdown-item" href="{% url 'recur_profiledesc' %}">Profile Z-A</a>
+                            <a class="dropdown-item" href="{% url 'bank_home'  %}">All</a>
+                            <a class="dropdown-item" href="{% url 'nameasc'  %}">Name A-Z</a>
+                            <a class="dropdown-item" href="{% url 'namedes'  %}">Name Z-A</a>
+                           
 
                         </div>
-                    </div> -->
+                    </div>
 
                 </div>
                 <hr>
@@ -189,17 +186,25 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {% for b in bank %}
+                            
+                            {% for bank, balance in bank_balances %}
                         
                             <tr>
-                            <td><a href="{% url 'bank_listout' b.id %}">{{b.name}}</a></td>
-                            <td><a href="{% url 'bank_listout' b.id %}"> {{ b.ifsc}}</a></td>
-                            <td ><a href="{% url 'bank_listout' b.id %}">{{ b.opn_bal }}</a></td>
-                            <td ><a href="{% url 'bank_listout' b.id %}"></a></td>
-                            <td><a href="{% url 'bank_listout' b.id %}">{{ b.ac_no}}</a></td>
-                            <td><a href="{% url 'bank_listout' b.id %}">{{ b.branch}}</a></td>
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{bank.name}}</a></td>
+                          
+
+                            <td><a href="{% url 'bank_listout' bank.id %}"> {{ bank.ifsc}}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ bank.opn_bal }}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ balance }}</a></td>
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.ac_no}}</a></td>
+                            <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.branch}}</a></td>
+                          
                             </tr>
-                            {%endfor%}
+
+                            {%endfor%}  
+                           
+                            
+                            
                         </tbody>
                     </table>
                 </div>
@@ -221,5 +226,6 @@
       }).hide();
     });
   });
+  $('.dropdown-toggle').dropdown();
 </script>
-{% endblock %}
+{%endblock%}

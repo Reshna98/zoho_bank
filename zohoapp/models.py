@@ -579,6 +579,7 @@ class ExpenseE(models.Model):
     sac=models.TextField(max_length=255,null=True, blank=True)
     taxamt=models.TextField(max_length=255,null=True, blank=True)
     image = models.FileField(upload_to='expense_image/', blank=True, null=True)
+
 class AttachE(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, default='')
     expense = models.ForeignKey(ExpenseE, on_delete=models.CASCADE, null=True)
@@ -594,6 +595,7 @@ class Bankcreation(models.Model):
     opn_bal =models.FloatField(null=True, blank=True)
     bal_type=models.CharField(max_length=220,default='', null=True, blank=True)
     date = models.DateField(null=True, blank=True)
+    document=models.FileField(upload_to='bank/',null=True,blank=True)
  
 class transactions(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
@@ -606,4 +608,4 @@ class transactions(models.Model):
     type=models.CharField(max_length=220,default='', null=True, blank=True)
     adjtype=models.CharField(max_length=220,default='', null=True, blank=True)
     adjacname=models.CharField(max_length=220,default='', null=True, blank=True)
-    # balance=models.FloatField(null=True, blank=True, default=0.0)
+   

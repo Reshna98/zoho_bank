@@ -214,7 +214,11 @@ urlpatterns = [
     path('edit_bank/<int:bank_id>', views.edit_bank, name='edit_bank'),
     path('bank_listout/<int:id>', views.bank_listout, name='bank_listout'),
     path('banktocash/<int:id>', views.banktocash, name='banktocash'),
+    path('bank_attachfile/<int:id>', views.bank_attachfile, name='bank_attachfile'),
     path('delete_bank/<int:bank_id>', views.delete_bank, name='delete_bank'),
+    path('nameasc/', views.nameasc, name='nameasc'),
+    path('namedes/', views.namedes, name='namedes'),
+
     re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     
     

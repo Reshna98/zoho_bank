@@ -104,101 +104,52 @@
     
                   </thead>
                   <tbody>
-                    {% for bank_item, balance in bank_balances %}
+    
+                    {%for bank in bank%}
                     <tr>
-                        <td><a class="text-white" href="{% url 'bank_listout' bank_item.id %}">
-                            {{ bank_item.name }} 
-                            <span class="d-flex justify-content-end align-items-start">&#8377;{{ balance }}</span>
-                        </a></td>
+    
+                      <td><a class="text-white"
+                          href="{% url 'bank_listout' bank.id %}">{{bank.name}} <span class="d-flex justify-content-end align-items-start"> {{expense.amount}}</span></a></td>
+    
                     </tr>
-                    {% endfor %}
-                </tbody>
-                
-                  
-            
-                
-                
-                  
-                  
-                 
-                 
+                    {%endfor%}
+                  </tbody>
                 </table>
     
               </div>
             </div>
           </div>
     
-          
+          <!-- Right Side: Card -->
           <div class="col-md-8">
             <div class="card">
               <div class="card-header" style="background-color: rgb(75, 75, 75);">
                 <div class="row">
                  <div class="col-md-6">
-                    <h6 class="bank-info">Bank Name: <span>{{ selected_bank.name }}</span></h6>
-                    <h6 class="bank-info">Account Number: <span>{{ selected_bank.ac_no }}</span></h6>
-                    <h6 class="bank-info">IFSC Code: <span>{{ selected_bank.ifsc }}</span></h6>
-                
+                    <h6 class="bank-info">Bank Name: <span>{{ banks.name }}</span></h6>
+                    <h6 class="bank-info">Account Number: <span>{{ banks.ac_no }}</span></h6>
+                    <h6 class="bank-info">IFSC Code: <span>{{ banks.ifsc }}</span></h6>
                   </div>
                 
                     <div class="col-md-6 d-flex justify-content-end align-items-start p-2 gap-2">
                       
                           <a style="color: orange; width: 2rem; height: 2rem;" class="btn btn-warning text-dark p-2"
-                              href="{%url 'edit_bank' selected_bank.id %}">
+                              href="{%url 'edit_bank' banks.id %}">
                               <i class="fa fa-pencil"></i>
                           </a>
-                          <a href="{%url 'delete_bank' selected_bank.id %}" style="color: orange; height: 2rem; width: 2rem;"
+                          <a href="{%url 'delete_bank' banks.id %}" style="color: orange; height: 2rem; width: 2rem;"
                               class="btn btn-warning text-dark p-2">
                               <i class="fa fa-trash"></i>
                           </a>
-                          <!-- <form method="post" enctype="multipart/form-data" id="upload-form" action="">
-                              {% csrf_token %} -->
-                              <!-- <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;"> -->
-                              <a href="#" class="btn btn-warning text-dark file-button text-dark p-2"   data-toggle="modal"
-                              data-target="#files" style="color: orange; height: 2rem; width: 2rem;">
+                          <form method="post" enctype="multipart/form-data" id="upload-form" action="">
+                              {% csrf_token %}
+                              <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;">
+                              <a href="#" class="btn btn-warning text-dark file-button text-dark p-2" id="file-button" style="color: orange; height: 2rem; width: 2rem;">
                                   <i class="fa fa-paperclip"></i>
                               </a>
-                            
-                      <!-- </form> -->
-                      <div class="modal fade" id="files">
-                        <div class="modal-dialog modal-xl m-5 p-5">
-                            <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
-                                <div class="modal-header " style="background: rgb(32, 35, 37);">
-                                    <h5 class="m-3 text-uppercase text-light" id="exampleModalLabel">Add File</h5>
-                                    <button type="button" class="close text-dark bg-none" data-dismiss="modal"
-                                        aria-label="Close">&times;</button>
-                                </div>
-                                <div class="modal-body" style="background: rgb(32, 35, 37); justify-content: center; overflow: hidden;">
-                                    <div class="card p-0 m-0">
-                                        <form action="" enctype="multipart/form-data" id="modalAddfile">
-                                            <div class="row mt-2 mx-5 text-center">
-                                                <input type="hidden" value="{{selected_bank.id}}" id="file_id">
-                                                <input type="file" class="form-control text-dark bg-light" name="file" id="filess" style="width: 400px;">
-                
-                                            </div>
-                
-                                            <div class="row mt-5">
-                                                <div class="col-md-4"></div>
-                                                <div class="col-md-4">
-                                                    <div class="d-flex">
-                                                        <button
-                                                            class=" font-weight-bold save_btn rounded-pill text-light w-50 my-4 mx-2"
-                                                            type="submit" data-dismiss="modal" id="fileSave">Save </button>
-                
-                
-                                                        <button type="button"
-                                                            class="font-weight-bold save_btn rounded-pill text-light w-50 my-4"
-                                                            data-dismiss="modal" aria-label="Close"> Cancel</button>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-4"></div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <script>
+                      </form>
+                     
+                    <script>
                       document.getElementById('file-button').addEventListener('click', function(e) {
                         e.preventDefault();
                         document.getElementById('attachment').click();
@@ -209,7 +160,7 @@
                         var form = document.getElementById('upload-form');
                         form.submit();
                       }
-                    </script> -->
+                    </script>
                    
                     </div>
                  </div>   
@@ -226,10 +177,11 @@
                       </div>
                   </div>
               </div>   
+              
               <div class="row justify-content-end"> 
-                <div class="col-md-4 p-2" style="width: 190px;">
+                <div class="col-md-3 p-2" style="width: 180px;">
                  
-                    <h4>Balance:&#8377;{{bank_balance}}</h4>
+                    <h4>Balance:{{bank_balance}}</h4>
                  
                 </div>
             </div>   
@@ -247,7 +199,7 @@
                         </div>
                         <div class="modal-body" style="background: rgb(32, 35, 37);">
                             <div class="card p-3 m-3">
-                              <form action="{% url 'banktocash' selected_bank.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
 
                                 
                                     {%csrf_token%}
@@ -256,7 +208,7 @@
                                             <label for="fromB">From</label>
                                             <select class="form-control text-dark bg-light form-select" id="fromB" name="fromB">
                                               <option value="">-- Select a Bank --</option>
-                                              {% for b in banks_list %}
+                                              {% for b in bank %}
                                               <option value="{{b.id }}">{{ b.name }}</option>
                                                {% endfor %}
                                             
@@ -342,7 +294,7 @@
                         </div>
                         <div class="modal-body" style="background: rgb(32, 35, 37);">
                             <div class="card p-3 m-3">
-                              <form action="{% url 'banktocash' selected_bank.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
 
                                 
                                     {%csrf_token%}
@@ -355,7 +307,7 @@
                                           <label for="toB">To</label>
                                           <select class="form-control text-dark bg-light form-select" id="toB" name="toB">
                                             <option value="">-- Select a Bank --</option>
-                                            {% for b in banks_list %}
+                                            {% for b in bank %}
                                             <option value="{{b.id }}">{{ b.name }}</option>
                                              {% endfor %}
                                           
@@ -438,7 +390,7 @@
                         </div>
                         <div class="modal-body" style="background: rgb(32, 35, 37);">
                             <div class="card p-3 m-3">
-                              <form action="{% url 'banktocash' selected_bank.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+                              <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
 
                                 
                                     {%csrf_token%}
@@ -447,7 +399,7 @@
                                           <label for="fromB">From</label>
                                           <select class="form-control text-dark bg-light form-select" id="fromB" name="fromB">
                                             <option value="">-- Select a Bank --</option>
-                                            {% for b in banks_list %}
+                                            {% for b in bank %}
                                             <option value="{{b.id }}">{{ b.name }}</option>
                                              {% endfor %}
                                           
@@ -457,7 +409,7 @@
                                           <label for="toB">To</label>
                                           <select class="form-control text-dark bg-light form-select" id="toB" name="toB">
                                             <option value="">-- Select a Bank --</option>
-                                            {% for b in banks_list %}
+                                            {% for b in bank %}
                                             <option value="{{b.id }}">{{ b.name }}</option>
                                              {% endfor %}
                                           
@@ -539,7 +491,7 @@
           </div>
           <div class="modal-body" style="background: rgb(32, 35, 37);">
               <div class="card p-3 m-3">
-                <form action="{% url 'banktocash' selected_bank.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
+                <form action="{% url 'banktocash' banks.id %}" method="post" class="needs-validation" novalidate autocomplete="off" id="bankToCashTransferForm">
 
                   
                       {%csrf_token%}
@@ -548,7 +500,7 @@
                             <label for="adjacname">Account Name</label>
                             <select class="form-control text-dark bg-light form-select" id="adjacname" name="adjacname">
                               <option value="">-- Select a Bank --</option>
-                              {% for b in banks_list %}
+                              {% for b in bank %}
                               <option value="{{b.id }}">{{ b.name }}</option>
                                {% endfor %}
                             
@@ -642,27 +594,18 @@ location.reload();
                           </tr>
                       </thead>
                       <tbody>
-                          {% for b in transactions_for_selected_bank %}
+                          {% for b in bankc %}
                       
                           <tr>
                           <td>{{b.type}}</a></td>
-                          <td>
-                          {% if b.type == 'Bank To Bank Transfer' %}
-                          {% if b.amount > 0 %}
-                          From: {{ b.fromB}}
-                          {% else %}
-                          To: {{ b.toB}}
-                          {% endif %}
-                          {% endif %}
-                          </td>
+                          <td> {{ b.}}</a></td>
                           <td >{{ b.date }}</td>
-                          <td >&#8377;{{ b.amount }}</a></td>
+                          <td >{{ b.amount }}</a></td>
                       
                           </tr>
                           {%endfor%}
                       </tbody>
-                  </table> 
-                  
+                  </table>
               </div>
     
         </div>
@@ -681,52 +624,8 @@ location.reload();
       });
     });
   
-    
-    
-    // $(document).ready(function () {
-    //     $("#fileSave").click(function () {
-
-    //         $.ajax({
-
-    //             type: 'POST',
-    //             url: "{% url 'bank_attachfile' selected_bank.id %}",
-
-    //             data: {
-    //                 id: $("#file_id").val(),
-    //                 file: $("#filess").val(),
-
-    //                 csrfmiddlewaretoken: '{{ csrf_token }}'
-
-    //             },
-
-    //             success: function (response) {
-    //                 document.getElementById("modalAddfile").reset();
-    //             },
-    //         });
-    //     });
-    // });
-    $(document).ready(function () {
-    $("#fileSave").click(function () {
-        var formData = new FormData();
-        formData.append('id', $("#file_id").val());
-        formData.append('file', $("#filess")[0].files[0]); // Get the file object
-
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-
-        $.ajax({
-            type: 'POST',
-            url: "{% url 'bank_attachfile' selected_bank.id %}",
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (response) {
-                document.getElementById("modalAddfile").reset();
-            },
-        });
-    });
-});
-
-
-  </script>
   
+  // $('.dropdown-toggle').dropdown();
+  </script>
+       
 {%endblock%}
