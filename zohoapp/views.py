@@ -14,9 +14,9 @@ from django.views import View
 # from .forms import EmailForm
 from django.http import JsonResponse
 from datetime import datetime,date, timedelta
-# from xhtml2pdf import pisa
+from xhtml2pdf import pisa
 from django.template.loader import get_template
-# from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup
 import io
 import os
 from django.template import Context, Template
@@ -4592,10 +4592,20 @@ def delete_bank(request, bank_id):
 def bank_listout(request, id):
     cp = company_details.objects.get(user=request.user)
     banks_list = Bankcreation.objects.filter(user=request.user)
+
     selected_bank = get_object_or_404(Bankcreation, id=id)
     transactions_for_selected_bank = transactions.objects.filter(user=request.user, bank=selected_bank)
     print(transactions_for_selected_bank)
     bank_balance = sum([transaction.amount for transaction in transactions_for_selected_bank])
+
+    for transaction in transactions_for_selected_bank:
+            if transaction.type == 'Bank To Bank Transfer':
+                if transaction.amount > 0:
+                    transaction.display_text = f'From: {transaction.fromB}'
+                else:
+                    transaction.display_text = f'To: {transaction.toB}'
+            else:
+                transaction.display_text = '' 
 
     bank_balances = []
     for bank in banks_list:
@@ -4675,8 +4685,6 @@ def banktocash(request, id):
                 to_bank = Bankcreation.objects.get(id=toB)
                 from_bank_transaction = transactions.objects.create(
                     user=request.user,
-                    # fromB=fromB.name,
-                    # toB=toB.name,
                     fromB=from_bank.name,
                     toB=to_bank.name,
                     amount=-amount,
@@ -4747,3 +4755,106 @@ def namedes(request):
         bank_balance = sum([transaction.amount for transaction in bank_transactions])
         bank_balances.append((bank, bank_balance))
     return render(request, 'bank_home.html', {'company': cp, 'bank_balances': bank_balances})
+
+def view_nameasc(request,id):
+    cp = company_details.objects.get(user = request.user)
+    banks_list =Bankcreation.objects.filter(user = request.user).order_by('name')
+    print(banks_list)
+    selected_bank = get_object_or_404(Bankcreation, id=id)
+    transactions_for_selected_bank = transactions.objects.filter(user=request.user, bank=selected_bank)
+    print(transactions_for_selected_bank)
+    bank_balance = sum([transaction.amount for transaction in transactions_for_selected_bank])
+
+    bank_balances = []
+    for bank in banks_list:
+        transactions_for_bank = transactions.objects.filter(user=request.user, bank=bank)
+        balance = sum([transaction.amount for transaction in transactions_for_bank])
+        bank_balances.append((bank, balance))
+    for transaction in transactions_for_selected_bank:
+            if transaction.type == 'Bank To Bank Transfer':
+                if transaction.amount > 0:
+                    transaction.display_text = f'From: {transaction.fromB}'
+                else:
+                    transaction.display_text = f'To: {transaction.toB}'
+            else:
+                transaction.display_text = '' 
+
+    return render(request, 'banklistout.html', {'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 'bank_balance': bank_balance, 'bank_balances': bank_balances ,'transactions_for_selected_bank':transactions_for_selected_bank})
+
+def view_namedes(request,id):
+    cp = company_details.objects.get(user = request.user)
+    banks_list =Bankcreation.objects.filter(user = request.user).order_by('-name')
+    print(banks_list)
+    selected_bank = get_object_or_404(Bankcreation, id=id)
+    transactions_for_selected_bank = transactions.objects.filter(user=request.user, bank=selected_bank)
+    print(transactions_for_selected_bank)
+    bank_balance = sum([transaction.amount for transaction in transactions_for_selected_bank])
+
+    bank_balances = []
+    for bank in banks_list:
+        transactions_for_bank = transactions.objects.filter(user=request.user, bank=bank)
+        balance = sum([transaction.amount for transaction in transactions_for_bank])
+        bank_balances.append((bank, balance))
+    for transaction in transactions_for_selected_bank:
+            if transaction.type == 'Bank To Bank Transfer':
+                if transaction.amount > 0:
+                    transaction.display_text = f'From: {transaction.fromB}'
+                else:
+                    transaction.display_text = f'To: {transaction.toB}'
+            else:
+                transaction.display_text = '' 
+
+    return render(request, 'banklistout.html', {'bankcompany': cp,'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 'bank_balance': bank_balance, 'bank_balances': bank_balances ,'transactions_for_selected_bank':transactions_for_selected_bank,})
+
+def bank_pdf(request, id):
+    cp = company_details.objects.get(user=request.user)
+    banks_list = Bankcreation.objects.filter(user=request.user)
+    selected_bank = get_object_or_404(Bankcreation, id=id)
+    transactions_for_selected_bank = transactions.objects.filter(user=request.user, bank=selected_bank)
+    print(transactions_for_selected_bank)
+    bank_balance = sum([transaction.amount for transaction in transactions_for_selected_bank])
+
+    bank_balances = []
+    for bank in banks_list:
+        transactions_for_bank = transactions.objects.filter(user=request.user, bank=bank)
+        balance = sum([transaction.amount for transaction in transactions_for_bank])
+        bank_balances.append((bank, balance))
+    for transaction in transactions_for_selected_bank:
+            if transaction.type == 'Bank To Bank Transfer':
+                if transaction.amount > 0:
+                    transaction.display_text = f'From: {transaction.fromB}'
+                else:
+                    transaction.display_text = f'To: {transaction.toB}'
+            else:
+                transaction.display_text = '' 
+
+    script_directory = os.path.dirname(os.path.abspath(__file__))
+    template_filename = 'banklistout.html'
+    template_path = os.path.join(script_directory, 'templates', template_filename)
+
+    with open(template_path, 'r') as file:
+        html_content = file.read()
+
+    soup = BeautifulSoup(html_content, 'html.parser')
+    section = soup.find('div', class_='bank')
+    section_html = section.prettify()
+    template = Template(section_html)
+
+    context = {
+    'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 
+    'bank_balance': bank_balance, 'bank_balances': bank_balances ,
+    'transactions_for_selected_bank':transactions_for_selected_bank
+    }
+    html = template.render(Context(context))
+
+    fname = selected_bank.name
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename={fname}.pdf'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+    if pisa_status.err:
+        return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    
+    return response
+   
+    

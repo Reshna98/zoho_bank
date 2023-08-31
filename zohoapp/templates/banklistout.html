@@ -2,17 +2,144 @@
 {%load static%}
 {% block content %}
 
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+<script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/print-js/1.6.0/print.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  
 <section ><style>
+   
+
+ 
+
+  
+
+    a {
+        list-style: none;
+        color: azure;
+    }
+
+    a:hover {
+        color: rgb(218, 164, 48);
+        text-decoration: none;
+    }
+
+ 
+
+    .tab {
+        overflow: hidden;
+        /* border: 1px solid ; */
+        background-color: transparent;
+        width: 300px;
+    }
+
+    .tab a {
+
+        font-family: inherit;
+        background-color: inherit;
+        float: left;
+        outline: none;
+        cursor: pointer;
+        padding: 10px 5px;
+        transition: 0.3s;
+        color: azure;
+        border: none;
+    }
+
+    .tab a:hover {
+        background-color: #ddd;
+        color: rgb(56, 54, 54);
+    }
+
+    .tab a.active {
+        background-color: #ccc;
+        color: rgb(56, 54, 54);
+
+    }
+
+    .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border-top: none;
+    }
+
+    .page {
+        background: azure;
+        display: block;
+        margin: 0 auto;
+        position: relative;
+        box-shadow: 0 0 0.5cm rgba(0, 0, 0, 0.5);
+    }
+
+    .page[size="A4"] {
+        width: 17cm;
+        height: 23cm;
+        overflow: hidden;
+    }
+
+    .print-only {
+        display: none;
+        height: auto;
+        overflow-y: auto;
+        border: none;
+        box-shadow: inset 2px 2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset -2px -2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset 2px -2px 5px 2px rgba(0, 0, 0, 0.3),
+              inset -2px 2px 5px 2px rgba(0, 0, 0, 0.3);
+
+        /* box-shadow: 5px 2px 5px 2px  grey; */
+    }
+
+    @media print {
+        body * {
+            visibility: hidden;
+        }
+
+        header {
+            display: none;
+        }
+
+        .print-only * {
+            visibility: visible;
+        }
+
+        .print-only {
+            /* position: absolute; */
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            height: auto;
+            page-break-before: always;
+            page-break-inside: avoid;
+        }
+
+        @page {
+            size:100%;
+            margin: 0;
+            height: auto;
+        }
+    }
   .card-custom {
     background-color: rgba(255, 255, 255, 0.5);
    /* height: 400px; */
 
 }
 
-
+.btn{
+        color: rgb(218, 164, 48);
+        outline-color: azure;
+        border: 2px solid rgb(25, 91, 145);
+    }
+    .btn:hover{
+        color: darkslategray;
+        background-color: lightblue;
+        outline: none;
+        
+    }
 .card-text {
     margin-bottom: 0.5rem;
 }
@@ -90,9 +217,26 @@
                   <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
               </div>
               <div class="col-md-6 d-flex justify-content-end align-items-start">
-                  <a style="color: #ccc;width: 4rem;height: 2rem;" class="btn btn-warning" href="{%url 'create_bank'%}">New</a>
+                  <a class="btn fa fa-plus text-right px-3 py-2" role="button" href="{%url 'create_bank'%}">
+                    <span class="mt-2">&nbsp;&nbsp;NEW</span></a>
               </div>
+              
+             
+                
+                <div class="col-md-12 d-flex justify-content-end align-items-start">
+                  <a class="btn text-center " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                  role="button"><i class="fa fa-filter mt-2 mx-4 "></i>
+                  </a>
+                  <div class="dropdown-menu ">
+                     
+                      <a class="dropdown-item" href="{%url 'view_nameasc' selected_bank.id %}">Name A-Z</a>
+                      <a class="dropdown-item" href="{%url 'view_namedes' selected_bank.id %}">Name Z-A</a>
+                  
+                  </div>
+              </div>
+              
           </div>
+         
             <div class="row">
               <div class="col-md-12" style="background-color: gray;">
                 <table class="table table-responsive text-white" id="table">
@@ -114,15 +258,7 @@
                     {% endfor %}
                 </tbody>
                 
-                  
-            
-                
-                
-                  
-                  
-                 
-                 
-                </table>
+              </table>
     
               </div>
             </div>
@@ -150,15 +286,34 @@
                               class="btn btn-warning text-dark p-2">
                               <i class="fa fa-trash"></i>
                           </a>
-                          <!-- <form method="post" enctype="multipart/form-data" id="upload-form" action="">
-                              {% csrf_token %} -->
-                              <!-- <input type="file" name="attachment" id="attachment" onchange="handleFileSelection(event)" style="display: none;"> -->
+                         
                               <a href="#" class="btn btn-warning text-dark file-button text-dark p-2"   data-toggle="modal"
                               data-target="#files" style="color: orange; height: 2rem; width: 2rem;">
                                   <i class="fa fa-paperclip"></i>
                               </a>
+                              <a href="" style="color: orange; height: 2rem; width: 2rem;"
+                              class="btn btn-warning text-dark p-2" onclick="window.print()">
+                              <i class="fa fa-print"></i> </a>
+
+                              <a href="{% url 'bank_pdf' selected_bank.id %}"  class="btn btn-warning text-dark p-2"
+                              style="color: orange; height: 2rem; width: 2rem;"  title="PDF"> <i class="fa fa-file-pdf"></i></a>
+
+                              {% if selected_bank.document != "" %}
+                              <a class="btn btn-warning text-dark p-2" download href="{{selected_bank.document.url }}"style="color: orange; height: 2rem; width: 2rem;"><i
+                                      class="fa fa-download"></i></a>
+                              {% endif %}
+                           
+                             
+                              <a class="tablinks  btn btn-warning text-dark p-2" onclick="openTab(event, 'Template')" role="button" style="color: orange; height: 2rem; width: 2rem;"><i class="fa fa-file-word"></i>
+                                </a>
+                              <a class="tablinks btn btn-warning text-dark p-2" onclick="openTab(event, 'Overview')" role="button"   style="color: orange; height: 2rem; width: 2rem;"><i class="fa fa-eye"></i>
+                                </a>
+                             
                             
-                      <!-- </form> -->
+            
+                             
+                         
+
                       <div class="modal fade" id="files">
                         <div class="modal-dialog modal-xl m-5 p-5">
                             <div class="modal-content" style="background: rgb(32, 35, 37);border-radius: 20px;">
@@ -198,18 +353,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <script>
-                      document.getElementById('file-button').addEventListener('click', function(e) {
-                        e.preventDefault();
-                        document.getElementById('attachment').click();
-                      });
-                    
-                      function handleFileSelection(event) {
-                        var input = event.target;
-                        var form = document.getElementById('upload-form');
-                        form.submit();
-                      }
-                    </script> -->
+                 
                    
                     </div>
                  </div>   
@@ -294,11 +438,11 @@
                                       <div class="col-md-4"></div>
                                       <div class="col-md-4">
                                         <div class="d-flex">
-                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          <button class="btn save_btn rounded-pill text-white w-50 my-4 mx-3"
                                           type="submit" data-dismiss="modal" id="paySave">Save
                                           </button> 
                                           
-                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                                          <input class="btn close btn save_btn rounded-pill text-white w-50 my-4" type="reset" value="Reset">
                                         </div>
                                       </div>
                                       <div class="col-md-4"></div>
@@ -389,11 +533,11 @@
                                       <div class="col-md-4"></div>
                                       <div class="col-md-4">
                                         <div class="d-flex">
-                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          <button class="btn save_btn rounded-pill text-white w-50 my-4 mx-3"
                                           type="submit" data-dismiss="modal" id="paySave">Save
                                           </button> 
                                           
-                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                                          <input class="btn close btn save_btn rounded-pill text-white w-50 my-4" type="reset" value="Reset">
                                         </div>
                                       </div>
                                       <div class="col-md-4"></div>
@@ -491,11 +635,11 @@
                                       <div class="col-md-4"></div>
                                       <div class="col-md-4">
                                         <div class="d-flex">
-                                          <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                                          <button class="btn save_btn rounded-pill text-white w-50 my-4 mx-3"
                                           type="submit" data-dismiss="modal" id="paySave">Save
                                           </button> 
                                           
-                                          <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                                          <input class="btn close btn save_btn rounded-pill text-white w-50 my-4" type="reset" value="Reset">
                                         </div>
                                       </div>
                                       <div class="col-md-4"></div>
@@ -590,11 +734,11 @@
                         <div class="col-md-4"></div>
                         <div class="col-md-4">
                           <div class="d-flex">
-                            <button class="btn save_btn rounded-pill text-grey w-50 my-4 mx-3"
+                            <button class="btn save_btn rounded-pill text-white w-50 my-4 mx-3"
                             type="submit" data-dismiss="modal" id="paySave">Save
                             </button> 
                             
-                            <input class="btn close btn save_btn rounded-pill text-grey w-50 my-4" type="reset" value="Reset">
+                            <input class="btn close btn save_btn rounded-pill text-white w-50 my-4" type="reset" value="Reset">
                           </div>
                         </div>
                         <div class="col-md-4"></div>
@@ -629,9 +773,78 @@ location.reload();
             
             <div class="card-body">
              
+              <div id="Template" class="print-only page tabcontent bank" >
+                <div class="row extra-info pt-3">
+                    <div class="col-md-6">
+                        <h5 style="color: black;">Bank:{{ selected_bank.name }}</h5>
+                        <p class="ac_no " style="color: black;">Account_No:{{ selected_bank.ac_no }}<br>
+                        IFSC Code:{{ selected_bank.ifsc}} <br>
+                        Branch:{{ selected_bank.branch}}<br>
+                           
+                        </p>
+                      </div>
+                    <div class="col-md-6">
+                        <!-- <h2 class="text-uppercase text-dark text-center">Banking</h2> -->
+                        <section class="top-content  d-flex justify-content-end">
+                            <div class="top-right">
+                                <!-- <div class="graphic-path"> -->
+                                    <h5 style="color: black;">{{selectd_bank.name}}</h5>
+                                <!-- </div> -->
+                                <!-- <div class="position-relative"> -->
+                                    <p style="color: black;font-weight: bolder;"><span>Balance:&#8377;{{bank_balance}}</span></p>
+                                <!-- </div> -->
+                            </div>
+                        </section>
+                       
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                         
+                      <table  class="table table-responsive-md">
+                        <h6 style="color: black;">Transactions</h6>
+                          <thead >
+                              <tr>
+                                  <th >TYPE</th>
+                                  <th>NAME</th>
+                                  <th>DATE</th>
+                                  <th>AMOUNT</th>
+                              
+                              </tr>
+                          </thead>
+                          <tbody>
+                              {% for b in transactions_for_selected_bank %}
+                          
+                              <tr >
+                              <td>{{b.type}}</td>
+                             
+                              <td>
+                              
+                              <!-- {% if b.type == 'Bank To Bank Transfer' %}
+                              {% if b.amount > 0 %}
+                              From: {{ b.fromB}}
+                              {% else %}
+                              To: {{ b.toB}}
+                              {% endif %}
+                              {% endif %} -->
+                              {{b.display_text}}
+                              </td>
+                              
+                            
+                            
+                              <td >{{ b.date }}</td>
+                              <td >&#8377;{{ b.amount }}</a></td>
+                          
+                              </tr>
+                              {%endfor%}
+                          </tbody>
+                      </table> 
+                  
+                  </div>
+                </div> 
               <!-- <div class="container-fluid"> -->
-                  <table class="table table-responsive-md mt-4" id="table">
-                    <h6>Transactions</h6>
+                
+                  <table id="Overview" class="table table-responsive-md mt-4  tabcontent"  style="display: block;padding: 40px;">
+                    <!-- <h6>Transactions</h6> -->
                       <thead>
                           <tr>
                               <th>TYPE</th>
@@ -645,16 +858,22 @@ location.reload();
                           {% for b in transactions_for_selected_bank %}
                       
                           <tr>
-                          <td>{{b.type}}</a></td>
+                          <td>{{b.type}}</td>
+                         
                           <td>
-                          {% if b.type == 'Bank To Bank Transfer' %}
+                          
+                          <!-- {% if b.type == 'Bank To Bank Transfer' %}
                           {% if b.amount > 0 %}
                           From: {{ b.fromB}}
                           {% else %}
                           To: {{ b.toB}}
                           {% endif %}
-                          {% endif %}
+                          {% endif %} -->
+                          {{b.display_text}}
                           </td>
+                          
+                        
+                        
                           <td >{{ b.date }}</td>
                           <td >&#8377;{{ b.amount }}</a></td>
                       
@@ -726,7 +945,28 @@ location.reload();
     });
 });
 
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script>
+    function openTab(evt, tabName) {
+      console.log("openTab called with tabName:", tabName);
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+
+      tablinks = document.getElementsByClassName("tablinks");
+
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      document.getElementById(tabName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
 
   </script>
-  
 {%endblock%}
