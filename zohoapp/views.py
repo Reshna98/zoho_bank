@@ -4732,7 +4732,7 @@ def bank_attachfile(request,id):
             bank.document = request.FILES['file']
 
         bank.save()
-        return redirect('bank_listout',id)
+        return redirect('bank_listout',id=id)
 
 def nameasc(request):
     cp = company_details.objects.get(user = request.user)
@@ -4805,6 +4805,38 @@ def view_namedes(request,id):
                 transaction.display_text = '' 
 
     return render(request, 'banklistout.html', {'bankcompany': cp,'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 'bank_balance': bank_balance, 'bank_balances': bank_balances ,'transactions_for_selected_bank':transactions_for_selected_bank,})
+def bank_status(request, id):
+    cp = company_details.objects.get(user=request.user)
+    banks_list = Bankcreation.objects.filter(user=request.user)
+
+    selected_bank = get_object_or_404(Bankcreation, id=id)
+    transactions_for_selected_bank = transactions.objects.filter(user=request.user, bank=selected_bank)
+    print(transactions_for_selected_bank)
+    bank_balance = sum([transaction.amount for transaction in transactions_for_selected_bank])
+
+    for transaction in transactions_for_selected_bank:
+            if transaction.type == 'Bank To Bank Transfer':
+                if transaction.amount > 0:
+                    transaction.display_text = f'From: {transaction.fromB}'
+                else:
+                    transaction.display_text = f'To: {transaction.toB}'
+            else:
+                transaction.display_text = '' 
+
+    bank_balances = []
+    for bank in banks_list:
+        transactions_for_bank = transactions.objects.filter(user=request.user, bank=bank)
+        balance = sum([transaction.amount for transaction in transactions_for_bank])
+        bank_balances.append((bank, balance))
+    if request.method == 'POST':
+        selected_bank = get_object_or_404(Bankcreation, id=id)
+        new_status = request.POST.get('action')
+        selected_bank.status = new_status
+        selected_bank.save()
+
+        return JsonResponse({'message': 'Status updated successfully'})
+    
+    return render(request, 'banklistout.html', {'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 'bank_balance': bank_balance, 'bank_balances': bank_balances ,'transactions_for_selected_bank':transactions_for_selected_bank})
 
 def bank_pdf(request, id):
     cp = company_details.objects.get(user=request.user)
@@ -4836,7 +4868,7 @@ def bank_pdf(request, id):
         html_content = file.read()
 
     soup = BeautifulSoup(html_content, 'html.parser')
-    section = soup.find('div', class_='bank')
+    section = soup.find('div', class_='print-only')
     section_html = section.prettify()
     template = Template(section_html)
 

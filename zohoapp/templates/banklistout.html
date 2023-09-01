@@ -10,7 +10,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.3.2/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
  
-<section ><style>
+<section >
+  <style>
    
 
  
@@ -94,6 +95,8 @@
     }
 
     @media print {
+     
+
         body * {
             visibility: hidden;
         }
@@ -115,13 +118,15 @@
             height: auto;
             page-break-before: always;
             page-break-inside: avoid;
+            
         }
-
+       
         @page {
             size:100%;
             margin: 0;
             height: auto;
         }
+       
     }
   .card-custom {
     background-color: rgba(255, 255, 255, 0.5);
@@ -273,6 +278,7 @@
                     <h6 class="bank-info">Bank Name: <span>{{ selected_bank.name }}</span></h6>
                     <h6 class="bank-info">Account Number: <span>{{ selected_bank.ac_no }}</span></h6>
                     <h6 class="bank-info">IFSC Code: <span>{{ selected_bank.ifsc }}</span></h6>
+                    
                 
                   </div>
                 
@@ -295,10 +301,13 @@
                               class="btn btn-warning text-dark p-2" onclick="window.print()">
                               <i class="fa fa-print"></i> </a>
 
+                           
                               <a href="{% url 'bank_pdf' selected_bank.id %}"  class="btn btn-warning text-dark p-2"
                               style="color: orange; height: 2rem; width: 2rem;"  title="PDF"> <i class="fa fa-file-pdf"></i></a>
-
-                              {% if selected_bank.document != "" %}
+                               <!-- <a  onclick="convertToPDF();" class="btn btn-warning text-dark p-2"
+                              style="color: orange; height: 2rem; width: 2rem;"  title="PDF"> <i class="fa fa-file-pdf"></i></a>  -->
+                             
+                              {% if selected_bank.document != "" %} 
                               <a class="btn btn-warning text-dark p-2" download href="{{selected_bank.document.url }}"style="color: orange; height: 2rem; width: 2rem;"><i
                                       class="fa fa-download"></i></a>
                               {% endif %}
@@ -358,6 +367,13 @@
                     </div>
                  </div>   
                  <div class="row justify-content-end"> 
+                  <form id="statusForm" data-url="{% url 'bank_status' selected_bank.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="{% if selected_bank.status == 'active' %}inactive{% else %}active{% endif %}">
+                    <button type="button" id="toggleStatusButton" class="btn btn-warning text-dark p-2">
+                        {% if selected_bank.status == 'active' %}Active{% else %}Inactive{% endif %}
+                    </button>
+                  </form>
                   <div class="col-md-3 p-2" style="width: 180px;">
                       <div class="form-group ">
                           <select class="form-control p-2 form-select bg-light text-dark" id="selectOption">
@@ -772,8 +788,8 @@ location.reload();
 
             
             <div class="card-body">
-             
-              <div id="Template" class="print-only page tabcontent bank" >
+             <h6>Transactions</h6>
+              <div id="Template" class="print-only page tabcontent ">
                 <div class="row extra-info pt-3">
                     <div class="col-md-6">
                         <h5 style="color: black;">Bank:{{ selected_bank.name }}</h5>
@@ -787,24 +803,26 @@ location.reload();
                         <!-- <h2 class="text-uppercase text-dark text-center">Banking</h2> -->
                         <section class="top-content  d-flex justify-content-end">
                             <div class="top-right">
-                                <!-- <div class="graphic-path"> -->
+                                <div class="graphic-path">
                                     <h5 style="color: black;">{{selectd_bank.name}}</h5>
-                                <!-- </div> -->
-                                <!-- <div class="position-relative"> -->
-                                    <p style="color: black;font-weight: bolder;"><span>Balance:&#8377;{{bank_balance}}</span></p>
-                                <!-- </div> -->
+                                </div>
+                                <div class="position-relative">
+                                    <p style="color: black;font-weight: bolder;"><span>Balance:{{bank_balance}}</span></p>
+                                </div>
                             </div>
                         </section>
-                       
+                        
                         </div>
                     </div>
-                    <div class="col-md-12">
+                    <section class="product-area mt-4">
+                    <!-- <div class="col-md-12"> -->
                          
-                      <table  class="table table-responsive-md">
+                      <table  class="table table-hover">
                         <h6 style="color: black;">Transactions</h6>
                           <thead >
                               <tr>
-                                  <th >TYPE</th>
+                                  <th >#</th>
+                                  <th>TYPE</th>
                                   <th>NAME</th>
                                   <th>DATE</th>
                                   <th>AMOUNT</th>
@@ -814,37 +832,24 @@ location.reload();
                           <tbody>
                               {% for b in transactions_for_selected_bank %}
                           
-                              <tr >
+                              <tr>
+                              <td>{{ forloop.counter }}</td>
                               <td>{{b.type}}</td>
-                             
-                              <td>
+                              <td>{{b.display_text}}</td>
+                              <td>{{ b.date }}</td>
+                              <td>{{ b.amount }}</td>
                               
-                              <!-- {% if b.type == 'Bank To Bank Transfer' %}
-                              {% if b.amount > 0 %}
-                              From: {{ b.fromB}}
-                              {% else %}
-                              To: {{ b.toB}}
-                              {% endif %}
-                              {% endif %} -->
-                              {{b.display_text}}
-                              </td>
-                              
-                            
-                            
-                              <td >{{ b.date }}</td>
-                              <td >&#8377;{{ b.amount }}</a></td>
-                          
                               </tr>
                               {%endfor%}
                           </tbody>
                       </table> 
-                  
+                  </section>
                   </div>
                 </div> 
-              <!-- <div class="container-fluid"> -->
-                
-                  <table id="Overview" class="table table-responsive-md mt-4  tabcontent"  style="display: block;padding: 40px;">
-                    <!-- <h6>Transactions</h6> -->
+            
+
+                  <table id="Overview" class="table table-responsive mt-4  tabcontent"  style="display: inline-table;">
+                   
                       <thead>
                           <tr>
                               <th>TYPE</th>
@@ -882,10 +887,10 @@ location.reload();
                       </tbody>
                   </table> 
                   
-              </div>
-    
+              
+            </div>
         </div>
-          
+         </div> 
     
   </section>
   <script>
@@ -940,6 +945,7 @@ location.reload();
             contentType: false,
             success: function (response) {
                 document.getElementById("modalAddfile").reset();
+                location.reload();
             },
         });
     });
@@ -964,9 +970,135 @@ location.reload();
         tablinks[i].className = tablinks[i].className.replace(" active", "");
       }
 
-      document.getElementById(tabName).style.display = "block";
+     
+      if (tabName === "Overview") {
+        document.getElementById(tabName).style.display = "inline-table"; 
+    } else {
+        document.getElementById(tabName).style.display = "block"; 
+    }
       evt.currentTarget.className += " active";
     }
-
+   
+  
   </script>
+  <!-- <script>
+    $(document).ready(function () {
+        $("#toggleStatusButton").on("click", function () {
+            const statusForm = $("#statusForm");
+            const statusInput = statusForm.find('input[name="action"]');
+            const url = statusForm.data("url");
+
+            // Toggle the status value
+            const newStatus = statusInput.val() === "activate" ? "deactivate" : "activate";
+
+            // Update the input field and button text
+            statusInput.val(newStatus);
+            $("#toggleStatusButton").text(newStatus === "activate" ? "Activate" : "Deactivate");
+
+            // Send an AJAX request to update the status
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: statusForm.serialize(),
+                success: function (response) {
+                    // Handle success response (if needed)
+                },
+                error: function () {
+                    // Handle error (if needed)
+                },
+            });
+        });
+    });
+</script> -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function () {
+      $("#toggleStatusButton").on("click", function () {
+          const statusForm = $("#statusForm");
+          const statusInput = statusForm.find('input[name="action"]');
+          const url = statusForm.data("url");
+
+          // Toggle the status value
+          const newStatus = statusInput.val() === "active" ? "inactive" : "active";
+
+          // Update the input field and button text
+          statusInput.val(newStatus);
+          $("#toggleStatusButton").text(newStatus === "active" ? "Active" : "Inactive");
+
+          // Send an AJAX request to update the status
+          $.ajax({
+              url: url,
+              type: "POST",
+              data: statusForm.serialize(),
+              success: function (response) {
+                  // Handle success response (if needed)
+              },
+              error: function () {
+                  // Handle error (if needed)
+              },
+          });
+      });
+   
+  });
+</script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+<script type="text/javascript">
+  
+  function convertToPDF() {
+    const element = document.getElementById('Template');
+
+    html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: 'bank.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      })
+      .outputPdf()
+      .then(function (pdf) {
+        // Save the PDF or display it
+        pdf.save();
+      });
+  }
+</script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> -->
+
+<script>
+  // function convertToPDF() {
+  //   const element = document.getElementById('Template');
+  //   console.log('Element found:', element);
+
+  //   html2pdf()
+  //     .from(element)
+  //     .set({
+  //       margin: 10,
+  //       filename: 'bankss.pdf',
+  //       image: { type: 'jpeg', quality: 0.98 },
+  //       html2canvas: { scale: 2 },
+  //       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+  //     })
+  //     .outputPdf()
+  //     .then(function (pdf) {
+  //       console.log(pdf);
+        
+  //       pdf.save();
+       
+
+  //     });
+     
+  //   }
+  //     console.log('PDF generated');
+  
+</script>
+
+
+
+  
 {%endblock%}

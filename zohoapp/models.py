@@ -596,6 +596,7 @@ class Bankcreation(models.Model):
     bal_type=models.CharField(max_length=220,default='', null=True, blank=True)
     date = models.DateField(null=True, blank=True)
     document=models.FileField(upload_to='bank/',null=True,blank=True)
+    status= models.TextField(default='active')
  
 class transactions(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE)
