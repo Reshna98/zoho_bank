@@ -208,7 +208,8 @@ urlpatterns = [
     path('pay_dropdownE', views.pay_dropdownE, name='pay_dropdownE'),
     path('get_vendor_gst_treatment', views.get_vendor_gst_treatment, name='get_vendor_gst_treatment'),
     path('get_company_state', views.get_company_state, name='get_company_state'),
-    
+     
+    #reshna-banking
     path('bank_home', views.bank_home, name='bank_home'),
     path('create_bank', views.create_bank, name='create_bank'),
     path('edit_bank/<int:bank_id>', views.edit_bank, name='edit_bank'),

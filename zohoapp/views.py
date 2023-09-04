@@ -4512,7 +4512,7 @@ def create_bank(request):
             branch= request.POST.get('branch')
             ac_no= request.POST.get('ac_no')
             ifsc=request.POST.get('ifsc')
-            if bal_type == 'Debit':
+            if bal_type == 'Credit':
                 opn_bal = -opn_bal
             else:
                 opn_bal = opn_bal
@@ -4551,7 +4551,7 @@ def edit_bank(request,bank_id):
             bank.name = request.POST.get('name')
             bank.opn_bal = float(request.POST.get('opn_bal', 0.0))
             bank.bal_type = request.POST.get('bal_type')
-            if bank.bal_type == 'Debit':
+            if bank.bal_type == 'Credit':
                 bank.opn_bal = -bank.opn_bal
             else: 
                 bank.opn_bal = bank.opn_bal
@@ -4834,7 +4834,7 @@ def bank_status(request, id):
         selected_bank.status = new_status
         selected_bank.save()
 
-        return JsonResponse({'message': 'Status updated successfully'})
+        # return JsonResponse({'message': 'Status updated successfully'})
     
     return render(request, 'banklistout.html', {'company': cp, 'banks_list': banks_list, 'selected_bank': selected_bank, 'bank_balance': bank_balance, 'bank_balances': bank_balances ,'transactions_for_selected_bank':transactions_for_selected_bank})
 
@@ -4888,5 +4888,5 @@ def bank_pdf(request, id):
         return HttpResponse('We had some errors <pre>' + html + '</pre>')
     
     return response
-   
+    
     

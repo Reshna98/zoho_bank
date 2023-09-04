@@ -91,12 +91,12 @@
                         <div class="col-md-10">
                             <h2 class="mb-0 text-uppercase text-right">ALL BANKINGS</h2>
                         </div>
-                        <div class="col-md-2">
+                        <!-- <div class="col-md-2">
                             <a href="{%url 'create_bank'%}" class="btn fa fa-plus text-right px-3 py-2" role="button">
                                 <span class="mt-2">&nbsp;&nbsp;NEW</span>
                             </a> 
 
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
@@ -112,10 +112,17 @@
                         
 
                     </div>
-                    <div class="col-md-7"></div>
-                    <div class="col-md-2">
+                    
+                    <div class="col-md-5"></div>
+                    <div class="col-md-4 d-flex justify-content-end align-items-start gap-1">
+                        <a href="{%url 'create_bank'%}" class="btn fa fa-plus text-right px-3 py-2" role="button">
+                            <span class="mt-2">&nbsp;&nbsp;NEW</span>
+                        </a> 
+
+                    <!-- </div>
+                    <div class="col-md-2"> -->
                         <a class="btn text-center " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                        role="button"><i class="fa fa-filter mt-2 mx-4"></i>
+                        role="button"><i class="fa fa-filter mt-1 mx-4"></i>
                         </a>
                         <div class="dropdown-menu ">
                             <a class="dropdown-item" href="{% url 'bank_home'  %}">All</a>
@@ -134,10 +141,11 @@
                             <tr>
                                 <th>NAME</th>
                                 <th>IFSC CODE</th>
-                                <th>OPENING BALANCE</th>
-                                <th>BALANCE</th>
                                 <th>ACCOUNT NUMBER</th>
                                 <th>BRANCH</th>
+                               
+                                <th>OPENING BALANCE</th>
+                                <th>BALANCE</th>
                             
                             </tr>
                         </thead>
@@ -150,10 +158,11 @@
                           
 
                             <td><a href="{% url 'bank_listout' bank.id %}"> {{ bank.ifsc}}</a></td>
-                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ bank.opn_bal }}</a></td>
-                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ balance }}</a></td>
+                          
                             <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.ac_no}}</a></td>
                             <td><a href="{% url 'bank_listout' bank.id %}">{{ bank.branch}}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ bank.opn_bal }}</a></td>
+                            <td ><a href="{% url 'bank_listout' bank.id %}">&#8377;{{ balance }}</a></td>
                           
                             </tr>
 
@@ -184,4 +193,5 @@
   });
   $('.dropdown-toggle').dropdown();
 </script>
+
 {%endblock%}

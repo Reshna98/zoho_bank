@@ -118,15 +118,31 @@
           <div class="row">
             <label for="ac_no" class="col-md-3 p-3 ">Account Number</label>
             <div class="col-md-6 p-3">
-              <input type="text" class="form-control text-dark bg-light" id="ac_no" name="ac_no" value="{{ bank.ac_no}}">
+              <input type="text" class="form-control text-dark bg-light" id="ac_no" name="ac_no" value="{{ bank.ac_no}}" placeholder="15 Digits">
             </div>
           </div>
+          <script>
+
+            const acNoInput = document.getElementById('ac_no');
+          
+            acNoInput.addEventListener('input', function () {
+              const inputValue = this.value.trim();
+              const isValid = /^\d{15}$/.test(inputValue); 
+          
+              if (!isValid) {
+             
+                this.setCustomValidity('Account number must be 15 digits');
+              } else {
+                this.setCustomValidity(''); 
+              }
+            });
+          </script>
           <div class="row">
             <label for="opn_bal" class="col-md-3 p-3">Opening Balance</label>
             <div class="col-md-6 p-3">
               <div class="input-group">
                 <div class="input-group-append">
-                  <select class="form-control form-select text-dark bg-light" id="bal_type" name="bal_type" style="background-color: #888; width: 100px;" onchange="adjustOpeningBalance()">
+                  <select class="form-control form-select text-dark bg-light" id="bal_type" name="bal_type" style="background-color: #888; width: 100px;">
                     <option value="Credit" {% if bank.bal_type == "Credit" %}selected{% endif %}>Credit</option>
                     <option value="Debit"{% if bank.bal_type == "Debit" %}selected{% endif %}>Debit</option>
                    

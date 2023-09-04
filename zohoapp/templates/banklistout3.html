@@ -15,9 +15,7 @@
    
 
  
-   .hidden-option {
-    display: none;
-  }
+
   
 
     a {
@@ -223,16 +221,16 @@
               <div class="col-md-6">
                   <input type="text" id="search" placeholder="Search..." class="form-control text-dark bg-light" autocomplete="off">
               </div>
-              <div class="col-md-6 d-flex justify-content-end align-items-start gap-1">
-                  <a class="btn fa fa-plus text-right px-1 py-1.5 " role="button" href="{%url 'create_bank'%}">
+              <div class="col-md-6 d-flex justify-content-end align-items-start">
+                  <a class="btn fa fa-plus text-right px-3 py-2" role="button" href="{%url 'create_bank'%}">
                     <span class="mt-2">&nbsp;&nbsp;NEW</span></a>
-              <!-- </div>
+              </div>
               
              
                 
-                <div class="col-md-12 d-flex justify-content-end align-items-start"> -->
+                <div class="col-md-12 d-flex justify-content-end align-items-start">
                   <a class="btn text-center " data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
-                  role="button"><i class="fa fa-filter mt-0 mx-1 "></i>
+                  role="button"><i class="fa fa-filter mt-2 mx-4 "></i>
                   </a>
                   <div class="dropdown-menu ">
                      
@@ -304,6 +302,8 @@
                            
                               <a href="{% url 'bank_pdf' selected_bank.id %}"  class="btn btn-warning text-dark p-2"
                               style="color: orange; height: 2rem; width: 2rem;"  title="PDF"> <i class="fa fa-file-pdf"></i></a>
+                               <!-- <a  onclick="convertToPDF();" class="btn btn-warning text-dark p-2"
+                              style="color: orange; height: 2rem; width: 2rem;"  title="PDF"> <i class="fa fa-file-pdf"></i></a>  -->
                              
                               {% if selected_bank.document != "" %} 
                               <a class="btn btn-warning text-dark p-2" download href="{{selected_bank.document.url }}"style="color: orange; height: 2rem; width: 2rem;"><i
@@ -311,13 +311,18 @@
                               {% endif %}
                            
                              
-                             
+                              <a class="tablinks  btn btn-warning text-dark p-2" onclick="openTab(event, 'Template')" role="button" style="color: orange; height: 2rem; width: 2rem;"><i class="fa fa-file-word"></i>
+                                </a>
                               
                                 <a href="" style="color: orange; height: 2rem; width: 2rem;"
                                 class="btn btn-warning text-dark p-2" onclick="window.print()">
                                 <i class="fa fa-print"></i> </a>
                               
-                                
+                                <a class="tablinks btn btn-warning text-dark p-2" onclick="openTab(event, 'Overview')" role="button"   style="color: orange; height: 2rem; width: 2rem;"><i class="fa fa-eye"></i>
+                                </a>
+                             
+                            
+            
                              
                          
 
@@ -364,72 +369,18 @@
                    
                     </div>
                  </div>   
-                 <div class="row"> 
-                  <div class="col-md-4">
-                    {% if selected_bank.status %}
-                      <button class="btn btn-warning text-dark p-2" style="width: 6rem;" >{{selected_bank.status}}</button>
-                    {% else %}
-                      <button class="btn btn-warning text-dark p-2" style="width: 6rem;" >{{selected_bank.status}}</button>
-                    {% endif %}
-                  </div>
-                  <!-- <div class="col-md-9 d-flex justify-content-end ">
-                 <form action="{% url 'bank_status' selected_bank.id %}" method="post">
-                  {% csrf_token %}
-                  <select name="action" style="width: 6rem;height: 2rem;" class="form-control form-select bg-light text-dark p-2">
-                    <option value="">Status</option>
-                    {% if selected_bank.status == 'inactive' %}
-                      <option value="active">Active</option>
-                      <option value="inactive" selected>Inactive</option>
-                    {% else %}
-                      <option value="active" selected>Active</option>
-                      <option value="inactive">Inactive</option>
-                    {% endif %}
-                
-                  </select>
-                  <input style="color: #ccc;height: 2rem;" class="btn btn-warning text-dark" type="submit">
-                </form>
-                </div> -->
-                <div class="col-md-8 d-flex justify-content-end">
-                  <form action="{% url 'bank_status' selected_bank.id %}" method="post" class="d-flex align-items-center">
-                    {% csrf_token %}
-                    <select name="action" style="width: 6rem;height: 2rem;" class="form-control form-select bg-light text-dark p-2">
-                      <!-- <option value="">Status</option> -->
-                      {% if selected_bank.status == 'Inactive' %}
-                        <option value="Active">Active</option>
-                        <option value="Inactive" selected>Inactive</option>
-                      {% else %}
-                        <option value="Active" selected>Active</option>
-                        <option value="Inactive">Inactive</option>
-                      {% endif %}
-                    </select>
-                    <input style="color: #ccc;height: 2rem;" class="btn btn-warning text-dark" type="submit">
-                  </form>
-                </div>
-                
-              </div>
-
-                 <div class="row"> 
-                  <!-- <div class="col-md-3">
-                    {% if selected_bank.status %}
-                      <button class="btn btn-warning text-dark p-2" >{{selected_bank.status}}</button>
-                    {% else %}
-                      <button class="btn btn-warning text-dark p-2" >{{selected_bank.status}}</button>
-                    {% endif %} -->
-                  <!-- <form id="statusForm" data-url="{% url 'bank_status' selected_bank.id %}" method="post">
+                 <div class="row justify-content-end"> 
+                  <form id="statusForm" data-url="{% url 'bank_status' selected_bank.id %}" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="action" value="{% if selected_bank.status == 'active' %}inactive{% else %}active{% endif %}">
                     <button type="button" id="toggleStatusButton" class="btn btn-warning text-dark p-2">
                         {% if selected_bank.status == 'active' %}Active{% else %}Inactive{% endif %}
                     </button>
-                  </form> -->
-                <!-- </div> -->
-             
-                <div class="col-md-8"></div>
-                  <div class="col-md-4 d-flex justify-content-end align-items-start p-2" >
-                      <div class="form-group mt-4">
+                  </form>
+                  <div class="col-md-3 p-2" style="width: 180px;">
+                      <div class="form-group ">
                           <select class="form-control p-2 form-select bg-light text-dark" id="selectOption">
-                              <!-- <option value="">Deposit/withdraw</option> -->
-                              <option value="" class="hidden-option">Deposit/Withdraw</option>
+                              <option value="">Deposit/withdraw</option>
                               <option value="Bank To Cash Transfer">Bank To Cash Transfer</option>
                               <option value="Cash To Bank Transfer">Cash To Bank Transfer</option>
                               <option value="Bank To Bank Transfer">Bank To Bank Transfer</option>
@@ -437,23 +388,14 @@
                           </select>
                       </div>
                   </div>
-              </div>  
-              <div class="row"> 
-                <div class="tab col-md-3">
-                  <a class="tablinks p-1" onclick="openTab(event, 'Overview')" role="button"><i class="fa fa-eye"></i>
-                    Overview</a>
-                  <a class="tablinks p-1  mx-2" onclick="openTab(event, 'Template')" role="button"><i
-                          class="fa fa-file-word"></i> Template</a>
-                 
-                </div>
-                <div class="col-md-3"></div>
-                <div class="col-md-6 p-2 d-flex justify-content-end align-items-start" style="width: 190px;">
+              </div>   
+              <div class="row justify-content-end"> 
+                <div class="col-md-4 p-2" style="width: 190px;">
                  
                     <h4>Balance:&#8377;{{bank_balance}}</h4>
                  
                 </div>
-          
-            </div>
+            </div>   
 
 
 <!-- bank to cash -->
@@ -913,10 +855,10 @@ location.reload();
                    
                       <thead>
                           <tr>
-                              <th  class="text-white">TYPE</th>
-                              <th  class="text-white">NAME</th>
-                              <th  class="text-white">DATE</th>
-                              <th  class="text-white">AMOUNT</th>
+                              <th>TYPE</th>
+                              <th>NAME</th>
+                              <th>DATE</th>
+                              <th>AMOUNT</th>
                           
                           </tr>
                       </thead>
@@ -924,9 +866,9 @@ location.reload();
                           {% for b in transactions_for_selected_bank %}
                       
                           <tr>
-                          <td class="text-white">{{b.type}}</td>
+                          <td>{{b.type}}</td>
                          
-                          <td  class="text-white">
+                          <td>
                           
                           <!-- {% if b.type == 'Bank To Bank Transfer' %}
                           {% if b.amount > 0 %}
@@ -940,8 +882,8 @@ location.reload();
                           
                         
                         
-                          <td  class="text-white">{{ b.date }}</td>
-                          <td  class="text-white">&#8377;{{ b.amount }}</a></td>
+                          <td >{{ b.date }}</td>
+                          <td >&#8377;{{ b.amount }}</a></td>
                       
                           </tr>
                           {%endfor%}
@@ -968,12 +910,33 @@ location.reload();
   
     
     
+    // $(document).ready(function () {
+    //     $("#fileSave").click(function () {
 
+    //         $.ajax({
+
+    //             type: 'POST',
+    //             url: "{% url 'bank_attachfile' selected_bank.id %}",
+
+    //             data: {
+    //                 id: $("#file_id").val(),
+    //                 file: $("#filess").val(),
+
+    //                 csrfmiddlewaretoken: '{{ csrf_token }}'
+
+    //             },
+
+    //             success: function (response) {
+    //                 document.getElementById("modalAddfile").reset();
+    //             },
+    //         });
+    //     });
+    // });
     $(document).ready(function () {
     $("#fileSave").click(function () {
         var formData = new FormData();
         formData.append('id', $("#file_id").val());
-        formData.append('file', $("#filess")[0].files[0]); 
+        formData.append('file', $("#filess")[0].files[0]); // Get the file object
 
         formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
@@ -1021,9 +984,37 @@ location.reload();
    
   
   </script>
+  <!-- <script>
+    $(document).ready(function () {
+        $("#toggleStatusButton").on("click", function () {
+            const statusForm = $("#statusForm");
+            const statusInput = statusForm.find('input[name="action"]');
+            const url = statusForm.data("url");
 
+            // Toggle the status value
+            const newStatus = statusInput.val() === "activate" ? "deactivate" : "activate";
+
+            // Update the input field and button text
+            statusInput.val(newStatus);
+            $("#toggleStatusButton").text(newStatus === "activate" ? "Activate" : "Deactivate");
+
+            // Send an AJAX request to update the status
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: statusForm.serialize(),
+                success: function (response) {
+                    // Handle success response (if needed)
+                },
+                error: function () {
+                    // Handle error (if needed)
+                },
+            });
+        });
+    });
+</script> -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- <script>
+<script>
   $(document).ready(function () {
       $("#toggleStatusButton").on("click", function () {
           const statusForm = $("#statusForm");
@@ -1052,9 +1043,63 @@ location.reload();
       });
    
   });
+</script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js">
+</script>
+<script type="text/javascript">
+  
+  function convertToPDF() {
+    const element = document.getElementById('Template');
+
+    html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: 'bank.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      })
+      .outputPdf()
+      .then(function (pdf) {
+        // Save the PDF or display it
+        pdf.save();
+      });
+  }
 </script> -->
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script> -->
 
+<script>
+  function convertToPDF() {
+    const element = document.getElementById('Template');
+    console.log('Element found:', element);
 
+    html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: 'bankss.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      })
+      .outputPdf()
+      .then(function (pdf) {
+        console.log(pdf);
+        
+        pdf.save();
+       
+
+      });
+     
+    }
+      console.log('PDF generated');
+  
+</script>
 
 
 
