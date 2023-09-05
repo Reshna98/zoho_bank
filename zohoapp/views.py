@@ -4487,7 +4487,7 @@ def get_company_state(request):
     return JsonResponse({"state": state})
 
 
-# banking
+# banking-reshna
 
 def bank_home(request):
     cp= company_details.objects.get(user = request.user)
@@ -4828,11 +4828,16 @@ def bank_status(request, id):
         transactions_for_bank = transactions.objects.filter(user=request.user, bank=bank)
         balance = sum([transaction.amount for transaction in transactions_for_bank])
         bank_balances.append((bank, balance))
-    if request.method == 'POST':
+    # if request.method == 'POST':
         selected_bank = get_object_or_404(Bankcreation, id=id)
-        new_status = request.POST.get('action')
-        selected_bank.status = new_status
+        # new_status = request.POST.get('action')
+        # selected_bank.status = new_status
+        if selected_bank.status == 'Active':
+            selected_bank.status = 'Inactive'
+        else:
+            selected_bank.status = 'Active'
         selected_bank.save()
+        # selected_bank.save()
 
         # return JsonResponse({'message': 'Status updated successfully'})
     
